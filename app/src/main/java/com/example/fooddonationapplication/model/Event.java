@@ -1,6 +1,9 @@
 package com.example.fooddonationapplication.model;
 
-public class Event {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Event implements Parcelable {
     private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, endDate;
     private int totalDonation;
     private long endDateInMillis;
@@ -55,5 +58,47 @@ public class Event {
 
     public long getEndDateInMillis() {
         return endDateInMillis;
+    }
+
+    protected Event(Parcel in) {
+        imageURI = in.readString();
+        eventID = in.readString();
+        title = in.readString();
+        description = in.readString();
+        socialCommunityID = in.readString();
+        socialCommunityName = in.readString();
+        endDate = in.readString();
+        totalDonation = in.readInt();
+        endDateInMillis = in.readLong();
+    }
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(imageURI);
+        dest.writeString(eventID);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeString(socialCommunityID);
+        dest.writeString(socialCommunityName);
+        dest.writeString(endDate);
+        dest.writeInt(totalDonation);
+        dest.writeLong(endDateInMillis);
     }
 }

@@ -13,7 +13,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fooddonationapplication.model.Event;
-import com.example.fooddonationapplication.MainMenuActivity;
 import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -28,7 +27,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull Event model) {
+    protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull final Event model) {
         holder.textViewTitle.setText(model.getTitle());
         holder.textViewTotalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation()));
         holder.textViewSocialCommunity.setText("Conducted By: " + model.getSocialCommunityName());
@@ -37,8 +36,8 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MainMenuActivity.class);
-                intent.putExtra("eventID", eventID);
+                Intent intent = new Intent(context, EventDetailActivity.class);
+                intent.putExtra("Event", model);
                 context.startActivity(intent);
             }
         });

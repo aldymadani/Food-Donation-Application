@@ -1,6 +1,7 @@
-package com.example.fooddonationapplication;
+package com.example.fooddonationapplication.Donator.EventUserInterface;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,11 +15,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fooddonationapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
@@ -27,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
@@ -40,11 +44,11 @@ public class DonateActivity extends AppCompatActivity {
     private static final String TAG = "DonateActivity";
 
     Button btnConfirm;
-    TextInputLayout textInputAddress, textInputFoodItems, textInputDate, textInputQuantity;
+    TextInputLayout textInputAddress, textInputFoodItems, textInputDate, textInputTime, textInputQuantity;
     ProgressBar progressBar;
     ImageView foodImage;
     FirebaseAuth mFirebaseAuth;
-    EditText etDate;
+    EditText etAddress, etFoodItems, etDate, etTime, etQuantity;
 
     Calendar calendar;
     DatePickerDialog datePickerDialog;
@@ -66,54 +70,24 @@ public class DonateActivity extends AppCompatActivity {
         textInputAddress = findViewById(R.id.donate_address_layout);
         textInputFoodItems = findViewById(R.id.donate_food_item_layout);
         textInputDate = findViewById(R.id.donate_date_layout);
-        textInputQuantity = findViewById(R.id.donate_date_layout);
+        textInputQuantity = findViewById(R.id.donate_quantity_layout);
+        textInputTime = findViewById(R.id.donate_time_layout);
         btnConfirm = findViewById(R.id.donate_confirm);
         progressBar = findViewById(R.id.donate_progressBar);
         foodImage = findViewById(R.id.donate_food_photo);
+
+        etAddress = findViewById(R.id.donate_address);
+        etFoodItems = findViewById(R.id.donate_food_item);
         etDate = findViewById(R.id.donate_date);
+        etTime = findViewById(R.id.donate_time);
+        etQuantity = findViewById(R.id.donate_quantity);
 
-
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String getCurrentDateTime = sdf.format(c.getTime());
-        String getMyTime = "23/2/2020 23:59:59";
-        Log.d(TAG, getCurrentDateTime);
-
-        if (getCurrentDateTime.compareTo(getMyTime) < 0) {
-
-            Log.d(TAG, "getCurrentDateTime older than getMyTime ");
-        } else {
-            Log.d(TAG, "getMyTime older than getCurrentDateTime ");
-        }
-
-        try {
-            chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(getMyTime).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, String.valueOf(chosenDateInMillis));
-        Log.d(TAG, String.valueOf(System.currentTimeMillis()));
-
-        if (System.currentTimeMillis() > chosenDateInMillis) {
-            Log.d(TAG, "Expired");
-        } else {
-            Log.d(TAG, "Active");
-        }
-
-        int daysOld = (int) (chosenDateInMillis - System.currentTimeMillis());
-
-        if (daysOld < 0) {
-            Log.d(TAG, "Expired2");
-        } else {
-            Log.d(TAG, "Active2");
-        }
+        progressBar.setVisibility(View.INVISIBLE);
 
         etDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) { // TODO Change to Perform Click
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     calendar = Calendar.getInstance();
 
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -131,21 +105,42 @@ public class DonateActivity extends AppCompatActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            Log.d(TAG, "Chosen Date" + chosenDate);
+                            Log.d(TAG, "Chosen Date" + chosenDate); // TODO Erase Later
                             Log.d(TAG, String.valueOf(chosenDateInMillis));
                             Log.d(TAG, String.valueOf(System.currentTimeMillis()));
                         }
                     }, year, month, day);
                     long now = System.currentTimeMillis() - 1000;
-                    datePickerDialog.getDatePicker().setMinDate(now);// TODO: used to hide previous date,month and year
+                    datePickerDialog.getDatePicker().setMinDate(now);
                     calendar.add(Calendar.YEAR, 0);
-                    datePickerDialog.getDatePicker().setMaxDate(now + (1000 * 60 * 60 * 24 * 7));// TODO: used to hide future date,month and year
+                    datePickerDialog.getDatePicker().setMaxDate(now + (1000 * 60 * 60 * 24 * 7));
                     datePickerDialog.show();
                     return true;
                 } return false;
             }
         });
 
+        etTime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) { // TODO Change to Perform Click
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(DonateActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                            String amPm;
+                            if (hourOfDay >= 12) {
+                                amPm = " PM";
+                            } else {
+                                amPm = " AM";
+                            }
+                            etTime.setText(String.format("%02d:%02d", hourOfDay, minutes) + amPm);
+                        }
+                    }, 0, 0, false);
+                    timePickerDialog.show();
+                    return true;
+                } return false;
+            }
+        });
 
         foodImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +151,44 @@ public class DonateActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                checkingAllFields();
+                // TODO Checking all the fields
+                // TODO Upload the data into database
+                // TODO Show donation is completed and redirect to main menu
+            }
+        });
+    }
+
+    private void checkingAllFields() { // TODO change to boolean checking
+        // Address is optional
+        if(etFoodItems.getText().toString().isEmpty()) {
+            textInputFoodItems.setError("Please fill in the food items field");
+        } else {
+            textInputFoodItems.setErrorEnabled(false);
+        }
+
+        if(etDate.getText().toString().isEmpty()) {
+            textInputDate.setError("Please chose the pick up / delivery date");
+        } else {
+            textInputDate.setErrorEnabled(false);
+        }
+
+        if(etTime.getText().toString().isEmpty()) {
+            textInputTime.setError("Please chose the time");
+        } else {
+            textInputTime.setErrorEnabled(false);
+        }
+
+        if(etQuantity.getText().toString().isEmpty()) {
+            textInputQuantity.setError("Please fill in the quantity");
+        } else {
+            textInputQuantity.setErrorEnabled(false);
+        }
     }
 
     @Override
@@ -167,7 +200,7 @@ public class DonateActivity extends AppCompatActivity {
                 case RESULT_OK:
                     bitmap = (Bitmap) data.getExtras().get("data");
                     foodImage.setImageBitmap(bitmap);
-                    handleUpload(bitmap);
+//                    handleUpload(bitmap);
             }
         }
     }
@@ -182,19 +215,19 @@ public class DonateActivity extends AppCompatActivity {
         Log.v(TAG, date);
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(uuid + date + ".jpeg");
 
-//        reference.putBytes(baos.toByteArray())
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        getDownloadUrl(reference);
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.e(TAG, "onFailure: " + e.getCause());
-//                    }
-//                });
+        reference.putBytes(baos.toByteArray())
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        getDownloadUrl(reference);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: " + e.getCause());
+                    }
+                });
     }
 
     private void getDownloadUrl(StorageReference reference) {

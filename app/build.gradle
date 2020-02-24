@@ -52,13 +52,13 @@ dependencies {
     // Support design for show / hide password implementation
     implementation 'com.google.android.material:material:1.0.0'
 
+    // Card view and recycler view implementation
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'androidx.cardview:cardview:1.0.0'
 
-    // Search Implementation
-    implementation 'com.github.mancj:MaterialSearchBar:0.8.3'
-
-    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+    // Glide implementation
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Circle image
 //    implementation 'de.hdodenhof:circleimageview:2.1.0'
