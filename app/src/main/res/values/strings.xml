@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Food Donation Application</string>
+    <string name="login_create_account">Not registered yet? Sign up here</string>
+    <string name="main_menu_text">Welcome to main screen!</string>
+</resources>
