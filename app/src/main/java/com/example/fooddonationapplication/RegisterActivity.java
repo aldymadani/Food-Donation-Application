@@ -138,8 +138,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Log.d("RegisterActivity", "DocumentSnapshot successfully written!\nThe Unique ID of user is : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                                     updateUserName(fullName);
+                                    Intent intent = new Intent(RegisterActivity.this, MainMenuActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     Toast.makeText(RegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegisterActivity.this, MainMenuActivity.class));
+                                    startActivity(intent);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {

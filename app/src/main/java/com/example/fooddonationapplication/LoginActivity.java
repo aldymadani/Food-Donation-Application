@@ -157,9 +157,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (document.exists()) {
                         Log.d("LoginActivity", "DocumentSnapshot data: " + document.getData());
                         if (document.getData().containsValue("donator")) {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            btnSignIn.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                         } else {
                             startActivity(new Intent(LoginActivity.this, SocialCommunityActivity.class));
+                            btnSignIn.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                         Toast.makeText(LoginActivity.this, "You are logged in!", Toast.LENGTH_SHORT).show();
                     } else {
