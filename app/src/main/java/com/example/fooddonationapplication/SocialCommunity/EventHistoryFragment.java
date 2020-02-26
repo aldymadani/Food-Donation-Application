@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.Donator.UserManagementUI;
+package com.example.fooddonationapplication.SocialCommunity;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.fooddonationapplication.R;
 
-public class EditProfileFragment extends Fragment {
+public class EventHistoryFragment extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_edit_profile,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_event_history,container,false);
+        return rootView;
     }
 }
