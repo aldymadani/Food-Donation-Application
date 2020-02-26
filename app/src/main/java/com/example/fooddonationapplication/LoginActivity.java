@@ -88,11 +88,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     protected boolean inputValidation(String email, String password) {
         boolean isValid = false;
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         // Email checking
         if (email.isEmpty()) {
             textInputEmail.setError("Please enter your email");
-        } else if (!email.contains("@") || !email.contains(".")) {
+        } else if (!email.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
         } else if (!email.isEmpty()) {
             textInputEmail.setErrorEnabled(false);
