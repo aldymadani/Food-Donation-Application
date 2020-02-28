@@ -19,10 +19,13 @@
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/SecondAppTheme">
-        <activity android:name=".Donator.EventUserInterface.EventDetailActivity"></activity>
-        <activity android:name=".MainActivity" />
-        <activity
-            android:name=".Donator.EventUserInterface.DonateActivity" />
+        <activity android:name=".SocialCommunity.DonatorActivity"></activity>
+        <activity android:name=".Donator.HistoryUserInterface.HistoryDetail" />
+        <activity android:name=".SocialCommunity.DonatorDetail" />
+        <activity android:name=".SocialCommunity.MainSocialCommunityActivity" />
+        <activity android:name=".Donator.EventUserInterface.EventDetailActivity" />
+        <activity android:name=".Donator.MainDonatorActivity" />
+        <activity android:name=".Donator.EventUserInterface.DonateActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +36,6 @@
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".SocialCommunity.SocialCommunityActivity" />
         <activity
             android:name=".MainMenuActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />

@@ -7,12 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.fooddonationapplication.Donator.EditProfileInterface.EditProfileFragment;
-import com.example.fooddonationapplication.Donator.EventUserInterface.EventFragment;
-import com.example.fooddonationapplication.Donator.HistoryUserInterface.HistoryFragment;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.SocialCommunity.CreateEventFragment;
-import com.example.fooddonationapplication.SocialCommunity.EventHistoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainSocialCommunityActivity extends AppCompatActivity {

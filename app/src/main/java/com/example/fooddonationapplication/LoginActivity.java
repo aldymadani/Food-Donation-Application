@@ -12,7 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fooddonationapplication.SocialCommunity.SocialCommunityActivity;
+import com.example.fooddonationapplication.Donator.MainDonatorActivity;
+import com.example.fooddonationapplication.SocialCommunity.MainSocialCommunityActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -78,11 +79,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.login_sign_in_button:
                 String email = emailId.getText().toString();
                 String password = passwordId.getText().toString(); // TODO needs trim?
-                if(inputValidation(email, password) == true) {
+                if(inputValidation(email, password)) {
                     authenticateUser(email, password);
                 }
                 break;
-
         }
     }
 
@@ -157,13 +157,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (document.exists()) {
                         Log.d("LoginActivity", "DocumentSnapshot data: " + document.getData());
                         if (document.getData().containsValue("donator")) {
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MainDonatorActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             btnSignIn.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                         } else {
-                            startActivity(new Intent(LoginActivity.this, SocialCommunityActivity.class));
+                            startActivity(new Intent(LoginActivity.this, MainSocialCommunityActivity.class));
                             btnSignIn.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                         }

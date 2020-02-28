@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/nav_event"
-        android:icon="@drawable/ic_email_black_24dp"
+        android:icon="@drawable/soup"
         android:title="Donate" />
 
     <item
         android:id="@+id/nav_history"
-        android:icon="@drawable/ic_email_black_24dp"
-        android:title="History" />
+        android:icon="@drawable/history"
+        android:title="Donation History" />
 
     <item
         android:id="@+id/nav_edit_profile"
-        android:icon="@drawable/ic_email_black_24dp"
+        android:icon="@drawable/user"
         android:title="Edit Profile" />
 
 </menu>

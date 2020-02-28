@@ -31,7 +31,7 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        getIncomingIntent();
+//        getIncomingIntent();
 
         btnLogOut = findViewById(R.id.main_menu_log_out_button);
         btnLogOut.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +111,6 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void getIncomingIntent() {
-        Log.d("MainMenuActivity", getIntent().getStringExtra("eventID"));
+//        Log.d("MainMenuActivity", getIntent().getStringExtra("eventID"));
     }
 }

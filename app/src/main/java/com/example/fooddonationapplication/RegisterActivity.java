@@ -60,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = passwordId.getText().toString();
                 String fullName = fullNameId.getText().toString();
                 String telephoneNumber = telephoneNumberId.getText().toString();
+                Log.d("CEK",String.valueOf(telephoneNumber.length()));
                 allFieldValidation(email, password, fullName, telephoneNumber);
             }
         });
@@ -78,11 +79,13 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Password checking
+        boolean passwordValidation = false;
         if (password.isEmpty()) {
             textInputPassword.setError("Please enter your password");
         } else if (password.length() <= 5) {
             textInputPassword.setError("Password must be at least 6 characters");
         } else if (!password.isEmpty()) {
+            passwordValidation = true;
             textInputPassword.setErrorEnabled(false);
         }
 
@@ -96,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Telephone number checking
         if (telephoneNumber.isEmpty()) {
             textInputTelephoneNumber.setError("Please enter your telephone number");
-        } else if (telephoneNumber.length() <= 7 && telephoneNumber.length() >= 12) {
+        } else if (telephoneNumber.length() < 7 || telephoneNumber.length() > 13) {
             textInputTelephoneNumber.setError("Please Please input a valid telephone number");
         } else if (!telephoneNumber.isEmpty()) {
             textInputTelephoneNumber.setErrorEnabled(false);
@@ -105,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Register user
         if (email.isEmpty() && password.isEmpty() && fullName.isEmpty() && telephoneNumber.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!email.isEmpty() && !password.isEmpty() && !fullName.isEmpty() && !telephoneNumber.isEmpty()) {
+        } else if (!email.isEmpty() && !password.isEmpty() && passwordValidation && !fullName.isEmpty() && !telephoneNumber.isEmpty()) {
             registerUser(email, password, fullName, telephoneNumber);
         } else {
             Toast.makeText(RegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();

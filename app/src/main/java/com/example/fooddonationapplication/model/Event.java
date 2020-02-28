@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class Event implements Parcelable {
     private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, endDate;
-    private int totalDonation;
+    private double totalDonation;
     private long endDateInMillis;
 
     public Event() {
@@ -48,7 +48,7 @@ public class Event implements Parcelable {
         return socialCommunityName;
     }
 
-    public int getTotalDonation() {
+    public double getTotalDonation() {
         return totalDonation;
     }
 
@@ -98,7 +98,7 @@ public class Event implements Parcelable {
         dest.writeString(socialCommunityID);
         dest.writeString(socialCommunityName);
         dest.writeString(endDate);
-        dest.writeInt(totalDonation);
+        dest.writeDouble(totalDonation);
         dest.writeLong(endDateInMillis);
     }
 }

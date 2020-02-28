@@ -1,7 +1,8 @@
 package com.example.fooddonationapplication.model;
 
 public class User {
-    public String name, phone, uuid, role;
+    private String name, phone, uuid, role;
+    private int totalDonation;
 
     public User(){
         // Empty constructor
@@ -12,6 +13,26 @@ public class User {
         this.phone = phone;
         this.uuid = uuid;
         role = "donator";
+        totalDonation = 0;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public int getTotalDonation() {
+        return totalDonation;
+    }
 }

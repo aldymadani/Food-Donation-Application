@@ -52,7 +52,7 @@ public class EventDetailActivity extends AppCompatActivity {
         String eventDescriptionData = event.getDescription();
         String eventSocialCommunityNameData = event.getSocialCommunityName();
         String eventEndDateData = event.getEndDate();
-        int eventTotalDonationData = event.getTotalDonation();
+        double eventTotalDonationData = event.getTotalDonation();
 
         eventTitle.setText(eventTitleData);
         // TODO SET IMAGE WITH A BETTER VIEW SIZE (CHECK YOUTUBE)
@@ -60,7 +60,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
+                        eventProgressBar.setVisibility(View.GONE);
                         return false;
                     }
 
