@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     protected void checkRole(String uuid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(uuid);
+        DocumentReference docRef = db.collection("users").document(uuid); // TODO CHANGE TO UPPERCASE FIRST LETTER
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -163,7 +163,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             btnSignIn.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                         } else {
-                            startActivity(new Intent(LoginActivity.this, MainSocialCommunityActivity.class));
+                            Intent intent = new Intent(LoginActivity.this, MainSocialCommunityActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                             btnSignIn.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                         }

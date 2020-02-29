@@ -97,18 +97,20 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Telephone number checking
+        boolean telephoneNumberValidation = false;
         if (telephoneNumber.isEmpty()) {
             textInputTelephoneNumber.setError("Please enter your telephone number");
         } else if (telephoneNumber.length() < 7 || telephoneNumber.length() > 13) {
             textInputTelephoneNumber.setError("Please Please input a valid telephone number");
         } else if (!telephoneNumber.isEmpty()) {
+            telephoneNumberValidation = true;
             textInputTelephoneNumber.setErrorEnabled(false);
         }
 
         // Register user
         if (email.isEmpty() && password.isEmpty() && fullName.isEmpty() && telephoneNumber.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!email.isEmpty() && !password.isEmpty() && passwordValidation && !fullName.isEmpty() && !telephoneNumber.isEmpty()) {
+        } else if (!email.isEmpty() && !password.isEmpty() && passwordValidation && !fullName.isEmpty() && !telephoneNumber.isEmpty() && telephoneNumberValidation) {
             registerUser(email, password, fullName, telephoneNumber);
         } else {
             Toast.makeText(RegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
@@ -133,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 } else {
                     String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    User user = new User(fullName, telephoneNumber, uuid);
+                    User user = new User(fullName, telephoneNumber, uuid, "donator", 0);
                     db.collection("Users").document(uuid)
                             .set(user)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
