@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.Donator.adapter;
+package com.example.fooddonationapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;

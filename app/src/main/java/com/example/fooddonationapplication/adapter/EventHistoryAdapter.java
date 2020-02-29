@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.Donator.adapter;
+package com.example.fooddonationapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.fooddonationapplication.Donator.HistoryUserInterface.HistoryDetail;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.SocialCommunity.DonatorActivity;
 import com.example.fooddonationapplication.model.Event;
@@ -36,7 +35,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull EventHistoryHolder holder, int position, @NonNull Event model) {
+    protected void onBindViewHolder(@NonNull EventHistoryHolder holder, int position, @NonNull final Event model) {
         holder.eventTitle.setText(model.getTitle());
         holder.eventTotalDonation.setText(String.valueOf(model.getTotalDonation()));
         holder.eventEndDate.setText(model.getEndDate());
@@ -59,7 +58,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DonatorActivity.class);
-                intent.putExtra("Donator", "Smtg"); // TODO add parcelable later on
+                intent.putExtra("eventID", model.getEventID()); // TODO add parcelable later on
                 context.startActivity(intent);
             }
         });
