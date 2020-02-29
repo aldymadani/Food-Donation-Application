@@ -39,6 +39,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
         holder.eventTitle.setText(model.getTitle());
         holder.eventTotalDonation.setText(String.valueOf(model.getTotalDonation()));
         holder.eventEndDate.setText(model.getEndDate());
+        holder.eventDescription.setText(model.getDescription());
         Glide.with(context).load(model.getImageURI()).override(300,200)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -77,6 +78,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
         TextView eventTitle;
         TextView eventTotalDonation;
         TextView eventEndDate;
+        TextView eventDescription;
         CardView parentLayout;
 
         public EventHistoryHolder(@NonNull View itemView) {
@@ -85,6 +87,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
             eventTitle = itemView.findViewById(R.id.eventHistoryTitle);
             eventTotalDonation = itemView.findViewById(R.id.eventHistoryTotalDonation);
             eventEndDate = itemView.findViewById(R.id.eventHistoryEndDate);
+            eventDescription = itemView.findViewById(R.id.eventHistoryDescription);
             parentLayout = itemView.findViewById(R.id.event_history_fragment_id);
         }
     }

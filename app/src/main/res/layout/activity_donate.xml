@@ -196,7 +196,7 @@
             android:adjustViewBounds="true"
             android:src="@drawable/insert_image"
             app:layout_constraintEnd_toEndOf="@+id/donate_quantity_layout"
-            app:layout_constraintStart_toStartOf="@+id/donate_insert_image_text"
+            app:layout_constraintStart_toStartOf="@+id/donate_quantity_layout"
             app:layout_constraintTop_toBottomOf="@+id/donate_insert_image_text" />
 
         <TextView

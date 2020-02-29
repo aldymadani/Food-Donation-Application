@@ -41,6 +41,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventHistoryImage" />
 
+
+        <TextView
+            android:id="@+id/eventHistoryDescription"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Event Description"
+            android:textSize="14sp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/eventHistoryTitle" />
+
         <TextView
             android:id="@+id/eventHistoryTotalDonation"
             style="@style/TextAppearance.AppCompat.Headline"
@@ -52,8 +65,9 @@
             android:text="Total Donation : 10"
             android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/eventHistoryEndDate"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventHistoryTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/eventHistoryDescription" />
 
         <TextView
             android:id="@+id/eventHistoryEndDate"

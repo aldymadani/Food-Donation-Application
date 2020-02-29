@@ -49,7 +49,7 @@
             android:layout_below="@id/eventTitle"
             android:layout_alignParentLeft="true"
             android:padding="8dp"
-            android:text="Total Donation : 10"
+            android:text="Total Donation : 10.125 / 50.0"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
@@ -57,11 +57,12 @@
         <TextView
             android:id="@+id/eventSocialCommunity"
             style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="Social Community : Berbagi Nasi Makassar"
             android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventTotalDonation"
             app:layout_constraintTop_toTopOf="@+id/eventTotalDonation" />
 

@@ -2,6 +2,7 @@ package com.example.fooddonationapplication.SocialCommunity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fooddonationapplication.Donator.adapter.DonationHistoryAdapter;
-import com.example.fooddonationapplication.Donator.adapter.EventHistoryAdapter;
+import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
 import com.example.fooddonationapplication.LoginActivity;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,7 +62,8 @@ public class EventHistoryFragment extends Fragment {
 
     private void setUpRecyclerViewEventHistory() {
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Query query = eventRef.whereEqualTo("uuid", uuid);
+        Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
+        Log.d("CEK", uuid);
 
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
                 .setQuery(query, Event.class)

@@ -95,14 +95,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             textInputEmail.setError("Please enter your email");
         } else if (!email.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
-        } else if (!email.isEmpty()) {
+        } else {
             textInputEmail.setErrorEnabled(false);
         }
 
         // Password checking
         if (password.isEmpty()) {
             textInputPassword.setError("Please enter your password");
-        } else if (!password.isEmpty()) {
+        } else {
             textInputPassword.setErrorEnabled(false);
         }
 

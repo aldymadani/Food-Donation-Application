@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/SecondAppTheme">
-        <activity android:name=".SocialCommunity.DonatorActivity"></activity>
+        <activity android:name=".SocialCommunity.DonatorActivity" />
         <activity android:name=".Donator.HistoryUserInterface.HistoryDetail" />
         <activity android:name=".SocialCommunity.DonatorDetail" />
         <activity android:name=".SocialCommunity.MainSocialCommunityActivity" />

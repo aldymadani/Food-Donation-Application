@@ -27,7 +27,7 @@ public class EditProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_profile,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_edit_profile,container,false); // TODO ADD TOTAL DONATION IN THE UI
 
         logOutButton = rootView.findViewById(R.id.edit_profile_log_out);
 

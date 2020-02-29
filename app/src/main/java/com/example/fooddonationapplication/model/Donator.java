@@ -4,9 +4,12 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Donator implements Parcelable {
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
-    public String name, phone, uuid, eventName, eventId, foodItems, pickUpDate, donationDate, imageURI;
+@IgnoreExtraProperties
+public class Donator implements Parcelable {
+// TODO TIMESTAMP WATCH HERE https://www.youtube.com/watch?v=xnFnwbiDFuE
+    public String name, phone, uuid, eventName, eventId, pickUpAddress, foodItems, pickUpDate, donationDate, imageURI;
     double totalDonation;
 
     public Donator(){
@@ -33,6 +36,10 @@ public class Donator implements Parcelable {
         return eventId;
     }
 
+    public String getPickUpAddress() {
+        return pickUpAddress;
+    }
+
     public String getFoodItems() {
         return foodItems;
     }
@@ -55,6 +62,7 @@ public class Donator implements Parcelable {
         uuid = in.readString();
         eventName = in.readString();
         eventId = in.readString();
+        pickUpAddress = in.readString();
         foodItems = in.readString();
         pickUpDate = in.readString();
         donationDate = in.readString();
@@ -81,6 +89,7 @@ public class Donator implements Parcelable {
         dest.writeString(uuid);
         dest.writeString(eventName);
         dest.writeString(eventId);
+        dest.writeString(pickUpAddress);
         dest.writeString(foodItems);
         dest.writeString(pickUpDate);
         dest.writeString(donationDate);

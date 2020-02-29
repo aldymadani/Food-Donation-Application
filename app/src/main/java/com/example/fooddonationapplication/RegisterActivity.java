@@ -74,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
             textInputEmail.setError("Please input your email");
         } else if (!email.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
-        } else if (!email.isEmpty()) {
+        } else {
             textInputEmail.setErrorEnabled(false);
         }
 
@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
             textInputPassword.setError("Please enter your password");
         } else if (password.length() <= 5) {
             textInputPassword.setError("Password must be at least 6 characters");
-        } else if (!password.isEmpty()) {
+        } else {
             passwordValidation = true;
             textInputPassword.setErrorEnabled(false);
         }
@@ -92,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Full name checking
         if (fullName.isEmpty()) {
             textInputFullName.setError("Please enter your full name");
-        } else if (!fullName.isEmpty()) {
+        } else {
             textInputFullName.setErrorEnabled(false);
         }
 
@@ -102,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
             textInputTelephoneNumber.setError("Please enter your telephone number");
         } else if (telephoneNumber.length() < 7 || telephoneNumber.length() > 13) {
             textInputTelephoneNumber.setError("Please Please input a valid telephone number");
-        } else if (!telephoneNumber.isEmpty()) {
+        } else {
             telephoneNumberValidation = true;
             textInputTelephoneNumber.setErrorEnabled(false);
         }

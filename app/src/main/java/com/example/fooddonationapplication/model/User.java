@@ -3,6 +3,9 @@ package com.example.fooddonationapplication.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class User implements Parcelable {
     private String name, phone, uuid, role;
     private double totalDonation;

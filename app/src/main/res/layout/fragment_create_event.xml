@@ -112,7 +112,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Target Quantity"
+            android:hint="Target Quantity in Kg"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/create_event_end_date_layout"
             app:layout_constraintStart_toStartOf="@+id/create_event_end_date_layout"
