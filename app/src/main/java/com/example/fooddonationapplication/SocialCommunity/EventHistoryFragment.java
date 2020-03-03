@@ -32,7 +32,7 @@ public class EventHistoryFragment extends Fragment {
     FirebaseAuth mFirebaseAuth;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference eventRef = db.collection("Events");
+    private CollectionReference eventRef = db.collection("events");
 
     private EventHistoryAdapter eventHistoryAdapter;
     private View rootView;

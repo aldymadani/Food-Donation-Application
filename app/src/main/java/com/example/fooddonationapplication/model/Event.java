@@ -4,27 +4,98 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
 
 @IgnoreExtraProperties
 public class Event implements Parcelable {
-    private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, endDate;
-    private double totalDonation;
+    private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, socialCommunityTelephoneNumber, endDate;
+    private double targetQuantity, totalDonation;
     private long endDateInMillis;
+    private @ServerTimestamp Date timestamp;
+
+    public void setSocialCommunityTelephoneNumber(String socialCommunityTelephoneNumber) {
+        this.socialCommunityTelephoneNumber = socialCommunityTelephoneNumber;
+    }
 
     public Event() {
         // Empty constructor required
     }
 
-    public Event(String imageURI, String eventID, String title, String description, String socialCommunityID, String socialCommunityName, String endDate, int endDateInMillis, int totalDonation) {
+    public void setImageURI(String imageURI) {
+        this.imageURI = imageURI;
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setSocialCommunityID(String socialCommunityID) {
+        this.socialCommunityID = socialCommunityID;
+    }
+
+    public void setSocialCommunityName(String socialCommunityName) {
+        this.socialCommunityName = socialCommunityName;
+    }
+
+    public String getSocialCommunityTelephoneNumber() {
+        return socialCommunityTelephoneNumber;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setTargetQuantity(double targetQuantity) {
+        this.targetQuantity = targetQuantity;
+    }
+
+    public void setTotalDonation(double totalDonation) {
+        this.totalDonation = totalDonation;
+    }
+
+    public void setEndDateInMillis(long endDateInMillis) {
+        this.endDateInMillis = endDateInMillis;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Event(String imageURI, String eventID, String title, String description, String socialCommunityID, String socialCommunityName, String socialCommunityTelephoneNumber, String endDate, long endDateInMillis, double targetQuantity, double totalDonation, Date timestamp) {
         this.imageURI = imageURI;
         this.eventID = eventID;
         this.title = title;
         this.description = description;
         this.socialCommunityID = socialCommunityID;
         this.socialCommunityName = socialCommunityName;
+        this.socialCommunityTelephoneNumber = socialCommunityTelephoneNumber;
         this.endDate = endDate;
         this.endDateInMillis = endDateInMillis;
+        this.targetQuantity = targetQuantity;
         this.totalDonation = totalDonation;
+        this.timestamp = timestamp;
+    }
+
+    public String getSocialCommunityID() {
+        return socialCommunityID;
+    }
+
+    public double getTargetQuantity() {
+        return targetQuantity;
     }
 
     public String getImageURI() {
@@ -70,8 +141,10 @@ public class Event implements Parcelable {
         description = in.readString();
         socialCommunityID = in.readString();
         socialCommunityName = in.readString();
+        socialCommunityTelephoneNumber = in.readString();
         endDate = in.readString();
-        totalDonation = in.readInt();
+        targetQuantity = in.readDouble();
+        totalDonation = in.readDouble();
         endDateInMillis = in.readLong();
     }
 
@@ -100,7 +173,9 @@ public class Event implements Parcelable {
         dest.writeString(description);
         dest.writeString(socialCommunityID);
         dest.writeString(socialCommunityName);
+        dest.writeString(socialCommunityTelephoneNumber);
         dest.writeString(endDate);
+        dest.writeDouble(targetQuantity);
         dest.writeDouble(totalDonation);
         dest.writeLong(endDateInMillis);
     }

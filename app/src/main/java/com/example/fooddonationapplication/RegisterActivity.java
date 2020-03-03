@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fooddonationapplication.Donator.MainDonatorActivity;
 import com.example.fooddonationapplication.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -136,17 +137,13 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     User user = new User(fullName, telephoneNumber, uuid, "donator", 0);
-                    db.collection("Users").document(uuid)
+                    db.collection("users").document(uuid)
                             .set(user)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d("RegisterActivity", "DocumentSnapshot successfully written!\nThe Unique ID of user is : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                                     updateUserName(fullName);
-                                    Intent intent = new Intent(RegisterActivity.this, MainMenuActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    Toast.makeText(RegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
-                                    startActivity(intent);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -176,6 +173,10 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
                             Log.d("DonateActivity", "User profile created");
                             Log.d("DonateActivity", user.getDisplayName());
+                            Intent intent = new Intent(RegisterActivity.this, MainDonatorActivity.class);
+                            Toast.makeText(RegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                         }
                     }
                 });

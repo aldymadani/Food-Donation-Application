@@ -8,7 +8,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/eventHistoryRecyclerView"
         android:layout_width="409dp"
-        android:layout_height="657dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/eventHistoryLogOut"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,4 +29,5 @@
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

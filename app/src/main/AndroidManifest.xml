@@ -39,6 +39,9 @@
         <activity
             android:name=".MainMenuActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>
