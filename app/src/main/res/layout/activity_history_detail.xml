@@ -40,6 +40,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/historyDetailTitle"
             app:helperTextEnabled="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:hint="@string/event_name_placeholder" >
 
@@ -49,7 +51,9 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/event_title_icon"
                 android:drawablePadding="7dp"
-                android:inputType="text" />
+                android:inputType="text"
+                android:enabled="false"
+                android:textColor="#000000"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -58,6 +62,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailEventNameLayout"
             app:layout_constraintHorizontal_bias="0.452"
@@ -74,6 +80,8 @@
                 android:ems="10"
                 android:hint="@string/social_community_name_placeholder"
                 android:inputType="text"
+                android:enabled="false"
+                android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/register_email_layout"
@@ -86,9 +94,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="@string/pick_up_address_placeholder"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailSocialCommunityNameLayout"
+            app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityNameLayout"
             app:layout_constraintTop_toBottomOf="@+id/historyDetailSocialCommunityNameLayout">
 
@@ -96,12 +106,45 @@
                 android:id="@+id/historyDetailPickUpAddress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="152dp"
                 android:drawableStart="@drawable/pick_up_address_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="textPostalAddress" />
+                android:hint="@string/pick_up_address_placeholder"
+                android:inputType="text"
+                android:enabled="false"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
+                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
         </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/historyDetailPickUpAddressLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            android:hint="@string/pick_up_address_placeholder"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/historyDetailSocialCommunityNameLayout"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityNameLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/historyDetailSocialCommunityNameLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/historyDetailPickUpAddress"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/pick_up_address_icon"-->
+<!--                android:drawablePadding="7dp"-->
+<!--                android:ems="10"-->
+<!--                android:enabled="false"-->
+<!--                android:inputType="textPostalAddress"-->
+<!--                android:textColor="#000000" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/historyDetailFoodItemsLayout"
@@ -109,6 +152,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:hint="@string/food_items_placeholder"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailPickUpAddressLayout"
@@ -123,7 +168,9 @@
                 android:drawableStart="@drawable/food_items_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="text" />
+                android:enabled="false"
+                android:inputType="text"
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -133,6 +180,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/pick_up_date_placeholder"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailFoodItemsLayout"
             app:layout_constraintStart_toStartOf="@+id/historyDetailFoodItemsLayout"
@@ -146,7 +195,9 @@
                 android:drawableStart="@drawable/pick_up_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="date" />
+                android:inputType="date"
+                android:enabled="false"
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -156,6 +207,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/time_placeholder"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailDateLayout"
             app:layout_constraintHorizontal_bias="0.452"
@@ -170,7 +223,9 @@
                 android:drawableStart="@drawable/time_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:enabled="false"
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -180,6 +235,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/donate_quantity_placeholder"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailTimeLayout"
             app:layout_constraintHorizontal_bias="0.452"
@@ -194,7 +251,9 @@
                 android:drawableStart="@drawable/quantity_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal"
+                android:enabled="false"
+                android:textColor="#000000"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -204,6 +263,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/donation_date_placeholder"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailTotalDonationLayout"
             app:layout_constraintHorizontal_bias="0.452"
@@ -218,7 +279,9 @@
                 android:drawableStart="@drawable/pick_up_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="date" />
+                android:inputType="date"
+                android:enabled="false"
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
