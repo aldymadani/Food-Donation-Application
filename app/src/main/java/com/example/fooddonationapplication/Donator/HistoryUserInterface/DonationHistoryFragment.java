@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,26 +18,44 @@ import com.example.fooddonationapplication.adapter.DonationHistoryAdapter;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import java.util.Objects;
 
 public class DonationHistoryFragment extends Fragment {
 
     private static final String TAG = "DonationHistoryFragment";
 
+    TextView totalDonationTextView;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
-
     private DonationHistoryAdapter donationHistoryAdapter;
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private View rootView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_donation_history,container,false);
+        totalDonationTextView = rootView.findViewById(R.id.donationHistoryTotalDonation);
         setUpRecyclerViewDonationHistory();
+
+        db.collection("users").document(user.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            totalDonationTextView.setText("You have donated " + String.valueOf(documentSnapshot.getDouble("totalDonation")) + " Kg of food");
+                        }
+                    }
+                });
         return rootView;
     }
 

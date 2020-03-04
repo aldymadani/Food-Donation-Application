@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +22,8 @@ import com.example.fooddonationapplication.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,7 +34,6 @@ public class EventHistoryFragment extends Fragment {
 
     private static final String TAG = "EventHistoryFragment";
 
-    Button logOut;
     FirebaseAuth mFirebaseAuth;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -38,33 +41,57 @@ public class EventHistoryFragment extends Fragment {
 
     private EventHistoryAdapter eventHistoryAdapter;
     private View rootView;
+    TextInputLayout searchInputLayout;
+    EditText searchKeyword;
+    ImageView searchButton;
+    FloatingActionButton refreshButton;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_event_history,container,false);
 
-        logOut = rootView.findViewById(R.id.eventHistoryLogOut);
-        logOut.setOnClickListener(new View.OnClickListener() {
+        searchKeyword = rootView.findViewById(R.id.search);
+        searchInputLayout = rootView.findViewById(R.id.search_layout);
+        searchButton = rootView.findViewById(R.id.search_button);
+        refreshButton = rootView.findViewById(R.id.refreshFloatingButton);
+        final String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d(TAG, uuid);
+        Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
+        setUpRecyclerViewEventHistory(query);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final FirebaseUser user = mFirebaseAuth.getInstance().getCurrentUser();
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getContext(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                Query newQuery = null;
+                String search = searchKeyword.getText().toString();
+                if (!search.isEmpty()) {
+                    newQuery = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
+                } else {
+                    searchInputLayout.setError("Please fill in");
+                    return;
+                }
+                searchInputLayout.setErrorEnabled(false);
+                setUpRecyclerViewEventHistory(newQuery);
+                eventHistoryAdapter.startListening();
             }
         });
 
-        setUpRecyclerViewEventHistory();
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Query newQuery = eventRef.whereEqualTo("socialCommunityID", uuid);
+                searchInputLayout.setErrorEnabled(false);
+                searchKeyword.setText("");
+                setUpRecyclerViewEventHistory(newQuery);
+                eventHistoryAdapter.startListening();
+            }
+        });
 
         return rootView;
     }
 
-    private void setUpRecyclerViewEventHistory() {
-        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
-        Log.d(TAG, uuid);
+    private void setUpRecyclerViewEventHistory(Query query) {
 
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
                 .setQuery(query, Event.class)

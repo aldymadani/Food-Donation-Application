@@ -50,4 +50,8 @@
     <string name="donate_bottom_navbar">Donate</string>
     <string name="donation_history_bottom_navbar">Donation History</string>
     <string name="edit_profile_bottom_navbar">Edit profile</string>
+    <string name="search_event_title_placeholder">Search Event Title</string>
+    <string name="profile_bottom_navbar_social_community">Profile</string>
+    <string name="donation_history_total_title">You have donated ... kg of Food</string>
+    <string name="sort_by_spinner">Sort By</string>
 </resources>

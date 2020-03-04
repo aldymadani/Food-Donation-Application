@@ -27,6 +27,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 public class EventFragment extends Fragment {
 
@@ -41,51 +42,73 @@ public class EventFragment extends Fragment {
     TextInputLayout searchInputLayout;
     EditText searchKeyword;
     FloatingActionButton refreshButton;
+    MaterialSpinner sortBy;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_event, container,false);
         recyclerView = rootView.findViewById(R.id.event_recyclerView);
-        Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
+        Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
         setUpRecyclerView(query);
-        searchKeyword = rootView.findViewById(R.id.search);
-        searchInputLayout = rootView.findViewById(R.id.search_layout);
-        searchButton = rootView.findViewById(R.id.search_button);
+//        searchKeyword = rootView.findViewById(R.id.search);
+//        searchInputLayout = rootView.findViewById(R.id.search_layout);
+//        searchButton = rootView.findViewById(R.id.search_button);
         refreshButton = rootView.findViewById(R.id.refreshFloatingButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(getContext(), searchKeyword.getText().toString(), Toast.LENGTH_SHORT).show();
+//        searchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Toast.makeText(getContext(), searchKeyword.getText().toString(), Toast.LENGTH_SHORT).show();
+//                Query newQuery = null;
+//                String search = searchKeyword.getText().toString();
+//                if (!search.isEmpty()) {
+//                    newQuery = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
+//                } else if (search.isEmpty()) {
+//                    searchInputLayout.setError("Please fill in");
+//                    return;
+//                }
+//                searchInputLayout.setErrorEnabled(false);
+//                setUpRecyclerView(newQuery);
+//                adapter.startListening();
+//            }
+//        });
+
+//        refreshButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Query newQuery = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
+//                searchInputLayout.setErrorEnabled(false);
+//                searchKeyword.setText("");
+//                setUpRecyclerView(newQuery);
+//                adapter.startListening();
+//            }
+//        });
+
+        sortBy = rootView.findViewById(R.id.spinner);
+        sortBy.setItems("Almost end events", "Newest Events", "Past Events", "Show all events");
+        sortBy.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                Toast.makeText(getContext(), "Clicked " + item, Toast.LENGTH_SHORT).show();
                 Query newQuery = null;
-                String search = searchKeyword.getText().toString();
-                if (!search.isEmpty()) {
-                    newQuery = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
-                } else if (search.isEmpty()) {
-                    searchInputLayout.setError("Please fill in");
-                    return;
+                if(item.equals("Show all events")) {
+                    newQuery = eventRef;
+                } else if (item.equals("Newest Events")) {
+                    newQuery = eventRef.orderBy("timestamp", Query.Direction.DESCENDING);
+                } else if (item.equals("Past Events")) {
+                    newQuery = eventRef.whereLessThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
+                } else if (item.equals("Almost end events")) {
+                    newQuery = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
                 }
-                searchInputLayout.setErrorEnabled(false);
                 setUpRecyclerView(newQuery);
                 adapter.startListening();
             }
         });
 
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Query newQuery = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
-                searchInputLayout.setErrorEnabled(false);
-                searchKeyword.setText("");
-                setUpRecyclerView(newQuery);
-                adapter.startListening();
-            }
-        });
         return rootView;
     }
 
     private void setUpRecyclerView(Query query) {
-//        Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
                 .setQuery(query, Event.class)
                 .build();
@@ -100,15 +123,6 @@ public class EventFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), gridColumnCount));
         recyclerView.setAdapter(adapter);
     }
-
-//    private void firestoreSearch (String title) {
-//        Query query = eventRef.whereEqualTo("title", "Title 2");
-//        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
-//                .setQuery(query, Event.class)
-//                .build();
-//
-//        adapter.notifyDataSetChanged();
-//    }
 
     @Override
     public void onStart() {

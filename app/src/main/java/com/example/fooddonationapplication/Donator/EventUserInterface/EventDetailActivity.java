@@ -60,8 +60,11 @@ public class EventDetailActivity extends AppCompatActivity {
         double eventTargetDonationData = event.getTargetQuantity();
         double eventTotalDonationDataData = event.getTotalDonation();
 
+        if (event.getEndDateInMillis() <= System.currentTimeMillis()) {
+            eventDonateButton.setVisibility(View.GONE);
+        }
+
         eventTitle.setText(eventTitleData);
-        // TODO SET IMAGE WITH A BETTER VIEW SIZE (CHECK YOUTUBE)
         Glide.with(this).load(eventImageData).override(300,200)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -76,7 +79,7 @@ public class EventDetailActivity extends AppCompatActivity {
                         return false;
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(eventImage);
-        eventDescription.setText("Description :\n" + eventDescriptionData); // TODO SET XML TO MULTIPLE LINES MAYBE
+        eventDescription.setText("Description :\n" + eventDescriptionData);
         eventSocialCommunityName.setText( "Conductor: " + eventSocialCommunityNameData);
         eventSocialCommunityTelephoneNumber.setText("Telephone number : " + eventSocialCommunityTelephoneNumberData);
         eventTotalDonation.setText(String.valueOf("Total Donation : " + eventTotalDonationDataData + " / " + eventTargetDonationData));

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".SocialCommunity.SocialCommunityProfileFragment">
+
+    <TextView
+        android:id="@+id/socialCommunityProfileTitle"
+        style="@style/ShadowForText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="@string/profile_information_title"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/socialCommunityProfileEmailLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/email_placeholder"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        app:errorEnabled="true"
+        app:helperTextEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.452"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileTitle">
+
+        <EditText
+            android:id="@+id/socialCommunityProfileEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_email_black_24dp"
+            android:drawablePadding="7dp"
+            android:inputType="textEmailAddress"
+            android:enabled="false"
+            android:textColor="#000000" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/socialCommunityProfileFullNameLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/fullname_placeholder"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileEmailLayout"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileEmailLayout"
+        app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileEmailLayout">
+
+        <EditText
+            android:id="@+id/socialCommunityProfileFullName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            android:drawableStart="@drawable/ic_person_outline_black_24dp"
+            android:drawablePadding="7dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:enabled="false"
+            android:textColor="#000000" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/socialCommunityProfileTelephoneNumberLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/telephone_number_placeholder"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileFullNameLayout"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileFullNameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileFullNameLayout">
+
+        <EditText
+            android:id="@+id/socialCommunityProfileTelephoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            android:drawableStart="@drawable/ic_phone_black_24dp"
+            android:drawablePadding="7dp"
+            android:ems="10"
+            android:inputType="phone"
+            android:enabled="false"
+            android:textColor="#000000" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/socialCommunityProfileLogOutButton"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/log_out_button"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+        android:textSize="14sp"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,4 +10,9 @@
         android:id="@+id/nav_event_history"
         android:icon="@drawable/history"
         android:title="@string/event_history_bottom_navbar" />
+
+    <item
+        android:id="@+id/nav_social_community_profile"
+        android:icon="@drawable/edit_profile"
+        android:title="@string/profile_bottom_navbar_social_community" />
 </menu>

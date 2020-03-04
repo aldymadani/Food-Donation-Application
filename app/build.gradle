@@ -63,6 +63,9 @@ dependencies {
     // Crop image implementation
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
+    // Spinner implementation
+    implementation 'com.jaredrummler:material-spinner:1.3.1'
+
     // Circle image
 //    implementation 'de.hdodenhof:circleimageview:2.1.0'
 }

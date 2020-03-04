@@ -116,6 +116,9 @@ public class EditProfileFragment extends Fragment {
                     if (passwordConfirmTextView.getText().toString().isEmpty() || passwordTextView.getText().toString().isEmpty()) {
                         passwordConfirmLayout.setError("Please insert your new password in both fields");
                         passwordLayout.setError("Please insert your new password in both fields");
+                    } else if (passwordTextView.getText().toString().length() <= 5 || passwordConfirmTextView.getText().toString().length() <= 5) {
+                        passwordConfirmLayout.setError("Password minimum is 6 digit");
+                        passwordLayout.setError("Password minimum is 6 digit");
                     } else if (!passwordTextView.getText().toString().equals(passwordConfirmTextView.getText().toString())) {
                         passwordConfirmLayout.setError("The password is not matching");
                     } else {

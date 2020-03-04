@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -97,6 +98,11 @@ public class DonateActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.INVISIBLE);
 
+//        if(savedInstanceState != null) {
+//            Bitmap bitmapNew = savedInstanceState.getParcelable("image");
+//            foodImage.setImageBitmap(bitmapNew);
+//        }
+
         etDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -179,6 +185,13 @@ public class DonateActivity extends AppCompatActivity {
             }
         });
     }
+
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        Bitmap bitmapSaved = ((BitmapDrawable)foodImage.getDrawable()).getBitmap();
+//        outState.putParcelable("image", bitmapSaved);
+//        super.onSaveInstanceState(outState);
+//    }
 
     private void checkingAllFields() {
         if (pickUpAddressData.isEmpty()) {

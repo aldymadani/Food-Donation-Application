@@ -40,6 +40,9 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
                         case R.id.nav_event_history:
                             selectedFragment = new EventHistoryFragment();
                             break;
+                        case R.id.nav_social_community_profile:
+                            selectedFragment = new SocialCommunityProfileFragment();
+                            break;
                     }
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_social_community, selectedFragment).commit();

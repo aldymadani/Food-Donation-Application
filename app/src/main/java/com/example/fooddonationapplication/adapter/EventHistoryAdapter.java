@@ -37,9 +37,9 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
     @Override
     protected void onBindViewHolder(@NonNull EventHistoryHolder holder, int position, @NonNull final Event model) {
         holder.eventTitle.setText(model.getTitle());
-        holder.eventTotalDonation.setText(String.valueOf(model.getTotalDonation()));
-        holder.eventEndDate.setText(model.getEndDate());
-        holder.eventDescription.setText(model.getDescription());
+        holder.eventTotalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation()) + " / " + String.valueOf(model.getTargetQuantity()));
+        holder.eventEndDate.setText("End Date : " + model.getEndDate());
+        holder.eventDescription.setText("Description : " + model.getDescription());
         Glide.with(context).load(model.getImageURI()).override(300,200)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -59,7 +59,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DonatorActivity.class);
-                intent.putExtra("eventID", model.getEventID()); // TODO add parcelable later on
+                intent.putExtra("eventID", model.getEventID());
                 context.startActivity(intent);
             }
         });

@@ -56,8 +56,6 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(holder.imageViewEvent);
 
-        final String eventID = model.getEventID();
-
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,8 +71,6 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
     @Override
     public EventHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
-
-        // TODO : https://www.youtube.com/watch?v=lAGI6jGS4vs Minute 5:21
         return new EventHolder(v);
     }
 
