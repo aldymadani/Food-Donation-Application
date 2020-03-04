@@ -30,6 +30,8 @@ import com.google.firebase.firestore.WriteBatch;
 
 public class DonatorDetail extends AppCompatActivity {
 
+    private static final String TAG = "DonatorDetailActivity";
+
     TextView donatorNameTextView, donatorPhoneNumberTextView, donatorPickUpAddressTextView, donatorFoodItemsTextView, donatorPickUpDateTextView, donatorPickUpTimeTextView, donatorTotalDonationTextView, donatorDonationDateTextView;
     ProgressBar imageLoadingProgressBar, buttonProgressBar;
     ImageView foodImagePhoto;

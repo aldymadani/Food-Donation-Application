@@ -28,6 +28,8 @@ import com.google.firebase.firestore.Query;
 
 public class EventHistoryFragment extends Fragment {
 
+    private static final String TAG = "EventHistoryFragment";
+
     Button logOut;
     FirebaseAuth mFirebaseAuth;
 
@@ -47,7 +49,6 @@ public class EventHistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 final FirebaseUser user = mFirebaseAuth.getInstance().getCurrentUser();
-//                Log.d("DonateActivity", user.getDisplayName()); //TODO don't forget add user name when registration
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -63,7 +64,7 @@ public class EventHistoryFragment extends Fragment {
     private void setUpRecyclerViewEventHistory() {
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
-        Log.d("CEK", uuid);
+        Log.d(TAG, uuid);
 
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
                 .setQuery(query, Event.class)

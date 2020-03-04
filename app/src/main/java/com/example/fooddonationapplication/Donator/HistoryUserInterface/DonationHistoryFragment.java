@@ -24,6 +24,8 @@ import com.google.firebase.firestore.Query;
 
 public class DonationHistoryFragment extends Fragment {
 
+    private static final String TAG = "DonationHistoryFragment";
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
 
@@ -53,7 +55,7 @@ public class DonationHistoryFragment extends Fragment {
     private void setUpRecyclerViewDonationHistory() {
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Query query = donatorRef.whereEqualTo("uuid", uuid);
-        Log.d("CEK", uuid);
+        Log.d(TAG, uuid);
 
         FirestoreRecyclerOptions<Donator> options = new FirestoreRecyclerOptions.Builder<Donator>()
                 .setQuery(query, Donator.class)

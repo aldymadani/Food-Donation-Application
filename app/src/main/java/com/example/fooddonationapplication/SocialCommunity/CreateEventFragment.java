@@ -166,21 +166,6 @@ public class CreateEventFragment extends Fragment {
         if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
 
-//            ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), ImageURI);
-//            try {
-//                bitmap = ImageDecoder.decodeBitmap(source);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-//            try {
-//                Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            Log.d(TAG, String.valueOf(bitmap));
-//            eventPhoto.setImageBitmap(bitmap);
-
             CropImage.activity(ImageURI)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setAspectRatio(16,9)
@@ -197,7 +182,6 @@ public class CreateEventFragment extends Fragment {
                     hasImage = true;
                     Log.d(TAG, String.valueOf(bitmap));
                     eventPhoto.setImageBitmap(bitmap);
-//                    handleUpload(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -206,16 +190,6 @@ public class CreateEventFragment extends Fragment {
                 Log.e(TAG, String.valueOf(error));
             }
         }
-
-        // Old code
-//        if (requestCode == TAKE_IMAGE_CODE) {
-//            switch (resultCode) {
-//                case Activity.RESULT_OK:
-//                    bitmap = (Bitmap) data.getExtras().get("data");
-//                    eventPhoto.setImageBitmap(bitmap);
-//                    handleUpload(bitmap);
-//            }
-//        }
     }
 
     private void handleUpload(Bitmap bitmap) {

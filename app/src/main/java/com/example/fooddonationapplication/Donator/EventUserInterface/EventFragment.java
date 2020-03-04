@@ -29,6 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 public class EventFragment extends Fragment {
+
+    private static final String TAG = "EventFragment";
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventRef = db.collection("events");
 
@@ -89,9 +92,9 @@ public class EventFragment extends Fragment {
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
         adapter = new EventAdapter(options, getContext());
         adapter.notifyDataSetChanged();
-        Log.d("EventIniDong", String.valueOf(options));
-        Log.d("EventIniDong", String.valueOf(adapter));
-        Log.d("EventIniDong", String.valueOf(recyclerView));
+        Log.d(TAG, String.valueOf(options));
+        Log.d(TAG, String.valueOf(adapter));
+        Log.d(TAG, String.valueOf(recyclerView));
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), gridColumnCount));

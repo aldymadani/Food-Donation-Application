@@ -105,6 +105,7 @@ public class EditProfileFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
                                         Log.d(TAG, "User email address updated.");
                                     }
                                 }
@@ -125,6 +126,7 @@ public class EditProfileFragment extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            Toast.makeText(getContext(), "User password updated.", Toast.LENGTH_SHORT).show();
                                             Log.d(TAG, "User password updated.");
                                         }
                                     }
@@ -133,6 +135,8 @@ public class EditProfileFragment extends Fragment {
                 }
 
                 if (!newName.equals(oldName) || !newPhoneNumber.equals(oldPhoneNumber)) {
+                    editProfileButton.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(newName)
                             .build();
@@ -190,6 +194,8 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getContext(), "Profile is successfully updated", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
+                editProfileButton.setVisibility(View.VISIBLE);
             }
         });
     }

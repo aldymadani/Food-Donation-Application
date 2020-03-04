@@ -99,7 +99,7 @@ public class DonateActivity extends AppCompatActivity {
 
         etDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) { // TODO Change to Perform Click
+            public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     calendar = Calendar.getInstance();
 

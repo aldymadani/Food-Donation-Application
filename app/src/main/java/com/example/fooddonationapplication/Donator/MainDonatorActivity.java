@@ -15,6 +15,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainDonatorActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainDonatorActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

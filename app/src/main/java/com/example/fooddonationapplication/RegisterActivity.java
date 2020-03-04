@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final String TAG = "RegisterActivity";
+
     EditText emailId, passwordId, fullNameId, telephoneNumberId;
     Button btnSignUp;
     FirebaseAuth mFirebaseAuth;
@@ -43,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailId = findViewById(R.id.register_email);
-        passwordId = findViewById(R.id.register_password); // MINIMUM 6 Characters
+        passwordId = findViewById(R.id.register_password);
         btnSignUp = findViewById(R.id.register_confirm);
         fullNameId = findViewById(R.id.register_full_name);
         telephoneNumberId = findViewById(R.id.register_telephone_number);
@@ -61,7 +63,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = passwordId.getText().toString();
                 String fullName = fullNameId.getText().toString();
                 String telephoneNumber = telephoneNumberId.getText().toString();
-                Log.d("CEK",String.valueOf(telephoneNumber.length()));
                 allFieldValidation(email, password, fullName, telephoneNumber);
             }
         });
@@ -142,14 +143,14 @@ public class RegisterActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("RegisterActivity", "DocumentSnapshot successfully written!\nThe Unique ID of user is : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                    Log.d(TAG, "DocumentSnapshot successfully written!\nThe Unique ID of user is : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                                     updateUserName(fullName);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.w("Main", "Error writing document", e);
+                                    Log.d(TAG, "Error writing document", e);
                                 }
                             });
                 }
@@ -169,10 +170,10 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
-                            Log.d("DonateActivity", "Error occurred, please try again");
+                            Log.d(TAG, "Error occurred, please try again");
                         } else {
-                            Log.d("DonateActivity", "User profile created");
-                            Log.d("DonateActivity", user.getDisplayName());
+                            Log.d(TAG, "User profile created");
+                            Log.d(TAG, user.getDisplayName());
                             Intent intent = new Intent(RegisterActivity.this, MainDonatorActivity.class);
                             Toast.makeText(RegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

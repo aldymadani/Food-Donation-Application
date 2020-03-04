@@ -20,6 +20,8 @@ import com.google.firebase.firestore.Query;
 
 public class DonatorActivity extends AppCompatActivity {
 
+    private static final String TAG = "DonatorActivity";
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
 
@@ -32,7 +34,7 @@ public class DonatorActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Event event = intent.getParcelableExtra("Event");
         String eventID = getIntent().getStringExtra("eventID");
-        Log.d("CEK", eventID);
+        Log.d(TAG, eventID);
         setUpRecyclerViewDonator(eventID);
     }
 

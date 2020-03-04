@@ -12,6 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainSocialCommunityActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainSocialCommunityActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -22,6 +22,8 @@ import com.example.fooddonationapplication.model.Donator;
 
 public class HistoryDetail extends AppCompatActivity {
 
+    private static final String TAG = "HistoryDetail";
+
     TextView eventNameTextView, socialCommunityNameTextView, pickUpAddressTextView, foodItemsTextView, pickUpDateTextView, pickUpTimeTextView, totalDonationTextView, donationDateTextView;
     ImageView foodPhoto;
     ProgressBar foodImageProgressBar;
@@ -43,7 +45,7 @@ public class HistoryDetail extends AppCompatActivity {
         foodImageProgressBar = findViewById(R.id.historyDetailFoodImageProgressBar);
 
         Intent intent = getIntent();
-        Donator donator = intent.getParcelableExtra("Donator"); //TODO GET PICK UP ADDRESS ALSO AND PICKUP TIME
+        Donator donator = intent.getParcelableExtra("Donator");
         String eventName = donator.getEventName();
         String socialCommunityName = donator.getSocialCommunityName();
         String donatorPickUpAddress = donator.getPickUpAddress();
@@ -77,7 +79,5 @@ public class HistoryDetail extends AppCompatActivity {
                         return false;
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(foodPhoto);
-
-        Toast.makeText(this, "History Detail Activity", Toast.LENGTH_SHORT).show();
     }
 }

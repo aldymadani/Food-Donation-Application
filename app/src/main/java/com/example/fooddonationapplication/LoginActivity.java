@@ -27,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "LoginActivity";
+
     EditText emailId, passwordId;
     Button btnSignIn, btnRegister;
     FirebaseAuth mFirebaseAuth;
@@ -155,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Log.d("LoginActivity", "DocumentSnapshot data: " + document.getData());
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         if (document.getData().containsValue("donator")) {
                             Intent intent = new Intent(LoginActivity.this, MainDonatorActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -171,10 +173,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                         Toast.makeText(LoginActivity.this, "You are logged in!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.d("LoginActivity", "No such document");
+                        Log.d(TAG, "No such document");
                     }
                 } else {
-                    Log.d("LoginActivity", "get failed with ", task.getException());
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
