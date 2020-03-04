@@ -16,7 +16,6 @@ import com.example.fooddonationapplication.Donator.MainDonatorActivity;
 import com.example.fooddonationapplication.SocialCommunity.MainSocialCommunityActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +32,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button btnSignIn, btnRegister;
     FirebaseAuth mFirebaseAuth;
     ProgressBar progressBar;
-    Snackbar snackbar;
     View view;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private TextInputLayout textInputEmail, textInputPassword;
@@ -110,9 +108,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // User authentication
         if (email.isEmpty() && password.isEmpty()) {
-            snackbar = Snackbar.make(view, "Please fill in all the information", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setDuration(5000);
-            snackbar.show();
             Toast.makeText(LoginActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
         } else if (!email.isEmpty() && !password.isEmpty()) {
             btnSignIn.setVisibility(View.INVISIBLE);
@@ -121,9 +116,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             btnSignIn.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
-            snackbar = Snackbar.make(view, "Error occurred, please try again", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setDuration(5000);
-            snackbar.show();
             Toast.makeText(LoginActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
         return isValid;
@@ -134,9 +126,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
-                    snackbar = Snackbar.make(view, "Login error, please try again", Snackbar.LENGTH_INDEFINITE); // TODO erase or not?
-                    snackbar.setDuration(5000);
-                    snackbar.show();
                     Toast.makeText(LoginActivity.this, "Login error, please try again", Toast.LENGTH_SHORT).show();
                     btnSignIn.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
@@ -150,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     protected void checkRole(String uuid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(uuid); // TODO CHANGE TO UPPERCASE FIRST LETTER
+        DocumentReference docRef = db.collection("users").document(uuid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
