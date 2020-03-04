@@ -22,14 +22,15 @@
         <activity android:name=".SocialCommunity.DonatorActivity" />
         <activity android:name=".Donator.HistoryUserInterface.HistoryDetail" />
         <activity android:name=".SocialCommunity.DonatorDetail" />
-        <activity android:name=".SocialCommunity.MainSocialCommunityActivity" />
+        <activity android:name=".SocialCommunity.MainSocialCommunityActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Donator.EventUserInterface.EventDetailActivity" />
-        <activity android:name=".Donator.MainDonatorActivity" />
+        <activity android:name=".Donator.MainDonatorActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".Donator.EventUserInterface.DonateActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -39,7 +40,6 @@
         <activity
             android:name=".MainMenuActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
     </application>

@@ -1,5 +1,6 @@
 package com.example.fooddonationapplication.Donator.EventUserInterface;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +22,7 @@ import com.example.fooddonationapplication.adapter.EventAdapter;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,13 +30,14 @@ import com.google.firebase.firestore.Query;
 
 public class EventFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference eventRef = db.collection("Events");
+    private CollectionReference eventRef = db.collection("events");
 
     private EventAdapter adapter;
     RecyclerView recyclerView;
-    Button searchButton;
+    ImageView searchButton;
     TextInputLayout searchInputLayout;
     EditText searchKeyword;
+    FloatingActionButton refreshButton;
 
     @Nullable
     @Override
@@ -43,25 +48,33 @@ public class EventFragment extends Fragment {
         setUpRecyclerView(query);
         searchKeyword = rootView.findViewById(R.id.search);
         searchInputLayout = rootView.findViewById(R.id.search_layout);
-        searchButton = rootView.findViewById(R.id.button_search);
+        searchButton = rootView.findViewById(R.id.search_button);
+        refreshButton = rootView.findViewById(R.id.refreshFloatingButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Query query = null;
+//                Toast.makeText(getContext(), searchKeyword.getText().toString(), Toast.LENGTH_SHORT).show();
+                Query newQuery = null;
                 String search = searchKeyword.getText().toString();
-//                if(search == "1") {
-//                    query = eventRef.whereEqualTo("title", search);
-////                    setUpRecyclerView(query);
-////                    adapter.startListening();
-//                }
                 if (!search.isEmpty()) {
-                    query = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
+                    newQuery = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
                 } else if (search.isEmpty()) {
                     searchInputLayout.setError("Please fill in");
                     return;
                 }
                 searchInputLayout.setErrorEnabled(false);
-                setUpRecyclerView(query);
+                setUpRecyclerView(newQuery);
+                adapter.startListening();
+            }
+        });
+
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Query newQuery = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
+                searchInputLayout.setErrorEnabled(false);
+                searchKeyword.setText("");
+                setUpRecyclerView(newQuery);
                 adapter.startListening();
             }
         });

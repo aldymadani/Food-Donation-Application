@@ -21,7 +21,7 @@ import com.google.firebase.firestore.Query;
 public class DonatorActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference donatorRef = db.collection("Donators");
+    private CollectionReference donatorRef = db.collection("donators");
 
     private DonatorAdapter donatorAdapter;
 
@@ -49,7 +49,7 @@ public class DonatorActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerViewDonator(String eventID) {
-        Query query = donatorRef.whereEqualTo("eventID", eventID); // TODO PASSED FROM PREVIOUS FRAGMENT
+        Query query = donatorRef.whereEqualTo("eventId", eventID); // TODO PASSED FROM PREVIOUS FRAGMENT
 
         FirestoreRecyclerOptions<Donator> options = new FirestoreRecyclerOptions.Builder<Donator>()
                 .setQuery(query, Donator.class)

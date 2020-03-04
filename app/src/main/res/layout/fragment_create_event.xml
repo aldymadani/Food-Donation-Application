@@ -18,7 +18,7 @@
             android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="Create Food Donation Event for Charity"
+            android:text="@string/create_event_title"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,16 +41,15 @@
             app:layout_constraintTop_toBottomOf="@+id/create_event_title"
             app:helperTextEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Event Title" >
+            android:hint="@string/event_title_placeholder" >
 
             <EditText
                 android:id="@+id/create_event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_email_black_24dp"
-                android:drawableLeft="@drawable/ic_email_black_24dp"
+                android:drawableStart="@drawable/event_title_icon"
                 android:drawablePadding="7dp"
-                android:inputType="textPostalAddress" />
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -59,6 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:hint="@string/event_description_placeholder"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/create_event_name_layout"
             app:layout_constraintHorizontal_bias="0.452"
@@ -70,11 +70,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
+                android:drawableStart="@drawable/event_description_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:hint="Event Description"
                 android:inputType="textMultiLine"
                 app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -88,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Event End Date"
+            android:hint="@string/event_end_date_placeholder"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/create_event_description_layout"
             app:layout_constraintStart_toStartOf="@+id/create_event_description_layout"
@@ -99,8 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+                android:drawableStart="@drawable/time_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
                 android:inputType="date" />
@@ -112,7 +109,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Target Quantity in Kg"
+            android:hint="@string/target_in_quantity_placeholder"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/create_event_end_date_layout"
             app:layout_constraintStart_toStartOf="@+id/create_event_end_date_layout"
@@ -123,11 +120,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+                android:drawableStart="@drawable/quantity_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="date" />
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -139,7 +135,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="8dp"
-            android:text="Confirm Event"
+            android:text="@string/confirm_event_button"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
@@ -179,12 +175,11 @@
             android:layout_marginTop="8dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="Event Photo:"
+            android:text="@string/event_photo_text"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/create_event_target_quantity_layout"
             app:layout_constraintTop_toBottomOf="@+id/create_event_target_quantity_layout" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

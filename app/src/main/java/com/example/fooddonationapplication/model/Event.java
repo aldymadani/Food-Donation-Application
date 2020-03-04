@@ -114,10 +114,6 @@ public class Event implements Parcelable {
         return description;
     }
 
-    public String getSocialCommunityNameID() {
-        return socialCommunityID;
-    }
-
     public String getSocialCommunityName() {
         return socialCommunityName;
     }

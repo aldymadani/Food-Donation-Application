@@ -32,7 +32,6 @@ public class MainDonatorActivity extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     Fragment selectedFragment = null;
-
                     switch (menuItem.getItemId()) {
                         case R.id.nav_event:
                             selectedFragment = new EventFragment();
@@ -44,9 +43,7 @@ public class MainDonatorActivity extends AppCompatActivity {
                             selectedFragment = new EditProfileFragment();
                             break;
                     }
-
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_donator, selectedFragment).commit();
-
                     return true;
                 }
             };

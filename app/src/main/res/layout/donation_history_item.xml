@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Event Name : Algo Madona Ada Disini Untuk Berbagi Bersama Kalian Semua"
+            android:text="@string/event_name_placeholder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,7 +42,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Total Donation : 10.125 Kg"
+            android:text="@string/donate_quantity_placeholder"
             app:layout_constraintBottom_toTopOf="@+id/donationHistoryDate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage"
@@ -53,7 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Donation Date : 30/12/2020"
+            android:text="@string/donation_date_placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage" />

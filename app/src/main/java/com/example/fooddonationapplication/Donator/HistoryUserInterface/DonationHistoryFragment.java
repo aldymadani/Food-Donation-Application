@@ -25,7 +25,7 @@ import com.google.firebase.firestore.Query;
 public class DonationHistoryFragment extends Fragment {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference donatorRef = db.collection("Donators");
+    private CollectionReference donatorRef = db.collection("donators");
 
     private DonationHistoryAdapter donationHistoryAdapter;
     private View rootView;

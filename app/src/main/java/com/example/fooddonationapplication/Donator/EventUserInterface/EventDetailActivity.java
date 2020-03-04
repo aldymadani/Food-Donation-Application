@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,7 +25,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "EventDetailActivity";
 
-    TextView eventTitle, eventDescription, eventSocialCommunityName, eventTotalDonation, eventEndDate;
+    TextView eventTitle, eventDescription, eventSocialCommunityName, eventTotalDonation, eventEndDate, eventSocialCommunityTelephoneNumber;
     Button eventDonateButton;
     ImageView eventImage;
     ProgressBar eventProgressBar;
@@ -37,6 +38,7 @@ public class EventDetailActivity extends AppCompatActivity {
         eventTitle = findViewById(R.id.event_detail_title);
         eventDescription = findViewById(R.id.event_detail_description);
         eventSocialCommunityName = findViewById(R.id.event_detail_social_community);
+        eventSocialCommunityTelephoneNumber = findViewById(R.id.event_detail_social_community_telephone_number);
         eventTotalDonation = findViewById(R.id.event_detail_total_donation);
         eventEndDate = findViewById(R.id.event_detail_end_date);
         eventDonateButton = findViewById(R.id.event_detail_donate_button);
@@ -47,12 +49,16 @@ public class EventDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Event event = intent.getParcelableExtra("Event");
 
-        String eventTitleData = event.getTitle();
+        final String eventIDData = event.getEventID();
+        final String eventTitleData = event.getTitle();
         String eventImageData = event.getImageURI();
         String eventDescriptionData = event.getDescription();
-        String eventSocialCommunityNameData = event.getSocialCommunityName();
+        final String eventSocialCommunityIdData = event.getSocialCommunityID();
+        final String eventSocialCommunityNameData = event.getSocialCommunityName();
+        String eventSocialCommunityTelephoneNumberData = event.getSocialCommunityTelephoneNumber();
         String eventEndDateData = event.getEndDate();
-        double eventTotalDonationData = event.getTotalDonation();
+        double eventTargetDonationData = event.getTargetQuantity();
+        double eventTotalDonationDataData = event.getTotalDonation();
 
         eventTitle.setText(eventTitleData);
         // TODO SET IMAGE WITH A BETTER VIEW SIZE (CHECK YOUTUBE)
@@ -70,15 +76,20 @@ public class EventDetailActivity extends AppCompatActivity {
                         return false;
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(eventImage);
-        eventDescription.setText(eventDescriptionData); // TODO SET XML TO MULTIPLE LINES MAYBE
-        eventSocialCommunityName.setText(eventSocialCommunityNameData);
-        eventTotalDonation.setText(String.valueOf(eventTotalDonationData));
+        eventDescription.setText("Description :\n" + eventDescriptionData); // TODO SET XML TO MULTIPLE LINES MAYBE
+        eventSocialCommunityName.setText( "Conductor: " + eventSocialCommunityNameData);
+        eventSocialCommunityTelephoneNumber.setText("Telephone number : " + eventSocialCommunityTelephoneNumberData);
+        eventTotalDonation.setText(String.valueOf("Total Donation : " + eventTotalDonationDataData + " / " + eventTargetDonationData));
         eventEndDate.setText(eventEndDateData);
 
         eventDonateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EventDetailActivity.this, DonateActivity.class);
+                intent.putExtra("eventID", eventIDData);
+                intent.putExtra("eventName", eventTitleData);
+                intent.putExtra("socialCommunityId", eventSocialCommunityIdData);
+                intent.putExtra("socialCommunityName", eventSocialCommunityNameData);
                 startActivity(intent);
             }
         });

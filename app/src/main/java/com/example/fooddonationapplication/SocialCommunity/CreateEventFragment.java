@@ -40,7 +40,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -226,7 +225,7 @@ public class CreateEventFragment extends Fragment {
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.v(TAG, date);
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(uuid + " " + date + ".jpeg");
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(uuid + " " + date + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -299,8 +298,6 @@ public class CreateEventFragment extends Fragment {
     private void InitializeEvent() {
         String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String socialCommunityName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName(); // TODO SET DISPLAY NAME LATER FIRST
-        final String socialCommunityTelephoneNumber = null;
-
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final String eventId = db.collection("events").document().getId(); // EaYQPHbG7NR1K4zdUMxx

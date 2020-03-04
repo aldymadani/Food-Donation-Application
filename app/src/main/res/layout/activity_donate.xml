@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".Donator.EventUserInterface.DonateActivity">
 
         <TextView
@@ -18,7 +18,7 @@
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:textStyle="bold"
-            android:text="Register for Donators"
+            android:text="@string/donate_activity_title"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/ShadowForText"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,14 +42,13 @@
             app:layout_constraintTop_toBottomOf="@+id/register_title"
             app:helperTextEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Pick Up Address" >
+            android:hint="@string/pick_up_address_placeholder" >
 
             <EditText
                 android:id="@+id/donate_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_email_black_24dp"
-                android:drawableLeft="@drawable/ic_email_black_24dp"
+                android:drawableStart="@drawable/pick_up_address_icon"
                 android:drawablePadding="7dp"
                 android:inputType="textPostalAddress" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -71,11 +70,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
+                android:drawableStart="@drawable/food_items_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:hint="Food Item(s)"
+                android:hint="@string/food_items_placeholder"
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -89,7 +87,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Pick Up / Send Date"
+            android:hint="@string/pick_up_date_placeholder"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/donate_food_item_layout"
             app:layout_constraintStart_toStartOf="@+id/donate_food_item_layout"
@@ -100,8 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+                android:drawableStart="@drawable/pick_up_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
                 android:inputType="date" />
@@ -113,7 +110,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Time"
+            android:hint="@string/time_placeholder"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/donate_date_layout"
             app:layout_constraintStart_toStartOf="@+id/donate_date_layout"
@@ -124,8 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+                android:drawableStart="@drawable/time_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
                 android:inputType="date" />
@@ -137,7 +133,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Donate Quantity in Kg"
+            android:hint="@string/donate_quantity_placeholder"
             app:counterEnabled="true"
             app:counterMaxLength="3"
             app:errorEnabled="true"
@@ -151,8 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_phone_black_24dp"
-                android:drawableLeft="@drawable/ic_phone_black_24dp"
+                android:drawableStart="@drawable/quantity_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
                 android:inputType="numberDecimal"
@@ -168,7 +163,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="8dp"
-            android:text="Confirm Donation"
+            android:text="@string/confirm_donation_button"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
@@ -207,7 +202,7 @@
             android:layout_marginTop="8dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="Food Image:"
+            android:text="@string/food_image_text"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/donate_quantity_layout"

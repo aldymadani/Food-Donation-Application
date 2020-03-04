@@ -36,7 +36,7 @@ public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, D
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, HistoryDetail.class);
-                intent.putExtra("Donator", "Smtg"); // TODO add parcelable later on
+                intent.putExtra("Donator", model);
                 context.startActivity(intent);
             }
         });

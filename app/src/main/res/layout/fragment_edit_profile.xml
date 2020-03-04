@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:text="Profile Information"
+        android:text="@string/profile_information_title"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,31 +23,28 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_profile_email_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:hint="@string/email_placeholder"
         app:errorEnabled="true"
+        app:helperTextEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_profile_title"
-        app:helperTextEnabled="true"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="Email" >
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_title">
 
         <EditText
             android:id="@+id/edit_profile_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_email_black_24dp"
-            android:drawableLeft="@drawable/ic_email_black_24dp"
             android:drawablePadding="7dp"
-            android:inputType="textPostalAddress" />
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -56,11 +53,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:hint="@string/password_placeholder"
         app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="@+id/edit_profile_email_layout"
-        app:layout_constraintHorizontal_bias="0.452"
-        app:layout_constraintStart_toStartOf="@+id/edit_profile_email_layout"
-        app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_layout">
+        app:passwordToggleEnabled="true"
+        app:layout_constraintEnd_toEndOf="@+id/edit_profile_telephone_number_layout"
+        app:layout_constraintStart_toStartOf="@+id/edit_profile_telephone_number_layout"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout">
 
         <EditText
             android:id="@+id/edit_profile_password"
@@ -68,11 +66,34 @@
             android:layout_height="match_parent"
             android:layout_marginTop="152dp"
             android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-            android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
             android:drawablePadding="7dp"
             android:ems="10"
-            android:hint="Password"
-            android:inputType="textMultiLine"
+            android:inputType="textPassword"
+            app:layout_constraintHorizontal_bias="1.0" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_profile_password_confirm_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/confirm_password_placeholder"
+        app:passwordToggleEnabled="true"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="@+id/edit_profile_password_layout"
+        app:layout_constraintStart_toStartOf="@+id/edit_profile_password_layout"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_password_layout">
+
+        <EditText
+            android:id="@+id/edit_profile_password_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="152dp"
+            android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+            android:drawablePadding="7dp"
+            android:ems="10"
+            android:inputType="textPassword"
             app:layout_constraintHorizontal_bias="1.0" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,11 +103,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Full Name"
+        android:hint="@string/fullname_placeholder"
         app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="@+id/edit_profile_password_layout"
-        app:layout_constraintStart_toStartOf="@+id/edit_profile_password_layout"
-        app:layout_constraintTop_toBottomOf="@+id/edit_profile_password_layout">
+        app:layout_constraintEnd_toEndOf="@+id/edit_profile_email_layout"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/edit_profile_email_layout"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_layout">
 
         <EditText
             android:id="@+id/edit_profile_name"
@@ -94,10 +116,9 @@
             android:layout_height="match_parent"
             android:layout_marginTop="24dp"
             android:drawableStart="@drawable/ic_person_outline_black_24dp"
-            android:drawableLeft="@drawable/ic_person_outline_black_24dp"
             android:drawablePadding="7dp"
             android:ems="10"
-            android:inputType="date" />
+            android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -106,9 +127,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Telephone Number"
+        android:hint="@string/telephone_number_placeholder"
         app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="@+id/edit_profile_name_layout"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/edit_profile_name_layout"
         app:layout_constraintTop_toBottomOf="@+id/edit_profile_name_layout">
 
@@ -117,11 +139,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="24dp"
-            android:drawableStart="@drawable/ic_person_outline_black_24dp"
-            android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+            android:drawableStart="@drawable/ic_phone_black_24dp"
             android:drawablePadding="7dp"
             android:ems="10"
-            android:inputType="date" />
+            android:inputType="phone" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -131,16 +152,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:text="Update Details"
+        android:text="@string/update_details_button"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
         android:textSize="14sp"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_password_confirm_layout" />
 
     <ProgressBar
         android:id="@+id/edit_profile_progressbar"
@@ -158,8 +179,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Log Out"
+        android:layout_marginBottom="8dp"
+        android:text="@string/log_out_button"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
         android:textSize="14sp"

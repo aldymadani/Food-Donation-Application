@@ -3,6 +3,7 @@ package com.example.fooddonationapplication.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull final Event model) {
         holder.textViewTitle.setText(model.getTitle());
-        holder.textViewTotalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation()));
+        holder.textViewTotalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation() + " / " + model.getTargetQuantity()));
         holder.textViewSocialCommunity.setText("Conducted By: " + model.getSocialCommunityName());
 
         Glide.with(context).load(model.getImageURI()).override(300,200)
@@ -62,6 +63,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
             public void onClick(View v) {
                 Intent intent = new Intent(context, EventDetailActivity.class);
                 intent.putExtra("Event", model);
+                Log.d("CEK", model.getTotalDonation() + "\n" + model.getTargetQuantity());
                 context.startActivity(intent);
             }
         });

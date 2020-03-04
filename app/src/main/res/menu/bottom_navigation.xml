@@ -4,16 +4,16 @@
     <item
         android:id="@+id/nav_event"
         android:icon="@drawable/soup"
-        android:title="Donate" />
+        android:title="@string/donate_bottom_navbar" />
 
     <item
         android:id="@+id/nav_history"
         android:icon="@drawable/history"
-        android:title="Donation History" />
+        android:title="@string/donation_history_bottom_navbar" />
 
     <item
         android:id="@+id/nav_edit_profile"
         android:icon="@drawable/user"
-        android:title="Edit Profile" />
+        android:title="@string/edit_profile_bottom_navbar" />
 
 </menu>

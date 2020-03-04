@@ -16,17 +16,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fooddonationapplication.Donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.SocialCommunity.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.model.Donator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -36,8 +42,6 @@ import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DonateActivity extends AppCompatActivity {
 
@@ -57,10 +61,19 @@ public class DonateActivity extends AppCompatActivity {
     int TAKE_IMAGE_CODE = 10001;
     Bitmap bitmap;
 
+    String pickUpAddressData;
+    String foodItemsData;
+    String pickUpData;
+    String timeData;
+    String totalDonationData;
     String chosenDate;
     Long chosenDateInMillis;
+    private boolean hasImage = false;
+    String foodImageURI;
+    String userID;
+    String eventID;
 
-    String docRef = "";
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +129,8 @@ public class DonateActivity extends AppCompatActivity {
                     datePickerDialog.getDatePicker().setMaxDate(now + (1000 * 60 * 60 * 24 * 7));
                     datePickerDialog.show();
                     return true;
-                } return false;
+                }
+                return false;
             }
         });
 
@@ -138,7 +152,8 @@ public class DonateActivity extends AppCompatActivity {
                     }, 0, 0, false);
                     timePickerDialog.show();
                     return true;
-                } return false;
+                }
+                return false;
             }
         });
 
@@ -155,39 +170,57 @@ public class DonateActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
+                pickUpAddressData = etAddress.getText().toString(); // TODO ADDRESS IS OPTIONAL
+                foodItemsData = etFoodItems.getText().toString();
+                pickUpData = etDate.getText().toString();
+                timeData = etTime.getText().toString();
+                totalDonationData = etQuantity.getText().toString();
                 checkingAllFields();
-                // TODO Checking all the fields
-                // TODO Upload the data into database
-                // TODO Show donation is completed and redirect to main menu
             }
         });
     }
 
-    private void checkingAllFields() { // TODO change to boolean checking
-        // Address is optional
-        if(etFoodItems.getText().toString().isEmpty()) {
+    private void checkingAllFields() {
+        if (pickUpAddressData.isEmpty()) {
+            pickUpAddressData = "Shipping by the donator";
+        }
+
+        if (foodItemsData.isEmpty()) {
             textInputFoodItems.setError("Please fill in the food items field");
         } else {
             textInputFoodItems.setErrorEnabled(false);
         }
 
-        if(etDate.getText().toString().isEmpty()) {
+        if (pickUpData.isEmpty()) {
             textInputDate.setError("Please chose the pick up / delivery date");
         } else {
             textInputDate.setErrorEnabled(false);
         }
 
-        if(etTime.getText().toString().isEmpty()) {
+        if (timeData.isEmpty()) {
             textInputTime.setError("Please chose the time");
         } else {
             textInputTime.setErrorEnabled(false);
         }
 
-        if(etQuantity.getText().toString().isEmpty()) {
+        if (totalDonationData.isEmpty()) {
             textInputQuantity.setError("Please fill in the quantity");
         } else {
             textInputQuantity.setErrorEnabled(false);
+        }
+
+        if(!hasImage) {
+            Toast.makeText(getApplicationContext(), "Please insert the food image", Toast.LENGTH_SHORT).show();
+        }
+
+        if (foodItemsData.isEmpty() && pickUpData.isEmpty() && timeData.isEmpty() && totalDonationData.isEmpty() && !hasImage) {
+            Toast.makeText(getApplicationContext(), "Please complete in all the information", Toast.LENGTH_SHORT).show();
+        } else if (!foodItemsData.isEmpty() && !pickUpData.isEmpty() && !timeData.isEmpty() && !totalDonationData.isEmpty() && hasImage) {
+            progressBar.setVisibility(View.VISIBLE);
+            btnConfirm.setVisibility(View.INVISIBLE);
+            handleUpload(bitmap);
+        } else {
+            Toast.makeText(getApplicationContext(), "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -200,7 +233,7 @@ public class DonateActivity extends AppCompatActivity {
                 case RESULT_OK:
                     bitmap = (Bitmap) data.getExtras().get("data");
                     foodImage.setImageBitmap(bitmap);
-//                    handleUpload(bitmap);
+                    hasImage = true;
             }
         }
     }
@@ -210,10 +243,10 @@ public class DonateActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+        String currentDateDetail = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.v(TAG, date);
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(uuid + date + ".jpeg");
+        Log.v(TAG, currentDateDetail);
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(uuid + currentDateDetail + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -236,76 +269,96 @@ public class DonateActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
-                        addToDatabase(uri);
+                        foodImageURI = uri.toString();
+                        Log.d(TAG, foodImageURI);
+                        CreateDonation();
                     }
                 });
     }
 
-    private void addToDatabase(Uri reference) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Ada");
-        user.put("last", "Lovelace");
-        user.put("born", 1815);
-        user.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+    private void CreateDonation() {
+        eventID = getIntent().getStringExtra("eventID");
+        String eventTitle = getIntent().getStringExtra("eventName");
+        String socialCommunityId = getIntent().getStringExtra("socialCommunityId");
+        String socialCommunityName = getIntent().getStringExtra("socialCommunityName");
 
-        DocumentReference donatorsReference = db.collection("donators").document();
-        String donatorsReferenceID = db.collection("donators").document().getId();
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String donatorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        db.collection("donators").document(donatorsReferenceID)
-                .set(user)
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+
+        final String donatorDocumentID = db.collection("donators").document().getId();
+
+        final Donator donator = new Donator();
+        donator.setEventId(eventID);
+        donator.setEventName(eventTitle);
+        donator.setUuid(userID);
+        donator.setName(donatorName);
+        donator.setPickUpAddress(pickUpAddressData);
+        donator.setFoodItems(foodItemsData);
+        donator.setPickUpDate(pickUpData);
+        donator.setPickUpTime(timeData);
+        donator.setDonationDate(currentDate);
+        donator.setImageURI(foodImageURI);
+        donator.setTotalDonation(Double.parseDouble(totalDonationData));
+        donator.setDonatorId(donatorDocumentID);
+        donator.setSocialCommunityId(socialCommunityId);
+        donator.setSocialCommunityName(socialCommunityName);
+
+        db.collection("users").document(userID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            donator.setPhone(documentSnapshot.getString("phone"));
+                            db.collection("donators").document(donatorDocumentID)
+                                    .set(donator)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(getApplicationContext(), "Donation is successfully created", Toast.LENGTH_SHORT).show();
+                                            UpdateUserDonation();
+                                            Log.d(TAG, "Donation is successfully created");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e(TAG, "Error writing document", e);
+                                            Log.d(TAG, "Donation is Failure");
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
+
+    private void UpdateUserDonation() {
+        DocumentReference userDocumentReference = db.collection("users").document(userID);
+        userDocumentReference.update("totalDonation", FieldValue.increment(Double.parseDouble(totalDonationData)))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Main", "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Main", "Error writing document", e);
+                        Log.d(TAG, "User total donation is successfully updated");
+                        UpdateEventDonation();
                     }
                 });
+    }
 
-        // Add a new document with a generated ID
-        db.collection("events")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("DonateActivity", "DocumentSnapshot added with ID: " + documentReference.getId());
-                        docRef = documentReference.getId();
-                        Log.d("Main Activity", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("DonateActivity", "Error adding document", e);
-                    }
-                });
-
-        DocumentReference newCityRef = db.collection("smtg").document();
-        String smtg = db.collection("smtg").document().getId();
-        user.put("docId", newCityRef);
-
-        Log.d("Main", docRef);
-        Log.d("Main", "Get ID: " + smtg);
-
-        user.put("anotherDocId", smtg);
-//                newCityRef.set(user);
-        db.collection("cities").document(smtg)
-                .set(user)
+    private void UpdateEventDonation() {
+        DocumentReference userDocumentReference = db.collection("events").document(eventID);
+        userDocumentReference.update("totalDonation", FieldValue.increment(Double.parseDouble(totalDonationData)))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Main", "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Main", "Error writing document", e);
+                        Log.d(TAG, "Event total donation is successfully updated");
+                        Intent intent = new Intent(getApplicationContext(), MainDonatorActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        Log.d(TAG, "Event successfully written!");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        btnConfirm.setVisibility(View.VISIBLE);
                     }
                 });
     }

@@ -8,22 +8,28 @@
 
     <TextView
         android:id="@+id/event_detail_title"
-        android:layout_width="wrap_content"
+        style="@style/ShadowForText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Event Title"
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal"
+        android:text="@string/event_title_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/event_detail_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_detail_title"
         tools:srcCompat="@tools:sample/avatars" />
-
 
     <ProgressBar
         android:id="@+id/event_detail_progressBar"
@@ -38,34 +44,55 @@
 
     <TextView
         android:id="@+id/event_detail_description"
+        style="@style/DescriptionEvent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Description:"
+        android:layout_marginTop="16dp"
+        android:text="@string/event_description_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_detail_image" />
 
     <TextView
         android:id="@+id/event_detail_social_community"
-        android:layout_width="wrap_content"
+        style="@style/DescriptionEvent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Social Community"
+        android:layout_marginTop="8dp"
+        android:text="@string/social_community_name"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_detail_description" />
 
+
+    <TextView
+        android:id="@+id/event_detail_social_community_telephone_number"
+        style="@style/DescriptionEvent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/social_community_telephone_number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_detail_social_community" />
+
     <TextView
         android:id="@+id/event_detail_total_donation"
-        android:layout_width="wrap_content"
+        style="@style/DescriptionEvent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Total Donation"
+        android:layout_marginTop="8dp"
+        android:text="@string/event_total_donation"
+        app:layout_constraintEnd_toStartOf="@+id/event_detail_end_date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_detail_social_community_telephone_number" />
 
     <TextView
         android:id="@+id/event_detail_end_date"
+        style="@style/DescriptionEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="End Date"
+        android:text="@string/event_end_date"
         app:layout_constraintBottom_toBottomOf="@+id/event_detail_total_donation"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -75,7 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Donate Now"
+        android:text="@string/donate_now_button"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
         android:textSize="14sp"
@@ -83,13 +110,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_detail_total_donation" />
-
-    <TextView
-        android:id="@+id/event_detail_social_community_telephone_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Social Community Telephone Number"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_detail_social_community" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,7 @@
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/colorAccent"
+    app:cardBackgroundColor="#FFFFFF"
     android:id="@+id/event_fragment_id">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +35,7 @@
             android:layout_below="@id/eventImage"
             android:gravity="center"
             android:padding="8dp"
-            android:text="Event Title"
+            android:text="@string/event_title_text"
             android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,9 +47,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/eventTitle"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:padding="8dp"
-            android:text="Total Donation : 10.125 / 50.0"
+            android:text="@string/donate_quantity_text"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
@@ -60,11 +60,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="Social Community : Berbagi Nasi Makassar"
+            android:text="@string/social_community_name"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/eventTotalDonation"
-            app:layout_constraintTop_toTopOf="@+id/eventTotalDonation" />
+            app:layout_constraintStart_toStartOf="@+id/eventTotalDonation"
+            app:layout_constraintTop_toBottomOf="@+id/eventTotalDonation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
