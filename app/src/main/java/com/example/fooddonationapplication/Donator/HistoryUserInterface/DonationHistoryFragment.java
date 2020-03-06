@@ -26,6 +26,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.DecimalFormat;
+
 public class DonationHistoryFragment extends Fragment {
 
     private static final String TAG = "DonationHistoryFragment";
@@ -50,7 +52,9 @@ public class DonationHistoryFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            totalDonationTextView.setText("You have donated " + String.valueOf(documentSnapshot.getDouble("totalDonation")) + " Kg of food");
+                            DecimalFormat df = new DecimalFormat("#.###");
+                            String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+                            totalDonationTextView.setText("You have donated " + formattedTotalDonation + " Kg of food");
                         }
                     }
                 });

@@ -39,7 +39,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
     @Override
     protected void onBindViewHolder(@NonNull EventHistoryHolder holder, int position, @NonNull final Event model) {
         DecimalFormat df = new DecimalFormat("#.###");
-        String formattedTotalDonation = df.format(model.getTotalDonation());
+        final String formattedTotalDonation = df.format(model.getTotalDonation());
 
         holder.eventTitle.setText(model.getTitle());
         holder.eventTotalDonation.setText("Total Donation : " + formattedTotalDonation + " / " + String.valueOf(model.getTargetQuantity()) + " Kg");
@@ -65,7 +65,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
             public void onClick(View v) {
                 Intent intent = new Intent(context, DonatorActivity.class);
                 intent.putExtra("eventID", model.getEventID());
-                intent.putExtra("totalDonation", String.valueOf(model.getTotalDonation()));
+                intent.putExtra("totalDonation", formattedTotalDonation);
                 context.startActivity(intent);
             }
         });

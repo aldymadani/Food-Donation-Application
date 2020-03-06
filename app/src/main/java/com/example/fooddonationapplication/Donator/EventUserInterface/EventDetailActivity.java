@@ -21,6 +21,8 @@ import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 
+import java.text.DecimalFormat;
+
 public class EventDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "EventDetailActivity";
@@ -60,6 +62,9 @@ public class EventDetailActivity extends AppCompatActivity {
         double eventTargetDonationData = event.getTargetQuantity();
         double eventTotalDonationDataData = event.getTotalDonation();
 
+        DecimalFormat df = new DecimalFormat("#.###");
+        String formattedTotalDonation = df.format(eventTotalDonationDataData);
+
         if (event.getEndDateInMillis() <= System.currentTimeMillis()) {
             eventDonateButton.setVisibility(View.GONE);
         }
@@ -82,7 +87,7 @@ public class EventDetailActivity extends AppCompatActivity {
         eventDescription.setText("Event Description :\n" + eventDescriptionData);
         eventSocialCommunityName.setText( "Conductor: " + eventSocialCommunityNameData);
         eventSocialCommunityTelephoneNumber.setText("Telephone number : " + eventSocialCommunityTelephoneNumberData);
-        eventTotalDonation.setText(String.valueOf("Total Donation : " + eventTotalDonationDataData + " / " + eventTargetDonationData) + " Kg");
+        eventTotalDonation.setText(String.valueOf("Total Donation : " + formattedTotalDonation + " / " + eventTargetDonationData) + " Kg");
         eventEndDate.setText("Event End Date : " + eventEndDateData);
 
         eventDonateButton.setOnClickListener(new View.OnClickListener() {
