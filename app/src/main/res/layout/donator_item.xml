@@ -7,20 +7,22 @@
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/cardview_shadow_start_color"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="5dp"
+    app:cardBackgroundColor="#af4448"
     android:id="@+id/donator_item_fragment_id">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp">
-
+<!--        android:src="@drawable/donator_list"-->
         <ImageView
             android:id="@+id/eventHistoryImage"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/donator_list"
+            android:src="@drawable/basket_history_icon"
             app:layout_constraintBottom_toBottomOf="@+id/donatorDate"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -32,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/donator_name_placeholder"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventHistoryImage"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,6 +47,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/donate_quantity_placeholder"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/donatorDate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventHistoryImage"
@@ -55,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/donation_date_placeholder"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventHistoryImage" />

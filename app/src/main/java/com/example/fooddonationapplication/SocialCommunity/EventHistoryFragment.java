@@ -34,17 +34,15 @@ public class EventHistoryFragment extends Fragment {
 
     private static final String TAG = "EventHistoryFragment";
 
-    FirebaseAuth mFirebaseAuth;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventRef = db.collection("events");
 
     private EventHistoryAdapter eventHistoryAdapter;
     private View rootView;
-    TextInputLayout searchInputLayout;
-    EditText searchKeyword;
-    ImageView searchButton;
-    FloatingActionButton refreshButton;
+    private TextInputLayout searchInputLayout;
+    private EditText searchKeyword;
+    private ImageView searchButton;
+    private FloatingActionButton refreshButton;
 
     @Nullable
     @Override
@@ -64,7 +62,7 @@ public class EventHistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Query newQuery = null;
-                String search = searchKeyword.getText().toString();
+                String search = searchKeyword.getText().toString().toLowerCase();
                 if (!search.isEmpty()) {
                     newQuery = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
                 } else {

@@ -21,8 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SocialCommunityProfileFragment extends Fragment {
 
-    TextView emailTextView, fullNameTextView, telephoneNumberTextView;
-    Button logOutButton;
+    private TextView emailTextView, fullNameTextView, telephoneNumberTextView;
+    private Button logOutButton;
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 

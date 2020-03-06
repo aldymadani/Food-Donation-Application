@@ -14,7 +14,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/event_recyclerView"
         app:layout_constraintEnd_toStartOf="@+id/search_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -37,7 +36,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:tint="@color/colorPrimary"
+            android:tint="#af4448"
             app:layout_constraintBottom_toBottomOf="@+id/search_layout"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,11 +57,13 @@
         android:id="@+id/refreshFloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#FFFFFF"
         android:clickable="true"
-        android:tint="#FFFFFF"
+        android:tint="#af4448"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:borderWidth="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_reset" />
 

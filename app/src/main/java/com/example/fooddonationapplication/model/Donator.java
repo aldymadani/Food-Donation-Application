@@ -1,6 +1,5 @@
 package com.example.fooddonationapplication.model;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,7 +7,6 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Donator implements Parcelable {
-// TODO TIMESTAMP WATCH HERE https://www.youtube.com/watch?v=xnFnwbiDFuE
     public String name, phone, uuid, socialCommunityId, socialCommunityName, eventName, eventId, pickUpAddress, foodItems, pickUpDate, pickUpTime, donationDate, imageURI, donatorId;
     double totalDonation;
 

@@ -47,37 +47,37 @@ import java.util.Calendar;
 public class CreateEventFragment extends Fragment {
 
     private static final String TAG = "CreateEventFragment";
-    EditText eventName, eventDescription, eventEndDate, targetQuantity;
-    TextInputLayout eventNameLayout, eventDescriptionLayout, eventEndDateLayout, targetQuantityLayout;
-    ImageView eventPhoto;
-    Button createEventConfirmation;
-    ProgressBar progressBar;
+    private EditText eventName, eventDescription, eventEndDate, targetQuantity;
+    private TextInputLayout eventNameLayout, eventDescriptionLayout, eventEndDateLayout, targetQuantityLayout;
+    private ImageView eventPhoto;
+    private Button createEventConfirmation;
+    private ProgressBar progressBar;
 
     // For Date Picker
-    Calendar calendar;
-    DatePickerDialog datePickerDialog;
-    String chosenDate;
-    Long chosenDateInMillis;
+    private Calendar calendar;
+    private DatePickerDialog datePickerDialog;
+    private String chosenDate;
+    private Long chosenDateInMillis;
 
     // For photo
     int TAKE_IMAGE_CODE = 10001;
-    Bitmap bitmap;
-    String eventImageURI;
+    private Bitmap bitmap;
+    private String eventImageURI;
     private View rootView;
-    private boolean hasImage = false;
+    private boolean hasImage;
 
     private static final int GalleryPick = 1;
 
-    String eventNameData;
-    String eventDescriptionData;
-    String endDateData;
-    String targetQuantityData;
+    private String eventNameData;
+    private String eventDescriptionData;
+    private String endDateData;
+    private String targetQuantityData;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_create_event, container, false);
-
+        hasImage = false;
         eventName = rootView.findViewById(R.id.create_event_name);
         eventDescription = rootView.findViewById(R.id.create_event_description_);
         eventEndDate = rootView.findViewById(R.id.create_event_end_date);
@@ -96,7 +96,7 @@ public class CreateEventFragment extends Fragment {
 
         eventEndDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) { // TODO Change to Perform Click
+            public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     calendar = Calendar.getInstance();
 
@@ -115,7 +115,7 @@ public class CreateEventFragment extends Fragment {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            Log.d(TAG, "Chosen Date" + chosenDate); // TODO Erase Later
+                            Log.d(TAG, "Chosen Date" + chosenDate);
                             Log.d(TAG, String.valueOf(chosenDateInMillis));
                             Log.d(TAG, String.valueOf(System.currentTimeMillis()));
                         }
@@ -141,19 +141,13 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        eventPhoto.setOnClickListener(new View.OnClickListener() { // TODO CHECK PERMISSION
+        eventPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, GalleryPick);
-
-                // Old code
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-//                    startActivityForResult(intent, TAKE_IMAGE_CODE);
-//                }
             }
         });
 
@@ -266,22 +260,21 @@ public class CreateEventFragment extends Fragment {
             handleUpload(bitmap);
         } else {
             Toast.makeText(getContext(), "Error occurred, please try again", Toast.LENGTH_SHORT).show();
-        } // TODO don't forget image
+        }
     }
 
     private void InitializeEvent() {
         String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String socialCommunityName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName(); // TODO SET DISPLAY NAME LATER FIRST
+        String socialCommunityName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final String eventId = db.collection("events").document().getId(); // EaYQPHbG7NR1K4zdUMxx
+        final String eventId = db.collection("events").document().getId();
         Log.d(TAG, eventId);
 
-        final Event event = new Event(); // TODO ADD THE CONSTRUCTOR ADD IMAGE URI AT THE FIRST
-        // TODO WATCH THIS TO COMPLETE https://www.youtube.com/watch?v=xnFnwbiDFuE
+        final Event event = new Event();
         event.setImageURI(eventImageURI);
         event.setEventID(eventId);
-        event.setTitle(eventNameData);
+        event.setTitle(eventNameData.toLowerCase());
         event.setDescription(eventDescriptionData);
         event.setSocialCommunityID(socialCommunityID);
         event.setSocialCommunityName(socialCommunityName);

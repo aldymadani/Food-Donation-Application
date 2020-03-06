@@ -28,9 +28,9 @@ public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, D
 
     @Override
     protected void onBindViewHolder(@NonNull DonationHistoryHolder holder, int position, @NonNull final Donator model) {
-        holder.eventName.setText(model.getEventName());
-        holder.totalDonation.setText(String.valueOf(model.getTotalDonation()));
-        holder.donationDate.setText(model.getDonationDate());
+        holder.eventName.setText("Event Name : " + model.getEventName());
+        holder.totalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation()) + " Kg");
+        holder.donationDate.setText("Donation Date : " + model.getDonationDate());
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +59,7 @@ public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, D
         public DonationHistoryHolder(@NonNull View itemView) {
             super(itemView);
             eventName = itemView.findViewById(R.id.donationHistoryEventName);
-            totalDonation = itemView.findViewById(R.id.donationHistoryTotalDonation);
+            totalDonation = itemView.findViewById(R.id.donatorTitleTotalDonation);
             donationDate = itemView.findViewById(R.id.donationHistoryDate);
             parentLayout = itemView.findViewById(R.id.donation_history_fragment_id);
         }

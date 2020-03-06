@@ -28,10 +28,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private static final String TAG = "LoginActivity";
 
-    EditText emailId, passwordId;
-    Button btnSignIn, btnRegister;
-    FirebaseAuth mFirebaseAuth;
-    ProgressBar progressBar;
+    private EditText emailId, passwordId;
+    private Button btnSignIn, btnRegister;
+    private FirebaseAuth mFirebaseAuth;
+    private ProgressBar progressBar;
     View view;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private TextInputLayout textInputEmail, textInputPassword;

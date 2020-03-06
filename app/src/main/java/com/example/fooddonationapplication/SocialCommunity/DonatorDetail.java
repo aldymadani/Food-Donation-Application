@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,16 +27,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
+
+import java.lang.reflect.Field;
 
 public class DonatorDetail extends AppCompatActivity {
 
     private static final String TAG = "DonatorDetailActivity";
 
-    TextView donatorNameTextView, donatorPhoneNumberTextView, donatorPickUpAddressTextView, donatorFoodItemsTextView, donatorPickUpDateTextView, donatorPickUpTimeTextView, donatorTotalDonationTextView, donatorDonationDateTextView;
-    ProgressBar imageLoadingProgressBar, buttonProgressBar;
-    ImageView foodImagePhoto;
-    Button deleteDonation;
+    private TextView donatorNameTextView, donatorPhoneNumberTextView, donatorPickUpAddressTextView, donatorFoodItemsTextView, donatorPickUpDateTextView, donatorPickUpTimeTextView, donatorTotalDonationTextView, donatorDonationDateTextView;
+    private ProgressBar imageLoadingProgressBar, buttonProgressBar;
+    private ImageView foodImagePhoto;
+    private Button deleteDonation;
 
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -60,7 +64,7 @@ public class DonatorDetail extends AppCompatActivity {
         buttonProgressBar.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
-        final Donator donator = intent.getParcelableExtra("Donator"); //TODO GET PICK UP ADDRESS ALSO AND PICKUP TIME
+        final Donator donator = intent.getParcelableExtra("Donator");
         String donatorName = donator.getName();
         String donatorPhoneNumber = donator.getPhone();
         String donatorPickUpAddress = donator.getPickUpAddress();
@@ -104,11 +108,17 @@ public class DonatorDetail extends AppCompatActivity {
                 DocumentReference donatorReference = db.collection("donators").document(donator.getDonatorId());
                 batch.delete(donatorReference);
 
+                double decreaseTotalDonation = totalDonation * -1;
+                Log.d(TAG, String.valueOf(decreaseTotalDonation));
+
                 DocumentReference userReference = db.collection("users").document(donator.getUuid());
-                batch.update(userReference, "totalDonation", FieldValue.increment(totalDonation * -1));
+                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
+//                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
+
 
                 DocumentReference eventReference = db.collection("events").document(donator.getEventId());
-                batch.update(eventReference, "totalDonation", FieldValue.increment(totalDonation * -1));
+                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
+//                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
 
                 batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

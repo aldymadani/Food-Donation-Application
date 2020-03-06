@@ -26,13 +26,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.Objects;
-
 public class DonationHistoryFragment extends Fragment {
 
     private static final String TAG = "DonationHistoryFragment";
 
-    TextView totalDonationTextView;
+    private TextView totalDonationTextView;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
@@ -44,7 +42,7 @@ public class DonationHistoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_donation_history,container,false);
-        totalDonationTextView = rootView.findViewById(R.id.donationHistoryTotalDonation);
+        totalDonationTextView = rootView.findViewById(R.id.donatorTitleTotalDonation);
         setUpRecyclerViewDonationHistory();
 
         db.collection("users").document(user.getUid()).get()

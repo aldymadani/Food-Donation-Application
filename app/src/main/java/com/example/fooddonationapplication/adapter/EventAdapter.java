@@ -38,8 +38,8 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull final Event model) {
         holder.textViewTitle.setText(model.getTitle());
-        holder.textViewTotalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation() + " / " + model.getTargetQuantity()));
-        holder.textViewSocialCommunity.setText("Conducted By: " + model.getSocialCommunityName());
+        holder.textViewTotalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation() + " / " + model.getTargetQuantity()) + " Kg");
+        holder.textViewSocialCommunity.setText("End Date : " + model.getEndDate());
 
         Glide.with(context).load(model.getImageURI()).override(300,200)
                 .listener(new RequestListener<Drawable>() {
@@ -87,7 +87,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
 
             textViewTitle = itemView.findViewById(R.id.eventTitle);
             textViewTotalDonation = itemView.findViewById(R.id.eventTotalDonation);
-            textViewSocialCommunity = itemView.findViewById(R.id.eventSocialCommunity);
+            textViewSocialCommunity = itemView.findViewById(R.id.eventEndDate);
             imageViewEvent = itemView.findViewById(R.id.eventImage);
             parentLayout = itemView.findViewById(R.id.event_fragment_id);
         }

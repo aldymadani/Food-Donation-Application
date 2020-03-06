@@ -8,8 +8,10 @@
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="5dp"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/cardview_shadow_start_color">
+    app:cardBackgroundColor="#af4448">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/donationHistoryDate"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/donationHistoryEventName"
-            app:srcCompat="@drawable/donator_list" />
+            app:srcCompat="@drawable/basket_history_icon" />
 
         <TextView
             android:id="@+id/donationHistoryEventName"
@@ -31,18 +33,20 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/event_name_placeholder"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/donationHistoryTotalDonation"
+            android:id="@+id/donatorTitleTotalDonation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/donate_quantity_placeholder"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/donationHistoryDate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage"
@@ -54,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/donation_date_placeholder"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage" />

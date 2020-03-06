@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.fooddonationapplication.adapter.DonatorAdapter;
 import com.example.fooddonationapplication.R;
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.Query;
 public class DonatorActivity extends AppCompatActivity {
 
     private static final String TAG = "DonatorActivity";
-
+    private TextView titleTotalDonation;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
 
@@ -34,6 +35,9 @@ public class DonatorActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Event event = intent.getParcelableExtra("Event");
         String eventID = getIntent().getStringExtra("eventID");
+        String totalDonation = getIntent().getStringExtra("totalDonation");
+        titleTotalDonation = findViewById(R.id.donatorTitleTotalDonation);
+        titleTotalDonation.setText("People have donated " + totalDonation + " Kg of food");
         Log.d(TAG, eventID);
         setUpRecyclerViewDonator(eventID);
     }
@@ -51,7 +55,7 @@ public class DonatorActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerViewDonator(String eventID) {
-        Query query = donatorRef.whereEqualTo("eventId", eventID); // TODO PASSED FROM PREVIOUS FRAGMENT
+        Query query = donatorRef.whereEqualTo("eventId", eventID);
 
         FirestoreRecyclerOptions<Donator> options = new FirestoreRecyclerOptions.Builder<Donator>()
                 .setQuery(query, Donator.class)

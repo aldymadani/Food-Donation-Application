@@ -25,10 +25,10 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "EventDetailActivity";
 
-    TextView eventTitle, eventDescription, eventSocialCommunityName, eventTotalDonation, eventEndDate, eventSocialCommunityTelephoneNumber;
-    Button eventDonateButton;
-    ImageView eventImage;
-    ProgressBar eventProgressBar;
+    private TextView eventTitle, eventDescription, eventSocialCommunityName, eventTotalDonation, eventEndDate, eventSocialCommunityTelephoneNumber;
+    private Button eventDonateButton;
+    private ImageView eventImage;
+    private ProgressBar eventProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class EventDetailActivity extends AppCompatActivity {
             eventDonateButton.setVisibility(View.GONE);
         }
 
-        eventTitle.setText(eventTitleData);
+        eventTitle.setText(eventTitleData.toUpperCase());
         Glide.with(this).load(eventImageData).override(300,200)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -79,11 +79,11 @@ public class EventDetailActivity extends AppCompatActivity {
                         return false;
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(eventImage);
-        eventDescription.setText("Description :\n" + eventDescriptionData);
+        eventDescription.setText("Event Description :\n" + eventDescriptionData);
         eventSocialCommunityName.setText( "Conductor: " + eventSocialCommunityNameData);
         eventSocialCommunityTelephoneNumber.setText("Telephone number : " + eventSocialCommunityTelephoneNumberData);
-        eventTotalDonation.setText(String.valueOf("Total Donation : " + eventTotalDonationDataData + " / " + eventTargetDonationData));
-        eventEndDate.setText(eventEndDateData);
+        eventTotalDonation.setText(String.valueOf("Total Donation : " + eventTotalDonationDataData + " / " + eventTargetDonationData) + " Kg");
+        eventEndDate.setText("Event End Date : " + eventEndDateData);
 
         eventDonateButton.setOnClickListener(new View.OnClickListener() {
             @Override

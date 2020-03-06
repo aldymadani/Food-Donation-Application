@@ -42,7 +42,7 @@ public class User implements Parcelable {
         return totalDonation;
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() { // TODO make it in order way, check internet
+    public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
             return new User(in);

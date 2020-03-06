@@ -134,8 +134,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/donate_quantity_placeholder"
-            app:counterEnabled="true"
-            app:counterMaxLength="3"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/donate_time_layout"
             app:layout_constraintHorizontal_bias="0.452"
@@ -150,8 +148,7 @@
                 android:drawableStart="@drawable/quantity_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="numberDecimal"
-                android:maxLength="3" />
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton

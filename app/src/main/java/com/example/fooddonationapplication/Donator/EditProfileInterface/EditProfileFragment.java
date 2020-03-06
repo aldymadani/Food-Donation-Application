@@ -50,7 +50,7 @@ public class EditProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_profile,container,false); // TODO ADD TOTAL DONATION IN THE UI
+        View rootView = inflater.inflate(R.layout.fragment_edit_profile,container,false);
 
         emailTextView = rootView.findViewById(R.id.edit_profile_email);
         passwordTextView = rootView.findViewById(R.id.edit_profile_password);

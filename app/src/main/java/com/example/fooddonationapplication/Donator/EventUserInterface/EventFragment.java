@@ -37,52 +37,22 @@ public class EventFragment extends Fragment {
     private CollectionReference eventRef = db.collection("events");
 
     private EventAdapter adapter;
-    RecyclerView recyclerView;
-    ImageView searchButton;
-    TextInputLayout searchInputLayout;
-    EditText searchKeyword;
-    FloatingActionButton refreshButton;
-    MaterialSpinner sortBy;
+    private RecyclerView recyclerView;
+    private ImageView searchButton;
+    private TextInputLayout searchInputLayout;
+    private EditText searchKeyword;
+    private FloatingActionButton refreshButton;
+    private MaterialSpinner sortBy;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_event, container,false);
         recyclerView = rootView.findViewById(R.id.event_recyclerView);
+        refreshButton = rootView.findViewById(R.id.refreshFloatingButton);
+
         Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
         setUpRecyclerView(query);
-//        searchKeyword = rootView.findViewById(R.id.search);
-//        searchInputLayout = rootView.findViewById(R.id.search_layout);
-//        searchButton = rootView.findViewById(R.id.search_button);
-        refreshButton = rootView.findViewById(R.id.refreshFloatingButton);
-//        searchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Toast.makeText(getContext(), searchKeyword.getText().toString(), Toast.LENGTH_SHORT).show();
-//                Query newQuery = null;
-//                String search = searchKeyword.getText().toString();
-//                if (!search.isEmpty()) {
-//                    newQuery = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
-//                } else if (search.isEmpty()) {
-//                    searchInputLayout.setError("Please fill in");
-//                    return;
-//                }
-//                searchInputLayout.setErrorEnabled(false);
-//                setUpRecyclerView(newQuery);
-//                adapter.startListening();
-//            }
-//        });
-
-//        refreshButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Query newQuery = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
-//                searchInputLayout.setErrorEnabled(false);
-//                searchKeyword.setText("");
-//                setUpRecyclerView(newQuery);
-//                adapter.startListening();
-//            }
-//        });
 
         sortBy = rootView.findViewById(R.id.spinner);
         sortBy.setItems("Almost end events", "Newest Events", "Past Events", "Show all events");

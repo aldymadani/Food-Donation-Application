@@ -24,9 +24,9 @@ public class HistoryDetail extends AppCompatActivity {
 
     private static final String TAG = "HistoryDetail";
 
-    TextView eventNameTextView, socialCommunityNameTextView, pickUpAddressTextView, foodItemsTextView, pickUpDateTextView, pickUpTimeTextView, totalDonationTextView, donationDateTextView;
-    ImageView foodPhoto;
-    ProgressBar foodImageProgressBar;
+    private TextView eventNameTextView, socialCommunityNameTextView, pickUpAddressTextView, foodItemsTextView, pickUpDateTextView, pickUpTimeTextView, totalDonationTextView, donationDateTextView;
+    private ImageView foodPhoto;
+    private ProgressBar foodImageProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

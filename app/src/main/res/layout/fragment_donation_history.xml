@@ -13,15 +13,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/donationHistoryTotalDonation" />
+        app:layout_constraintTop_toBottomOf="@+id/donatorTitleTotalDonation" />
 
     <TextView
-        android:id="@+id/donationHistoryTotalDonation"
+        android:id="@+id/donatorTitleTotalDonation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
-        android:text="@string/donation_history_total_title"
+        android:text="@string/donator_history_total_title"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"

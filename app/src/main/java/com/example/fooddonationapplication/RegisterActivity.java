@@ -30,13 +30,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
 
-    EditText emailId, passwordId, fullNameId, telephoneNumberId;
-    Button btnSignUp;
-    FirebaseAuth mFirebaseAuth;
-    TextInputLayout textInputEmail, textInputPassword, textInputFullName, textInputTelephoneNumber;
-    ProgressBar progressBar;
-    private boolean isNewUser;
-    private boolean emailUsed;
+    private EditText emailId, passwordId, fullNameId, telephoneNumberId;
+    private Button btnSignUp;
+    private FirebaseAuth mFirebaseAuth;
+    private TextInputLayout textInputEmail, textInputPassword, textInputFullName, textInputTelephoneNumber;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

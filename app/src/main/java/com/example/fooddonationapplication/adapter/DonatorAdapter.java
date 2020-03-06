@@ -29,9 +29,9 @@ public class DonatorAdapter extends FirestoreRecyclerAdapter<Donator, DonatorAda
 
     @Override
     protected void onBindViewHolder(@NonNull DonatorHolder holder, int position, @NonNull final Donator model) {
-        holder.donatorName.setText(model.getName());
-        holder.totalDonation.setText(String.valueOf(model.getTotalDonation()));
-        holder.donationDate.setText(model.getDonationDate());
+        holder.donatorName.setText("Donator Name : " + model.getName());
+        holder.totalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation()) + " Kg");
+        holder.donationDate.setText("Donation Date : " + model.getDonationDate());
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
