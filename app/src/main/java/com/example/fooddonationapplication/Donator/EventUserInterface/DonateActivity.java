@@ -1,8 +1,11 @@
 package com.example.fooddonationapplication.Donator.EventUserInterface;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +24,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.fooddonationapplication.Donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
@@ -161,9 +166,13 @@ public class DonateActivity extends AppCompatActivity {
         foodImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, TAKE_IMAGE_CODE);
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(DonateActivity.this, new String[] {Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
+                } else {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(intent, TAKE_IMAGE_CODE);
+                    }
                 }
             }
         });
@@ -233,6 +242,21 @@ public class DonateActivity extends AppCompatActivity {
             handleUpload(bitmap);
         } else {
             Toast.makeText(getApplicationContext(), "Error occurred, please try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == TAKE_IMAGE_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, TAKE_IMAGE_CODE);
+                }
+            } else {
+                Toast.makeText(this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

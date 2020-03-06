@@ -1,8 +1,10 @@
 package com.example.fooddonationapplication.SocialCommunity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
@@ -22,8 +24,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.fooddonationapplication.Donator.EventUserInterface.DonateActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -144,14 +149,34 @@ public class CreateEventFragment extends Fragment {
         eventPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent galleryIntent = new Intent();
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GalleryPick);
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                } else {
+                    Intent galleryIntent = new Intent();
+                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    galleryIntent.setType("image/*");
+                    startActivityForResult(galleryIntent, GalleryPick);
+                }
             }
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, String.valueOf(grantResults));
+        if (requestCode == GalleryPick) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, GalleryPick);
+            } else {
+                Toast.makeText(getActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
