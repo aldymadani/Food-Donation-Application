@@ -1,9 +1,5 @@
 package com.example.fooddonationapplication.SocialCommunity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,6 +11,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -23,25 +23,25 @@ import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
-
-import java.lang.reflect.Field;
 
 public class DonatorDetail extends AppCompatActivity {
 
     private static final String TAG = "DonatorDetailActivity";
-
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private TextView donatorNameTextView, donatorPhoneNumberTextView, donatorPickUpAddressTextView, donatorFoodItemsTextView, donatorPickUpDateTextView, donatorPickUpTimeTextView, donatorTotalDonationTextView, donatorDonationDateTextView;
     private ProgressBar imageLoadingProgressBar, buttonProgressBar;
     private ImageView foodImagePhoto;
     private Button deleteDonation;
-
-    final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +104,53 @@ public class DonatorDetail extends AppCompatActivity {
             public void onClick(View v) {
                 deleteDonation.setVisibility(View.INVISIBLE);
                 buttonProgressBar.setVisibility(View.VISIBLE);
+
+//                final DocumentReference userDocumentReference = db.collection("users").document(donator.getUuid());
+//                final DocumentReference eventDocumentReference = db.collection("events").document(donator.getEventId());
+//                final DocumentReference donatorReference = db.collection("donators").document(donator.getDonatorId());
+
+//                db.runTransaction(new Transaction.Function<Void>() {
+//                    @Override
+//                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//                        Log.d(TAG, String.valueOf(totalDonation));
+//
+//                        DocumentSnapshot snapshotUser = transaction.get(userDocumentReference);
+//
+//                        // Note: this could be done without a transaction
+//                        //       by updating the population using FieldValue.increment()
+//                        double newUserTotalDonation = snapshotUser.getDouble("totalDonation") - totalDonation;
+//                        transaction.update(userDocumentReference, "totalDonation", newUserTotalDonation);
+//                        Log.d(TAG, "newUserTotalDonation : " + newUserTotalDonation);
+//
+//                        DocumentSnapshot snapshotEvent = transaction.get(eventDocumentReference);
+//                        double newEventTotalDonation = snapshotEvent.getDouble("totalDonation") - totalDonation;
+//                        transaction.update(eventDocumentReference, "totalDonation", newEventTotalDonation);
+//                        Log.d(TAG, "newEventTotalDonation : " + newEventTotalDonation);
+//
+//                        transaction.delete(donatorReference);
+//                        // Success
+//                        return null;
+//                    }
+//                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "Transaction success!");
+//                        Toast.makeText(DonatorDetail.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(intent);
+//                        deleteDonation.setVisibility(View.VISIBLE);
+//                        buttonProgressBar.setVisibility(View.INVISIBLE);
+//                    }
+//                })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.w(TAG, "Transaction failure.", e);
+//                            }
+//                        });
+
+
                 WriteBatch batch = db.batch();
                 DocumentReference donatorReference = db.collection("donators").document(donator.getDonatorId());
                 batch.delete(donatorReference);

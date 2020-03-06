@@ -24,8 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fooddonationapplication.Donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.SocialCommunity.DonatorDetail;
-import com.example.fooddonationapplication.SocialCommunity.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.model.Donator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,16 +35,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -354,13 +348,61 @@ public class DonateActivity extends AppCompatActivity {
     }
 
     private void UpdateUserAndEventDonation() {
-        DocumentReference userDocumentReference = db.collection("users").document(userID);
-        DocumentReference eventDocumentReference = db.collection("events").document(eventID);
+//        final DocumentReference userDocumentReference = db.collection("users").document(userID);
+//        final DocumentReference eventDocumentReference = db.collection("events").document(eventID);
+//
+//        db.runTransaction(new Transaction.Function<Void>() {
+//            @Override
+//            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//                double updateTotalDonation = Double.parseDouble(totalDonationData);
+//
+//                DocumentSnapshot snapshotUser = transaction.get(userDocumentReference);
+//                double newUserTotalDonation = snapshotUser.getDouble("totalDonation") + updateTotalDonation;
+//
+//
+//                DocumentSnapshot snapshotEvent = transaction.get(eventDocumentReference);
+//                double newEventTotalDonation = snapshotEvent.getDouble("totalDonation") + updateTotalDonation;
+//
+//                Log.d(TAG, "updateTotalDonation : " + updateTotalDonation);
+//
+//                // Note: this could be done without a transaction
+//                //       by updating the population using FieldValue.increment()
+//                transaction.update(userDocumentReference, "totalDonation", newUserTotalDonation);
+//                Log.d(TAG, "newUserTotalDonation : " + newUserTotalDonation);
+//                transaction.update(eventDocumentReference, "totalDonation", newEventTotalDonation);
+//                // Success
+//                Log.d(TAG, "newEventTotalDonation : " + newEventTotalDonation);
+//                return null;
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Log.d(TAG, "Transaction success!");
+//                Intent intent = new Intent(getApplicationContext(), MainDonatorActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+//                Log.d(TAG, "Event successfully written!");
+//                progressBar.setVisibility(View.INVISIBLE);
+//                btnConfirm.setVisibility(View.VISIBLE);
+//            }
+//        })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Transaction failure.", e);
+//                    }
+//                });
+
+        final DocumentReference userDocumentReference = db.collection("users").document(userID);
+        final DocumentReference eventDocumentReference = db.collection("events").document(eventID);
+
+
+        double updateTotalDonation = Double.parseDouble(totalDonationData);
 
         WriteBatch batch = db.batch();
 
-        batch.update(userDocumentReference, "totalDonation", FieldValue.increment(Double.parseDouble(totalDonationData)));
-        batch.update(eventDocumentReference, "totalDonation", FieldValue.increment(Double.parseDouble(totalDonationData)));
+        batch.update(userDocumentReference, "totalDonation", FieldValue.increment(updateTotalDonation));
+        batch.update(eventDocumentReference, "totalDonation", FieldValue.increment(updateTotalDonation));
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

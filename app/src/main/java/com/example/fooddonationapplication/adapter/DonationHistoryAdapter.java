@@ -17,6 +17,8 @@ import com.example.fooddonationapplication.model.Donator;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.text.DecimalFormat;
+
 public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, DonationHistoryAdapter.DonationHistoryHolder>{
 
     private Context context;
@@ -28,8 +30,11 @@ public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, D
 
     @Override
     protected void onBindViewHolder(@NonNull DonationHistoryHolder holder, int position, @NonNull final Donator model) {
+        DecimalFormat df = new DecimalFormat("#.###");
+        String formattedTotalDonation = df.format(model.getTotalDonation());
+
         holder.eventName.setText("Event Name : " + model.getEventName());
-        holder.totalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation()) + " Kg");
+        holder.totalDonation.setText("Total Donation : " + formattedTotalDonation + " Kg");
         holder.donationDate.setText("Donation Date : " + model.getDonationDate());
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {

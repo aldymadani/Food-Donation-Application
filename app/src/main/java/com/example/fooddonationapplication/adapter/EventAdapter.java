@@ -26,6 +26,8 @@ import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.text.DecimalFormat;
+
 public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.EventHolder> {
 
     private Context context;
@@ -37,8 +39,11 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
 
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull final Event model) {
+        DecimalFormat df = new DecimalFormat("#.###");
+        String formattedTotalDonation = df.format(model.getTotalDonation());
+
         holder.textViewTitle.setText(model.getTitle());
-        holder.textViewTotalDonation.setText("Total Donation : " + String.valueOf(model.getTotalDonation() + " / " + model.getTargetQuantity()) + " Kg");
+        holder.textViewTotalDonation.setText("Total Donation : " + formattedTotalDonation + String.valueOf(" / " + model.getTargetQuantity()) + " Kg");
         holder.textViewSocialCommunity.setText("End Date : " + model.getEndDate());
 
         Glide.with(context).load(model.getImageURI()).override(300,200)
