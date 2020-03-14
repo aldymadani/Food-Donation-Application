@@ -20,7 +20,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.fooddonationapplication.Donator.EventUserInterface.EventDetailActivity;
+import com.example.fooddonationapplication.donator.EventUserInterface.EventDetailActivity;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;

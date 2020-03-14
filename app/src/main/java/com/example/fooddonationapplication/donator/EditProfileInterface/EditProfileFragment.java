@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.Donator.EditProfileInterface;
+package com.example.fooddonationapplication.donator.EditProfileInterface;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,7 +1,6 @@
-package com.example.fooddonationapplication.Donator.EventUserInterface;
+package com.example.fooddonationapplication.donator.EventUserInterface;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -26,10 +25,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.example.fooddonationapplication.Donator.MainDonatorActivity;
+import com.example.fooddonationapplication.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -76,6 +78,8 @@ public class DonateActivity extends AppCompatActivity {
     private String userID;
     private String eventID;
 
+    DonatorViewModel mViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,10 +102,13 @@ public class DonateActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.INVISIBLE);
 
-//        if(savedInstanceState != null) {
-//            Bitmap bitmapNew = savedInstanceState.getParcelable("image");
-//            foodImage.setImageBitmap(bitmapNew);
-//        }
+        mViewModel = new ViewModelProvider(this).get(DonatorViewModel.class);
+        if(mViewModel.getImageBitmap() != null) {
+            bitmap = mViewModel.getImageBitmap();
+            foodImage.setImageBitmap(bitmap);
+            hasImage = true;
+        }
+
 
         etDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -190,13 +197,6 @@ public class DonateActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        Bitmap bitmapSaved = ((BitmapDrawable)foodImage.getDrawable()).getBitmap();
-//        outState.putParcelable("image", bitmapSaved);
-//        super.onSaveInstanceState(outState);
-//    }
-
     private void checkingAllFields() {
         if (pickUpAddressData.isEmpty()) {
             pickUpAddressData = "Shipping by the donator";
@@ -269,6 +269,7 @@ public class DonateActivity extends AppCompatActivity {
                 case RESULT_OK:
                     bitmap = (Bitmap) data.getExtras().get("data");
                     foodImage.setImageBitmap(bitmap);
+                    mViewModel.setImageBitmap(bitmap);
                     hasImage = true;
             }
         }

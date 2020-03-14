@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fooddonationapplication.Donator.HistoryUserInterface.HistoryDetail;
+import com.example.fooddonationapplication.donator.HistoryUserInterface.HistoryDetail;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;

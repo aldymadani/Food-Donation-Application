@@ -36,6 +36,9 @@ public class DonatorActivity extends AppCompatActivity {
         Event event = intent.getParcelableExtra("Event");
         String eventID = getIntent().getStringExtra("eventID");
         String totalDonation = getIntent().getStringExtra("totalDonation");
+        if (Double.parseDouble(totalDonation) <= 0) {
+            totalDonation = "0";
+        }
         titleTotalDonation = findViewById(R.id.donatorTitleTotalDonation);
         titleTotalDonation.setText("People have donated " + totalDonation + " Kg of food");
         Log.d(TAG, eventID);

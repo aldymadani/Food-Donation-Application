@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fooddonationapplication.Donator.MainDonatorActivity;
+import com.example.fooddonationapplication.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.SocialCommunity.MainSocialCommunityActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.Donator.HistoryUserInterface;
+package com.example.fooddonationapplication.donator.HistoryUserInterface;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -55,6 +54,9 @@ public class HistoryDetail extends AppCompatActivity {
         String donationDate = donator.getDonationDate();
         String foodPhotoData = donator.getImageURI();
         double totalDonation = donator.getTotalDonation();
+        if (totalDonation <= 0) {
+            totalDonation = 0;
+        }
 
         eventNameTextView.setText(eventName);
         socialCommunityNameTextView.setText(socialCommunityName);

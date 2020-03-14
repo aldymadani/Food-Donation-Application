@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,13 +23,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.fooddonationapplication.Donator.EventUserInterface.DonateActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.viewmodel.CreateEventViewModel;
+import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
@@ -78,6 +78,8 @@ public class CreateEventFragment extends Fragment {
     private String endDateData;
     private String targetQuantityData;
 
+    private CreateEventViewModel mViewModel;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,6 +100,13 @@ public class CreateEventFragment extends Fragment {
         progressBar = rootView.findViewById(R.id.create_event_progressBar);
 
         progressBar.setVisibility(View.INVISIBLE);
+
+        mViewModel = new ViewModelProvider(this).get(CreateEventViewModel.class);
+        if(mViewModel.getImageBitmap() != null) {
+            bitmap = mViewModel.getImageBitmap();
+            eventPhoto.setImageBitmap(bitmap);
+            hasImage = true;
+        }
 
         eventEndDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -201,6 +210,7 @@ public class CreateEventFragment extends Fragment {
                     hasImage = true;
                     Log.d(TAG, String.valueOf(bitmap));
                     eventPhoto.setImageBitmap(bitmap);
+                    mViewModel.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

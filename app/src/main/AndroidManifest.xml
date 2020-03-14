@@ -18,14 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/SecondAppTheme">
         <activity android:name=".SocialCommunity.DonatorActivity" />
-        <activity android:name=".Donator.HistoryUserInterface.HistoryDetail" />
+        <activity android:name=".donator.HistoryUserInterface.HistoryDetail" />
         <activity android:name=".SocialCommunity.DonatorDetail" />
         <activity android:name=".SocialCommunity.MainSocialCommunityActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".Donator.EventUserInterface.EventDetailActivity" />
-        <activity android:name=".Donator.MainDonatorActivity"
+        <activity android:name=".donator.EventUserInterface.EventDetailActivity" />
+        <activity android:name=".donator.MainDonatorActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".Donator.EventUserInterface.DonateActivity" />
+        <activity android:name=".donator.EventUserInterface.DonateActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

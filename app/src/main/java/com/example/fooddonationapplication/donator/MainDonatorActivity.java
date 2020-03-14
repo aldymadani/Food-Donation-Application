@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.Donator;
+package com.example.fooddonationapplication.donator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,9 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.fooddonationapplication.Donator.EventUserInterface.EventFragment;
-import com.example.fooddonationapplication.Donator.HistoryUserInterface.DonationHistoryFragment;
-import com.example.fooddonationapplication.Donator.EditProfileInterface.EditProfileFragment;
+import com.example.fooddonationapplication.donator.EventUserInterface.EventFragment;
+import com.example.fooddonationapplication.donator.HistoryUserInterface.DonationHistoryFragment;
+import com.example.fooddonationapplication.donator.EditProfileInterface.EditProfileFragment;
 import com.example.fooddonationapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

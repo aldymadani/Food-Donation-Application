@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.Donator.HistoryUserInterface;
+package com.example.fooddonationapplication.donator.HistoryUserInterface;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -52,8 +52,13 @@ public class DonationHistoryFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
+                            String formattedTotalDonation;
                             DecimalFormat df = new DecimalFormat("#.###");
-                            String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+                            if (documentSnapshot.getDouble("totalDonation") > 0) {
+                                formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+                            } else {
+                                formattedTotalDonation = "0";
+                            }
                             totalDonationTextView.setText("You have donated " + formattedTotalDonation + " Kg of food");
                         }
                     }

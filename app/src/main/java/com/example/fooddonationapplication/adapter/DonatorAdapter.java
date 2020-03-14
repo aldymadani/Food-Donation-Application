@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fooddonationapplication.Donator.EventUserInterface.EventDetailActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.SocialCommunity.DonatorDetail;
 import com.example.fooddonationapplication.model.Donator;
