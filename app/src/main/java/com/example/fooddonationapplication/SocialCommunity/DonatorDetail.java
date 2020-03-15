@@ -33,6 +33,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
+import com.shreyaspatil.MaterialDialog.MaterialDialog;
+import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 public class DonatorDetail extends AppCompatActivity {
 
@@ -99,11 +101,63 @@ public class DonatorDetail extends AppCompatActivity {
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(foodImagePhoto);
 
+        final MaterialDialog mDialog = new MaterialDialog.Builder(this)
+                .setTitle("Delete Donation")
+                .setMessage("Are you sure want to delete this donation?")
+                .setCancelable(false)
+                .setPositiveButton("Delete", R.drawable.ic_delete_forever_black_24dp, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        // Hide the dialog again
+                        dialogInterface.dismiss();
+
+                        deleteDonation.setVisibility(View.INVISIBLE);
+                        buttonProgressBar.setVisibility(View.VISIBLE);
+
+                        // Delete Operation
+                        WriteBatch batch = db.batch();
+                        DocumentReference donatorReference = db.collection("donators").document(donator.getDonatorId());
+                        batch.delete(donatorReference);
+
+                        double decreaseTotalDonation = totalDonation * -1;
+                        Log.d(TAG, String.valueOf(decreaseTotalDonation));
+
+                        DocumentReference userReference = db.collection("users").document(donator.getUuid());
+                        batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
+//                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
+
+
+                        DocumentReference eventReference = db.collection("events").document(donator.getEventId());
+                        batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
+//                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
+
+                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(DonatorDetail.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                deleteDonation.setVisibility(View.VISIBLE);
+                                buttonProgressBar.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", R.drawable.ic_cancel_black_24dp, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .build();
+
         deleteDonation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteDonation.setVisibility(View.INVISIBLE);
-                buttonProgressBar.setVisibility(View.VISIBLE);
+
+                // Show Dialog
+                mDialog.show();
 
 //                final DocumentReference userDocumentReference = db.collection("users").document(donator.getUuid());
 //                final DocumentReference eventDocumentReference = db.collection("events").document(donator.getEventId());
@@ -151,33 +205,7 @@ public class DonatorDetail extends AppCompatActivity {
 //                        });
 
 
-                WriteBatch batch = db.batch();
-                DocumentReference donatorReference = db.collection("donators").document(donator.getDonatorId());
-                batch.delete(donatorReference);
 
-                double decreaseTotalDonation = totalDonation * -1;
-                Log.d(TAG, String.valueOf(decreaseTotalDonation));
-
-                DocumentReference userReference = db.collection("users").document(donator.getUuid());
-                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
-//                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
-
-
-                DocumentReference eventReference = db.collection("events").document(donator.getEventId());
-                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
-//                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
-
-                batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(DonatorDetail.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        deleteDonation.setVisibility(View.VISIBLE);
-                        buttonProgressBar.setVisibility(View.INVISIBLE);
-                    }
-                });
             }
         });
     }
