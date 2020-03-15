@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -102,6 +103,7 @@ public class DonatorDetail extends AppCompatActivity {
                 }).error(R.drawable.ic_error_black_24dp).into(foodImagePhoto);
 
         final MaterialDialog mDialog = new MaterialDialog.Builder(this)
+                .setAnimation(R.raw.delete_animation)
                 .setTitle("Delete Donation")
                 .setMessage("Are you sure want to delete this donation?")
                 .setCancelable(false)
@@ -157,6 +159,7 @@ public class DonatorDetail extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Show Dialog
+                LottieAnimationView animationView = mDialog.getAnimationView();
                 mDialog.show();
 
 //                final DocumentReference userDocumentReference = db.collection("users").document(donator.getUuid());
