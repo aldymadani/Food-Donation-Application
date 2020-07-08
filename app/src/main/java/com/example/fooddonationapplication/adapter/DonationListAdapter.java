@@ -12,18 +12,18 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.SocialCommunity.DonatorDetail;
+import com.example.fooddonationapplication.ui.social_community.history.DonationDetailActivity;
 import com.example.fooddonationapplication.model.Donator;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.text.DecimalFormat;
 
-public class DonatorAdapter extends FirestoreRecyclerAdapter<Donator, DonatorAdapter.DonatorHolder> {
+public class DonationListAdapter extends FirestoreRecyclerAdapter<Donator, DonationListAdapter.DonatorHolder> {
 
     private Context context;
 
-    public DonatorAdapter(@NonNull FirestoreRecyclerOptions<Donator> options, Context context) {
+    public DonationListAdapter(@NonNull FirestoreRecyclerOptions<Donator> options, Context context) {
         super(options);
         this.context = context;
     }
@@ -40,7 +40,7 @@ public class DonatorAdapter extends FirestoreRecyclerAdapter<Donator, DonatorAda
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DonatorDetail.class);
+                Intent intent = new Intent(context, DonationDetailActivity.class);
                 intent.putExtra("Donator", model);
                 context.startActivity(intent);
             }

@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.SocialCommunity;
+package com.example.fooddonationapplication.ui.social_community.history;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.example.fooddonationapplication.adapter.DonatorAdapter;
+import com.example.fooddonationapplication.adapter.DonationListAdapter;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.model.Event;
@@ -19,14 +19,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class DonatorActivity extends AppCompatActivity {
+public class DonationListActivity extends AppCompatActivity {
 
     private static final String TAG = "DonatorActivity";
     private TextView titleTotalDonation;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
 
-    private DonatorAdapter donatorAdapter;
+    private DonationListAdapter donatorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class DonatorActivity extends AppCompatActivity {
 
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
 
-        donatorAdapter = new DonatorAdapter(options, this);
+        donatorAdapter = new DonationListAdapter(options, this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(new GridLayoutManager(this, gridColumnCount));

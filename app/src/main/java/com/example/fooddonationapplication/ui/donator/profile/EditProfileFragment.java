@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.donator.EditProfileInterface;
+package com.example.fooddonationapplication.ui.donator.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.fooddonationapplication.LoginActivity;
+import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;

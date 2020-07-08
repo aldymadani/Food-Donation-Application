@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication;
+package com.example.fooddonationapplication.ui.general;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fooddonationapplication.donator.MainDonatorActivity;
+import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.User;
+import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

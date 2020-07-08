@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.donator.EventUserInterface;
+package com.example.fooddonationapplication.ui.donator.event;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fooddonationapplication.adapter.EventAdapter;
+import com.example.fooddonationapplication.adapter.EventListAdapter;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -27,14 +27,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-public class EventFragment extends Fragment {
+public class EventListFragment extends Fragment {
 
     private static final String TAG = "EventFragment";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventRef = db.collection("events");
 
-    private EventAdapter adapter;
+    private EventListAdapter adapter;
     private RecyclerView recyclerView;
     private ImageView searchButton;
     private TextInputLayout searchInputLayout;
@@ -81,7 +81,7 @@ public class EventFragment extends Fragment {
                 .setQuery(query, Event.class)
                 .build();
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
-        adapter = new EventAdapter(options, getContext());
+        adapter = new EventListAdapter(options, getContext());
         adapter.notifyDataSetChanged();
         Log.d(TAG, String.valueOf(options));
         Log.d(TAG, String.valueOf(adapter));

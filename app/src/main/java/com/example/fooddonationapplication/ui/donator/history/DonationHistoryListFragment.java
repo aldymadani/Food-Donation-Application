@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.donator.HistoryUserInterface;
+package com.example.fooddonationapplication.ui.donator.history;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +28,7 @@ import com.google.firebase.firestore.Query;
 
 import java.text.DecimalFormat;
 
-public class DonationHistoryFragment extends Fragment {
+public class DonationHistoryListFragment extends Fragment {
 
     private static final String TAG = "DonationHistoryFragment";
 
@@ -57,6 +57,7 @@ public class DonationHistoryFragment extends Fragment {
                             if (documentSnapshot.getDouble("totalDonation") > 0) {
                                 formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
                             } else {
+                                // TODO: Tambahkan gambar apabila belum ada donasi
                                 formattedTotalDonation = "0";
                             }
                             totalDonationTextView.setText("You have donated " + formattedTotalDonation + " Kg of food");

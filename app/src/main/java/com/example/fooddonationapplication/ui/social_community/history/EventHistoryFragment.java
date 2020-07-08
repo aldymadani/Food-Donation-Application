@@ -1,12 +1,10 @@
-package com.example.fooddonationapplication.SocialCommunity;
+package com.example.fooddonationapplication.ui.social_community.history;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -16,16 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
-import com.example.fooddonationapplication.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -42,7 +38,7 @@ public class EventHistoryFragment extends Fragment {
     private TextInputLayout searchInputLayout;
     private EditText searchKeyword;
     private ImageView searchButton;
-    private FloatingActionButton refreshButton;
+    private SwipeRefreshLayout swipeLayout;
 
     @Nullable
     @Override
@@ -52,7 +48,7 @@ public class EventHistoryFragment extends Fragment {
         searchKeyword = rootView.findViewById(R.id.search);
         searchInputLayout = rootView.findViewById(R.id.search_layout);
         searchButton = rootView.findViewById(R.id.search_button);
-        refreshButton = rootView.findViewById(R.id.refreshFloatingButton);
+        swipeLayout = rootView.findViewById(R.id.swipeLayout);
         final String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d(TAG, uuid);
         Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
@@ -75,14 +71,15 @@ public class EventHistoryFragment extends Fragment {
             }
         });
 
-        refreshButton.setOnClickListener(new View.OnClickListener() {
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
+            public void onRefresh() {
                 Query newQuery = eventRef.whereEqualTo("socialCommunityID", uuid);
                 searchInputLayout.setErrorEnabled(false);
                 searchKeyword.setText("");
                 setUpRecyclerViewEventHistory(newQuery);
                 eventHistoryAdapter.startListening();
+                swipeLayout.setRefreshing(false);
             }
         });
 
@@ -90,7 +87,6 @@ public class EventHistoryFragment extends Fragment {
     }
 
     private void setUpRecyclerViewEventHistory(Query query) {
-
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
                 .setQuery(query, Event.class)
                 .build();

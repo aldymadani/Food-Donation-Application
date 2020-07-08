@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.SocialCommunity.DonatorActivity;
+import com.example.fooddonationapplication.ui.social_community.history.DonationListActivity;
 import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -63,7 +63,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DonatorActivity.class);
+                Intent intent = new Intent(context, DonationListActivity.class);
                 intent.putExtra("eventID", model.getEventID());
                 intent.putExtra("totalDonation", formattedTotalDonation);
                 context.startActivity(intent);

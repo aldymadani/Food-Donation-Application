@@ -17,23 +17,23 @@
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/SecondAppTheme">
-        <activity android:name=".SocialCommunity.DonatorActivity" />
-        <activity android:name=".donator.HistoryUserInterface.HistoryDetail" />
-        <activity android:name=".SocialCommunity.DonatorDetail" />
-        <activity android:name=".SocialCommunity.MainSocialCommunityActivity"
+        <activity android:name=".ui.social_community.DonatorActivity" />
+        <activity android:name=".ui.donator.history.DonationHistoryDetailActivity" />
+        <activity android:name=".ui.social_community.DonatorDetail" />
+        <activity android:name=".ui.social_community.MainSocialCommunityActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".donator.EventUserInterface.EventDetailActivity" />
-        <activity android:name=".donator.MainDonatorActivity"
+        <activity android:name=".ui.donator.event.EventDetailActivity" />
+        <activity android:name=".ui.donator.MainDonatorActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".donator.EventUserInterface.DonateActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".ui.donator.event.EventDonateActivity" />
+        <activity android:name=".ui.general.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity" />
+            android:name=".ui.general.RegisterActivity" />
 
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>

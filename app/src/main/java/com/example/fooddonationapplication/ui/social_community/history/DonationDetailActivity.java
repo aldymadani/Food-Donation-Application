@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.SocialCommunity;
+package com.example.fooddonationapplication.ui.social_community.history;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,7 +33,7 @@ import com.google.firebase.firestore.WriteBatch;
 import com.shreyaspatil.MaterialDialog.MaterialDialog;
 import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
-public class DonatorDetail extends AppCompatActivity {
+public class DonationDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DonatorDetailActivity";
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -131,7 +132,7 @@ public class DonatorDetail extends AppCompatActivity {
                         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(DonatorDetail.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);

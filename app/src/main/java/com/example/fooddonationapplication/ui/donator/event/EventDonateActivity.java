@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.donator.EventUserInterface;
+package com.example.fooddonationapplication.ui.donator.event;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -26,9 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
-import com.example.fooddonationapplication.donator.MainDonatorActivity;
+import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
@@ -52,7 +50,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class DonateActivity extends AppCompatActivity {
+public class EventDonateActivity extends AppCompatActivity {
 
     private static final String TAG = "DonateActivity";
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -63,6 +61,7 @@ public class DonateActivity extends AppCompatActivity {
     private EditText etAddress, etFoodItems, etDate, etTime, etQuantity;
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
     private String PROFILE_IMAGE_URL = null;
     private int TAKE_IMAGE_CODE = 10001;
     private Bitmap bitmap;
@@ -110,30 +109,32 @@ public class DonateActivity extends AppCompatActivity {
         }
 
 
-        etDate.setOnTouchListener(new View.OnTouchListener() {
+        etDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
                     calendar = Calendar.getInstance();
 
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
                     int month = calendar.get(Calendar.MONTH);
                     int year = calendar.get(Calendar.YEAR);
 
-                    datePickerDialog = new DatePickerDialog(DonateActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    datePickerDialog = new DatePickerDialog(EventDonateActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                            etDate.setText(chosenDate);
-                            chosenDate += " 23:59:59";
-                            try {
-                                chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Log.d(TAG, "Chosen Date" + chosenDate);
-                            Log.d(TAG, String.valueOf(chosenDateInMillis));
-                            Log.d(TAG, String.valueOf(System.currentTimeMillis()));
+                        chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                        etDate.setText(chosenDate);
+                        chosenDate += " 23:59:59";
+                        try {
+                            chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        /*
+                        Log.d(TAG, "Chosen Date" + chosenDate);
+                        Log.d(TAG, String.valueOf(chosenDateInMillis));
+                        Log.d(TAG, String.valueOf(System.currentTimeMillis()));
+                        */
                         }
                     }, year, month, day);
                     long now = System.currentTimeMillis() - 1000;
@@ -141,17 +142,19 @@ public class DonateActivity extends AppCompatActivity {
                     calendar.add(Calendar.YEAR, 0);
                     datePickerDialog.getDatePicker().setMaxDate(now + (1000 * 60 * 60 * 24 * 7));
                     datePickerDialog.show();
-                    return true;
+                } else {
+                    if (datePickerDialog != null) {
+                        datePickerDialog.hide();
+                    }
                 }
-                return false;
             }
         });
 
-        etTime.setOnTouchListener(new View.OnTouchListener() {
+        etTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(DonateActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    timePickerDialog = new TimePickerDialog(EventDonateActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
                             String amPm;
@@ -164,9 +167,11 @@ public class DonateActivity extends AppCompatActivity {
                         }
                     }, 0, 0, false);
                     timePickerDialog.show();
-                    return true;
+                } else {
+                    if (timePickerDialog != null) {
+                        timePickerDialog.hide();
+                    }
                 }
-                return false;
             }
         });
 
@@ -174,7 +179,7 @@ public class DonateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(DonateActivity.this, new String[] {Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
+                    ActivityCompat.requestPermissions(EventDonateActivity.this, new String[] {Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
                 } else {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (intent.resolveActivity(getPackageManager()) != null) {
@@ -432,7 +437,7 @@ public class DonateActivity extends AppCompatActivity {
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(DonateActivity.this, "Donation is successfully created", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventDonateActivity.this, "Donation is successfully created", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainDonatorActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

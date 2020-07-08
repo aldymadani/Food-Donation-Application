@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fooddonationapplication.donator.HistoryUserInterface.HistoryDetail;
+import com.example.fooddonationapplication.ui.donator.history.DonationHistoryDetailActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -40,7 +40,7 @@ public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, D
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, HistoryDetail.class);
+                Intent intent = new Intent(context, DonationHistoryDetailActivity.class);
                 intent.putExtra("Donator", model);
                 context.startActivity(intent);
             }

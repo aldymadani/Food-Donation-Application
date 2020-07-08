@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.donator.EventUserInterface;
+package com.example.fooddonationapplication.ui.donator.event;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -92,7 +92,7 @@ public class EventDetailActivity extends AppCompatActivity {
         eventDonateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EventDetailActivity.this, DonateActivity.class);
+                Intent intent = new Intent(EventDetailActivity.this, EventDonateActivity.class);
                 intent.putExtra("eventID", eventIDData);
                 intent.putExtra("eventName", eventTitleData);
                 intent.putExtra("socialCommunityId", eventSocialCommunityIdData);

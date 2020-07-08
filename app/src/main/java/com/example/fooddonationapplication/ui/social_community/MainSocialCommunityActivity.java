@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.SocialCommunity;
+package com.example.fooddonationapplication.ui.social_community;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.ui.social_community.create.CreateEventFragment;
+import com.example.fooddonationapplication.ui.social_community.history.EventHistoryFragment;
+import com.example.fooddonationapplication.ui.social_community.profile.SocialCommunityProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainSocialCommunityActivity extends AppCompatActivity {

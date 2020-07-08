@@ -1,10 +1,8 @@
-package com.example.fooddonationapplication.donator;
+package com.example.fooddonationapplication.ui.donator;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,9 +12,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.donator.EditProfileInterface.EditProfileFragment;
-import com.example.fooddonationapplication.donator.EventUserInterface.EventFragment;
-import com.example.fooddonationapplication.donator.HistoryUserInterface.DonationHistoryFragment;
+import com.example.fooddonationapplication.ui.donator.profile.EditProfileFragment;
+import com.example.fooddonationapplication.ui.donator.event.EventListFragment;
+import com.example.fooddonationapplication.ui.donator.history.DonationHistoryListFragment;
 import com.example.fooddonationapplication.viewmodel.EventViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -24,8 +22,8 @@ public class MainDonatorActivity extends AppCompatActivity {
 
     private static final String TAG = "MainDonatorActivity";
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    Fragment eventFragment = new EventFragment();
-    Fragment donationHistoryFragment = new DonationHistoryFragment();
+    Fragment eventFragment = new EventListFragment();
+    Fragment donationHistoryFragment = new DonationHistoryListFragment();
     Fragment editProfileFragment = new EditProfileFragment();
     Fragment activeFragment;
     Fragment firstInactiveFragment;

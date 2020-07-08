@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.SocialCommunity;
+package com.example.fooddonationapplication.ui.social_community.create;
 
 import android.Manifest;
 import android.app.Activity;
@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,7 +29,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.viewmodel.CreateEventViewModel;
-import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
@@ -102,16 +100,17 @@ public class CreateEventFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
 
         mViewModel = new ViewModelProvider(this).get(CreateEventViewModel.class);
-        if(mViewModel.getImageBitmap() != null) {
+
+        if (mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
             eventPhoto.setImageBitmap(bitmap);
             hasImage = true;
         }
 
-        eventEndDate.setOnTouchListener(new View.OnTouchListener() {
+        eventEndDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
                     calendar = Calendar.getInstance();
 
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -121,26 +120,28 @@ public class CreateEventFragment extends Fragment {
                     datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                            eventEndDate.setText(chosenDate);
-                            chosenDate += " 23:59:59";
-                            try {
-                                chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Log.d(TAG, "Chosen Date" + chosenDate);
-                            Log.d(TAG, String.valueOf(chosenDateInMillis));
-                            Log.d(TAG, String.valueOf(System.currentTimeMillis()));
+                        chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                        eventEndDate.setText(chosenDate);
+                        chosenDate += " 23:59:59";
+                        try {
+                            chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, "Chosen Date" + chosenDate);
+                        Log.d(TAG, String.valueOf(chosenDateInMillis));
+                        Log.d(TAG, String.valueOf(System.currentTimeMillis()));
                         }
                     }, year, month, day);
                     long now = System.currentTimeMillis() - 1000;
                     datePickerDialog.getDatePicker().setMinDate(now);
                     calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
                     datePickerDialog.show();
-                    return true;
+                } else {
+                    if (datePickerDialog != null) {
+                        datePickerDialog.hide();
+                    }
                 }
-                return false;
             }
         });
 
@@ -204,6 +205,7 @@ public class CreateEventFragment extends Fragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
+                // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
                 ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), resultUri);
                 try {
                     bitmap = ImageDecoder.decodeBitmap(source);

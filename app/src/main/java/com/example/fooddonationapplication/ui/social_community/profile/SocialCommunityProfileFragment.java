@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.SocialCommunity;
+package com.example.fooddonationapplication.ui.social_community.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.fooddonationapplication.LoginActivity;
+import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

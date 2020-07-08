@@ -20,7 +20,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.fooddonationapplication.donator.EventUserInterface.EventDetailActivity;
+import com.example.fooddonationapplication.ui.donator.event.EventDetailActivity;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -28,11 +28,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.text.DecimalFormat;
 
-public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.EventHolder> {
+public class EventListAdapter extends FirestoreRecyclerAdapter<Event, EventListAdapter.EventHolder> {
 
     private Context context;
 
-    public EventAdapter(@NonNull FirestoreRecyclerOptions<Event> options, Context context) {
+    public EventListAdapter(@NonNull FirestoreRecyclerOptions<Event> options, Context context) {
         super(options);
         this.context = context;
     }

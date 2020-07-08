@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.donator.HistoryUserInterface;
+package com.example.fooddonationapplication.ui.donator.history;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +19,7 @@ import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 
-public class HistoryDetail extends AppCompatActivity {
+public class DonationHistoryDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "HistoryDetail";
 
