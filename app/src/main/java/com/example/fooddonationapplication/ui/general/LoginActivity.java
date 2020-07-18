@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fooddonationapplication.R;
@@ -28,9 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
-
     private EditText emailId, passwordId;
-    private Button btnSignIn, btnRegister;
+    private Button btnSignIn, btnRegister, donatorButton, socialCommunityButton;
     private FirebaseAuth mFirebaseAuth;
     private ProgressBar progressBar;
     View view;
@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         emailId = findViewById(R.id.login_email);
         passwordId = findViewById(R.id.login_password);
         btnSignIn = findViewById(R.id.login_sign_in_button);
-        btnRegister = findViewById(R.id.login_register_text_view);
+        btnRegister = findViewById(R.id.loginRegisterButton);
         textInputEmail = findViewById(R.id.login_email_layout);
         textInputPassword = findViewById(R.id.login_password_layout);
         progressBar = findViewById(R.id.login_progressBar);
@@ -73,9 +73,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.login_register_text_view:
-                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(i);
+            case R.id.loginRegisterButton:
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
+                View registerDialog = getLayoutInflater().inflate(R.layout.dialog_register, null);
+                mBuilder.setView(registerDialog);
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+                donatorButton = registerDialog.findViewById(R.id.registerDialogDonatorButton);
+                socialCommunityButton = registerDialog.findViewById(R.id.registerDialogSocialCommunityButton);
+                donatorButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                        startActivity(i);
+                    }
+                });
+                socialCommunityButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(LoginActivity.this, SocialCommunityRegisterActivity.class);
+                        startActivity(i);
+                    }
+                });
                 break;
             case R.id.login_sign_in_button:
                 String email = emailId.getText().toString();

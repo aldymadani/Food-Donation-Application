@@ -6,7 +6,9 @@
     <string name="password_placeholder">Password</string>
     <string name="fullname_placeholder">Full Name</string>
     <string name="telephone_number_placeholder">Telephone Number</string>
+    <string name="social_community_description_placeholder">Social Community Description</string>
     <string name="register_title">Register as Donator</string>
+    <string name="social_community_register_title">Register as Social Community</string>
     <string name="sign_up_button">Sign Up</string>
     <string name="sign_in_title">Sign In</string>
     <string name="sign_in_button">Sign In</string>
@@ -18,6 +20,7 @@
     <string name="donate_quantity_placeholder">Donate Quantity in Kg</string>
     <string name="confirm_donation_button">Confirm Donation</string>
     <string name="food_image_text">Food Image :</string>
+    <string name="social_community_image_text">Social Community Profile Picture:</string>
     <string name="donator_details_title">Donator Details</string>
     <string name="donator_name_placeholder">Donator Name</string>
     <string name="donator_phone_number_placeholder">Donator Phone Number</string>
@@ -35,6 +38,7 @@
     <string name="social_community_name_placeholder">Social Community Name</string>
     <string name="donate_quantity_text">Donate Quantity :</string>
     <string name="create_event_title">Create Food Donation Event for Charity</string>
+    <string name="update_event_title">Event Title</string>
     <string name="event_title_placeholder">Event Title</string>
     <string name="event_description_placeholder">Event Description</string>
     <string name="event_end_date_placeholder">Event End Date</string>
@@ -52,7 +56,10 @@
     <string name="edit_profile_bottom_navbar">Edit profile</string>
     <string name="search_event_title_placeholder">Search Event Title</string>
     <string name="profile_bottom_navbar_social_community">Profile</string>
-    <string name="donation_history_total_title">You have donated ... Kg of Food</string>
-    <string name="donator_history_total_title">People have donated ... Kg of food</string>
+    <string name="donation_history_total_title">You have donated … Kg of Food</string>
+    <string name="donator_history_total_title">People have donated … Kg of food</string>
     <string name="sort_by_spinner">Sort By</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

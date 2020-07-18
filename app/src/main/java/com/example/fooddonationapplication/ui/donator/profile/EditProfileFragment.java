@@ -76,7 +76,7 @@ public class EditProfileFragment extends Fragment {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             oldPhoneNumber = documentSnapshot.getString("phone");
-                            telephoneNumberTextView.setText(documentSnapshot.getString("phone"));
+                            telephoneNumberTextView.setText(documentSnapshot.getString("phone")); // TODO later pass from login to reduce read
                         }
                     }
                 });

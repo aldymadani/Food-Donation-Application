@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.viewmodel.CreateEventViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -77,6 +78,9 @@ public class CreateEventFragment extends Fragment {
     private String targetQuantityData;
 
     private CreateEventViewModel mViewModel;
+
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    final String eventId = db.collection("events").document().getId();
 
     @Nullable
     @Override
@@ -230,7 +234,7 @@ public class CreateEventFragment extends Fragment {
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.v(TAG, date);
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(uuid + " " + date + ".jpeg");
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(eventId + ".jpeg"); // TODO gunakan event ID biar bisa di ganti nanti
 
         reference.putBytes(baos.toByteArray())
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -304,8 +308,6 @@ public class CreateEventFragment extends Fragment {
         String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String socialCommunityName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final String eventId = db.collection("events").document().getId();
         Log.d(TAG, eventId);
 
         final Event event = new Event();

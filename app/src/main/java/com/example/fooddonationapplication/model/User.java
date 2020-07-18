@@ -7,7 +7,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class User implements Parcelable {
-    private String name, phone, uuid, role;
+    private String name, phone, description, uuid, role, imageURI;
     private double totalDonation;
 
     public User(){
@@ -20,6 +20,15 @@ public class User implements Parcelable {
         this.uuid = uuid;
         this.role = role;
         this.totalDonation = totalDonation;
+    }
+
+    public User(String name, String phone, String description, String uuid, String role, String imageURI) {
+        this.name = name;
+        this.phone = phone;
+        this.description = description;
+        this.uuid = uuid;
+        this.role = role;
+        this.imageURI = imageURI;
     }
 
     public String getName() {
@@ -42,6 +51,10 @@ public class User implements Parcelable {
         return totalDonation;
     }
 
+    public String getImageURI() {
+        return imageURI;
+    }
+
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -57,18 +70,22 @@ public class User implements Parcelable {
     protected User(Parcel in) {
         name = in.readString();
         phone = in.readString();
+        description = in.readString();
         uuid = in.readString();
         role = in.readString();
         totalDonation = in.readDouble();
+        imageURI = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(phone);
+        dest.writeString(description);
         dest.writeString(uuid);
         dest.writeString(role);
         dest.writeDouble(totalDonation);
+        dest.writeString(imageURI);
     }
 
     @Override

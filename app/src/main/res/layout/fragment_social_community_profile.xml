@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.social_community.SocialCommunityProfileFragment">
+    tools:context=".ui.social_community.profile.SocialCommunityProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -107,6 +107,89 @@
                 android:drawableStart="@drawable/ic_phone_black_24dp"
                 android:drawablePadding="7dp"
                 android:ems="10"
+                android:enabled="false"
+                android:inputType="phone"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/socialCommunityProfileDescriptionLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Description"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileTelephoneNumberLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileTelephoneNumberLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileTelephoneNumberLayout">
+
+            <EditText
+                android:id="@+id/socialCommunityProfileDescription"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:inputType="phone" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/socialCommunityProfilePasswordLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/password_placeholder"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileDescriptionLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileDescriptionLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileDescriptionLayout">
+
+            <EditText
+                android:id="@+id/socialCommunityProfilePassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:inputType="phone"
+                android:enabled="false"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/socialCommunityProfileConfirmPasswordLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/confirm_password_placeholder"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfilePasswordLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfilePasswordLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfilePasswordLayout">
+
+            <EditText
+                android:id="@+id/socialCommunityProfileConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
                 android:inputType="phone"
                 android:enabled="false"
                 android:textColor="#000000" />
@@ -114,21 +197,34 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/socialCommunityProfileUpdateButton"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Update Profile"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textSize="14sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileConfirmPasswordLayout"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileConfirmPasswordLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileConfirmPasswordLayout" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/socialCommunityProfileLogOutButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
             android:text="@string/log_out_button"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
             app:backgroundTint="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileTelephoneNumberLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileUpdateButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
