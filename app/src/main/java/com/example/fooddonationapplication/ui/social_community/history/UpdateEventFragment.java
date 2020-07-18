@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,29 +29,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
-import com.example.fooddonationapplication.model.User;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
-import com.example.fooddonationapplication.viewmodel.CreateEventViewModel;
 import com.example.fooddonationapplication.viewmodel.UpdateEventViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -69,17 +60,18 @@ import java.util.Calendar;
 public class UpdateEventFragment extends Fragment {
 
     private static final String TAG = "UpdateEventFragment";
-    private TextView title;
-    private EditText eventDescription, eventEndDate, targetQuantity, totalDonation;
-    private TextInputLayout eventNameLayout, eventDescriptionLayout, eventEndDateLayout, targetQuantityLayout, totalDonationLayout;
+    private TextView eventTitle;
+    private EditText eventDescription, eventEndDate, eventTargetQuantity, eventTotalDonation;
+    private TextInputLayout eventNameLayout, eventDescriptionLayout, eventEndDateLayout, eventTargetQuantityLayout, eventTotalDonationLayout;
     private ImageView eventPhoto;
     private Button updateEventConfirmation, deleteEventConfirmation, sendNotificationConfirmation;
     private ProgressBar updateEventProgressBar, deleteEventProgressBar, sendNotificationProgressBar;
 
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    String eventID, eventPhotoImageURI, eventTitleData, eventDescriptionData, eventEndDateData;
-    Double eventTotalDonation, eventTargetQuantityData;
+    private Event newEvent = new Event();
+    private Event event = new Event();
+    private boolean hasChanged;
 
     View rootView;
 
@@ -87,20 +79,16 @@ public class UpdateEventFragment extends Fragment {
     private static final int GalleryPick = 1;
     private Bitmap bitmap;
     private String eventImageURI;
-    private boolean hasImage;
+    private boolean hasImageChanged;
 
     // For Date Picker
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
     private String chosenDate;
     private Long chosenDateInMillis, endDateInMillisData;
-    private boolean hasChanged, photoChanges, descriptionChanged, endDateChanged, totalQuantityChanged;
 
     // View Model
     private UpdateEventViewModel mViewModel;
-
-    // Event model
-    Event event = new Event();
 
     public UpdateEventFragment() {
         // Required empty public constructor
@@ -113,17 +101,17 @@ public class UpdateEventFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_update_event, container, false);
 
-        title = rootView.findViewById(R.id.updateEventTitle);
+        eventTitle = rootView.findViewById(R.id.updateEventTitle);
 
         eventDescription = rootView.findViewById(R.id.updateEventDescription);
         eventEndDate = rootView.findViewById(R.id.updateEventEndDate);
-        targetQuantity = rootView.findViewById(R.id.updateEventTargetQuantity);
-        totalDonation = rootView.findViewById(R.id.updateEventTotalDonation);
+        eventTargetQuantity = rootView.findViewById(R.id.updateEventTargetQuantity);
+        eventTotalDonation = rootView.findViewById(R.id.updateEventTotalDonation);
 
         eventDescriptionLayout = rootView.findViewById(R.id.updateEventDescriptionLayout);
         eventEndDateLayout = rootView.findViewById(R.id.updateEventEndDateLayout);
-        targetQuantityLayout = rootView.findViewById(R.id.updateEventTargetQuantityLayout);
-        totalDonationLayout = rootView.findViewById(R.id.updateEventTotalDonationLayout);
+        eventTargetQuantityLayout = rootView.findViewById(R.id.updateEventTargetQuantityLayout);
+        eventTotalDonationLayout = rootView.findViewById(R.id.updateEventTotalDonationLayout);
 
         eventPhoto = rootView.findViewById(R.id.updateEventImage);
 
@@ -141,60 +129,37 @@ public class UpdateEventFragment extends Fragment {
 
         // Variable to check if there are changes
         hasChanged = false;
-        photoChanges = false;
-        descriptionChanged = false;
-        endDateChanged = false;
-        totalQuantityChanged = false;
 
         // Coding started
 
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
-        Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
-        if (eventData != null) {
-            eventID = eventData.getEventID();
-            eventTotalDonation = eventData.getTotalDonation();
-            eventPhotoImageURI = eventData.getImageURI();
-            eventTitleData = eventData.getTitle();
-            eventDescriptionData = eventData.getDescription();
-            eventEndDateData = eventData.getEndDate();
-            eventTargetQuantityData = eventData.getTargetQuantity();
-            endDateInMillisData = eventData.getEndDateInMillis();
+        event = fragmentActivity.getIntent().getParcelableExtra("eventData");
+        if (event == null) {
+            // TODO: Alert when data is null
+            fragmentActivity.finish();
         }
 
         // Initialize the text in text field
-        title.setText((eventTitleData + " Details").toUpperCase());
-        eventDescription.setText(eventDescriptionData);
-        eventEndDate.setText(eventEndDateData);
-        targetQuantity.setText(String.valueOf(eventTargetQuantityData));
-        totalDonation.setText(String.valueOf(eventTotalDonation));
+        eventTitle.setText((event.getTitle() + " Details").toUpperCase());
+        eventDescription.setText(event.getDescription());
+        eventEndDate.setText(event.getEndDate());
+        eventTargetQuantity.setText(String.valueOf(event.getTargetQuantity()));
+        eventTotalDonation.setText(String.valueOf(event.getTotalDonation()));
         // ViewModel for Image
         mViewModel = new ViewModelProvider(this).get(UpdateEventViewModel.class);
         if (mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
             eventPhoto.setImageBitmap(bitmap);
-            hasImage = true;
+            hasImageChanged = true;
         } else {
-            Glide.with(this).load(eventPhotoImageURI).override(300,200)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                        eventProgressBar.setVisibility(View.GONE); // TODO add progressBar Later
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                        eventProgressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    }).error(R.drawable.ic_error_black_24dp).into(eventPhoto);
+            Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventPhoto);
         }
 
         deleteEventConfirmation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (eventTotalDonation > 0) {
+                if (event.getTotalDonation() > 0) {
                     Toast.makeText(getContext(), "Please ensure that the event have no donator", Toast.LENGTH_SHORT).show();
                 } else {
                     deleteEvent();
@@ -301,16 +266,24 @@ public class UpdateEventFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (eventEndDate.hasFocus()) {
+            eventEndDate.clearFocus();
+        }
+    }
+
     private void updateEvent() {
         // TODO check has changed to check if the user has change anything
         if (hasChanged) {
-            DocumentReference eventReference = db.collection("events").document(eventID);
+            DocumentReference eventReference = db.collection("events").document(newEvent.getEventID());
             eventReference.update(
-                    "description", event.getDescription(),
-                    "endDate", event.getEndDate(),
-                    "endDateInMillis", event.getEndDateInMillis(),
-                    "imageURI", event.getImageURI(), // TODO add image URI later
-                    "targetQuantity", event.getTargetQuantity()
+                    "description", newEvent.getDescription(),
+                    "endDate", newEvent.getEndDate(),
+                    "endDateInMillis", newEvent.getEndDateInMillis(),
+                    "imageURI", newEvent.getImageURI(), // TODO add image URI later
+                    "targetQuantity", newEvent.getTargetQuantity()
             ).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -323,36 +296,20 @@ public class UpdateEventFragment extends Fragment {
     }
 
     private void checkingChanges() {
-        // TODO add checking if there is empty field
+        // TODO: add checking if there is empty field
 
-        if (!eventDescriptionData.equalsIgnoreCase(eventDescription.getText().toString())) { // TODO add validation later on so no error in database
-            hasChanged = true;
-            event.setDescription(eventDescription.getText().toString());
-        } else {
-            event.setDescription(eventDescriptionData);
-        }
+        newEvent = event;
+        newEvent.setDescription(eventDescription.getText().toString());
+        newEvent.setEndDate(eventEndDate.getText().toString());
+        // TODO: Change this later on
+        newEvent.setEndDateInMillis(chosenDateInMillis);
+        newEvent.setTargetQuantity(Double.parseDouble(eventTargetQuantity.getText().toString()));
 
-        if (!eventEndDateData.equalsIgnoreCase(eventEndDate.getText().toString())) {
-            hasChanged = true;
-            event.setEndDate(eventEndDate.getText().toString());
-            event.setEndDateInMillis(chosenDateInMillis);
-        } else {
-            event.setEndDate(eventEndDateData);
-            event.setEndDateInMillis(endDateInMillisData);
-        }
+        hasChanged = !newEvent.isSame(event);
 
-        if (!String.valueOf(eventTargetQuantityData).equalsIgnoreCase(targetQuantity.getText().toString())) {
-            hasChanged = true;
-            event.setTargetQuantity(Double.parseDouble(targetQuantity.getText().toString()));
-        } else {
-            event.setTargetQuantity(eventTargetQuantityData);
-        }
-
-        if (hasImage) {
+        if (hasImageChanged) {
             hasChanged = true;
             handleUpload(bitmap);
-        } else {
-            event.setImageURI(eventPhotoImageURI);
         }
     }
 
@@ -360,7 +317,7 @@ public class UpdateEventFragment extends Fragment {
         // TODO disable update and send notification and the rest of the text and image click
         // Perform delete donation on the database
         WriteBatch batch = db.batch();
-        DocumentReference donatorReference = db.collection("events").document(eventID);
+        DocumentReference donatorReference = db.collection("events").document(event.getEventID());
         batch.delete(donatorReference); // TODO don't use batch, use single deletion
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -368,7 +325,7 @@ public class UpdateEventFragment extends Fragment {
             public void onComplete(@NonNull Task<Void> task) {
                 // Perform deletion of the image on the firebase storage
 //                String storageUrl = "event-image/" + eventID + ".jpeg";
-                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(eventPhotoImageURI);
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(event.getImageURI());
                 storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -431,11 +388,11 @@ public class UpdateEventFragment extends Fragment {
                 ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), resultUri);
                 try {
                     bitmap = ImageDecoder.decodeBitmap(source);
-                    hasImage = true;
-                    Log.d(TAG, String.valueOf(bitmap));
+                    hasImageChanged = true;
                     eventPhoto.setImageBitmap(bitmap);
                     mViewModel.setImageBitmap(bitmap);
                 } catch (IOException e) {
+                    Log.e("UpdateEventFragment", e.getLocalizedMessage());
                     e.printStackTrace();
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -452,21 +409,21 @@ public class UpdateEventFragment extends Fragment {
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 //        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.v(TAG, date);
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(eventID + ".jpeg"); // TODO gunakan event ID biar bisa di ganti nanti
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(event.getEventID() + ".jpeg"); // TODO gunakan event ID biar bisa di ganti nanti
 
         reference.putBytes(baos.toByteArray())
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        getDownloadUrl(reference);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: " + e.getCause());
-                    }
-                });
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    getDownloadUrl(reference);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onFailure: " + e.getCause());
+                }
+            });
     }
 
     private void getDownloadUrl(StorageReference reference) {

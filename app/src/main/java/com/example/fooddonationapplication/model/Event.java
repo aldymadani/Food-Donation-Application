@@ -130,6 +130,19 @@ public class Event implements Parcelable {
         return endDateInMillis;
     }
 
+    public boolean isSame(Event event) {
+        // TODO: Compare function
+        if (!eventID.equals(event.eventID)) {
+            return false;
+        }
+
+        if (!title.equals(event.title)) {
+            return false;
+        }
+
+        return true;
+    }
+
     protected Event(Parcel in) {
         imageURI = in.readString();
         eventID = in.readString();

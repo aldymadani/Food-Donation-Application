@@ -39,15 +39,16 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull EventHistoryHolder holder, int position, @NonNull final Event model) {
+    protected void onBindViewHolder(@NonNull EventHistoryHolder holder, int position, @NonNull final Event event) {
         DecimalFormat df = new DecimalFormat("#.###");
-        final String formattedTotalDonation = df.format(model.getTotalDonation());
+        final String formattedTotalDonation = df.format(event.getTotalDonation());
 
-        holder.eventTitle.setText(model.getTitle());
-        holder.eventTotalDonation.setText("Total Donation : " + formattedTotalDonation + " / " + String.valueOf(model.getTargetQuantity()) + " Kg");
-        holder.eventEndDate.setText("End Date : " + model.getEndDate());
-        holder.eventDescription.setText("Description : " + model.getDescription());
-        Glide.with(context).load(model.getImageURI()).override(300,200)
+        holder.eventTitle.setText(event.getTitle());
+        holder.eventTotalDonation.setText("Total Donation : " + formattedTotalDonation + " / " + String.valueOf(event.getTargetQuantity()) + " Kg");
+        holder.eventEndDate.setText("End Date : " + event.getEndDate());
+        holder.eventDescription.setText("Description : " + event.getDescription());
+        // Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventPhoto);
+        Glide.with(context).load(event.getImageURI()).override(300,200)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -68,7 +69,7 @@ public class EventHistoryAdapter extends FirestoreRecyclerAdapter<Event, EventHi
                 Intent intent = new Intent(context, UpdateEventActivity.class);
 //                intent.putExtra("eventID", model.getEventID());
 //                intent.putExtra("totalDonation", formattedTotalDonation);
-                intent.putExtra("eventData", model);
+                intent.putExtra("eventData", event);
                 context.startActivity(intent);
             }
         });
