@@ -77,6 +77,7 @@
                 android:inputType="date" />
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/updateEventTargetQuantityLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -105,12 +106,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:hint="Total Donation in Kg"
             android:layout_marginTop="8dp"
-            android:hint="@string/target_in_quantity_placeholder"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/updateEventTargetQuantityLayout"
             app:layout_constraintStart_toStartOf="@+id/updateEventTargetQuantityLayout"
-            app:layout_constraintTop_toBottomOf="@+id/updateEventTargetQuantityLayout">
+            app:layout_constraintTop_toBottomOf="@+id/updateEventTargetQuantityLayout" >
 
             <EditText
                 android:id="@+id/updateEventTotalDonation"
@@ -148,6 +149,16 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/updateEventTotalDonationLayout"
             app:layout_constraintTop_toBottomOf="@+id/updateEventPhotoText" />
+
+        <ProgressBar
+            android:id="@+id/updateEventImageProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/updateEventImage"
+            app:layout_constraintEnd_toEndOf="@+id/updateEventImage"
+            app:layout_constraintStart_toStartOf="@+id/updateEventImage"
+            app:layout_constraintTop_toTopOf="@+id/updateEventImage" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/updateEventConfirmButton"

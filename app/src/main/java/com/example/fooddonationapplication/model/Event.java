@@ -132,15 +132,20 @@ public class Event implements Parcelable {
 
     public boolean isSame(Event event) {
         // TODO: Compare function
-        if (!eventID.equals(event.eventID)) {
-            return false;
+        boolean isSame = true;
+        if (!description.equals(event.getDescription())) {
+            isSame=  false;
         }
 
-        if (!title.equals(event.title)) {
-            return false;
+        if (!endDate.equals(event.getEndDate())) {
+            isSame = false;
         }
 
-        return true;
+        if (targetQuantity != event.getTargetQuantity()) {
+            isSame = false;
+        }
+
+        return isSame;
     }
 
     protected Event(Parcel in) {

@@ -132,6 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (!email.isEmpty() && !password.isEmpty()) {
             btnSignIn.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
+            btnRegister.setEnabled(false);
             isValid = true;
         } else {
             btnSignIn.setVisibility(View.VISIBLE);

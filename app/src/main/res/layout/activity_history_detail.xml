@@ -226,6 +226,7 @@
                 android:inputType="numberDecimal"
                 android:enabled="false"
                 android:textColor="#000000" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -297,6 +298,16 @@
             app:layout_constraintStart_toStartOf="@+id/historyDetailDonationDateLayout"
             app:layout_constraintTop_toBottomOf="@+id/donate_insert_image_text" />
 
+        <ProgressBar
+            android:id="@+id/historyDetailFoodImageProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/historyDetailFoodPhoto"
+            app:layout_constraintEnd_toEndOf="@+id/historyDetailFoodPhoto"
+            app:layout_constraintStart_toStartOf="@+id/historyDetailFoodPhoto"
+            app:layout_constraintTop_toTopOf="@+id/historyDetailFoodPhoto" />
+
         <TextView
             android:id="@+id/donate_insert_image_text"
             style="@style/ShadowForText"
@@ -310,16 +321,6 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/historyDetailDonationDateLayout"
             app:layout_constraintTop_toBottomOf="@+id/historyDetailDonationDateLayout" />
-
-        <ProgressBar
-            android:id="@+id/historyDetailFoodImageProgressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintTop_toTopOf="@+id/historyDetailFoodPhoto" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

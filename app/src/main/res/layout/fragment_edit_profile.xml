@@ -28,19 +28,16 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_profile_email_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
             android:hint="@string/email_placeholder"
             app:errorEnabled="true"
             app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_title">
+            app:layout_constraintEnd_toEndOf="@+id/edit_profile_name_layout"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/edit_profile_name_layout"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_name_layout">
 
             <EditText
                 android:id="@+id/edit_profile_email"
@@ -106,13 +103,18 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:hint="@string/fullname_placeholder"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_email_layout"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_email_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_layout">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_title" >
 
             <EditText
                 android:id="@+id/edit_profile_name"
@@ -133,10 +135,10 @@
             android:layout_marginTop="8dp"
             android:hint="@string/telephone_number_placeholder"
             app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_name_layout"
+            app:layout_constraintEnd_toEndOf="@+id/edit_profile_email_layout"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_name_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_name_layout">
+            app:layout_constraintStart_toStartOf="@+id/edit_profile_email_layout"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_layout">
 
             <EditText
                 android:id="@+id/edit_profile_telephone_number"

@@ -17,10 +17,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -62,10 +65,10 @@ public class UpdateEventFragment extends Fragment {
     private static final String TAG = "UpdateEventFragment";
     private TextView eventTitle;
     private EditText eventDescription, eventEndDate, eventTargetQuantity, eventTotalDonation;
-    private TextInputLayout eventNameLayout, eventDescriptionLayout, eventEndDateLayout, eventTargetQuantityLayout, eventTotalDonationLayout;
+    private TextInputLayout eventDescriptionLayout, eventEndDateLayout, eventTargetQuantityLayout;
     private ImageView eventPhoto;
     private Button updateEventConfirmation, deleteEventConfirmation, sendNotificationConfirmation;
-    private ProgressBar updateEventProgressBar, deleteEventProgressBar, sendNotificationProgressBar;
+    private ProgressBar updateEventProgressBar, deleteEventProgressBar, sendNotificationProgressBar, imageEventPhotoProgressBar;
 
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -94,7 +97,6 @@ public class UpdateEventFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,7 +113,6 @@ public class UpdateEventFragment extends Fragment {
         eventDescriptionLayout = rootView.findViewById(R.id.updateEventDescriptionLayout);
         eventEndDateLayout = rootView.findViewById(R.id.updateEventEndDateLayout);
         eventTargetQuantityLayout = rootView.findViewById(R.id.updateEventTargetQuantityLayout);
-        eventTotalDonationLayout = rootView.findViewById(R.id.updateEventTotalDonationLayout);
 
         eventPhoto = rootView.findViewById(R.id.updateEventImage);
 
@@ -122,6 +123,7 @@ public class UpdateEventFragment extends Fragment {
         updateEventProgressBar = rootView.findViewById(R.id.updateEventConfirmProgressBar);
         deleteEventProgressBar = rootView.findViewById(R.id.updateEventDeleteProgressBar);
         sendNotificationProgressBar = rootView.findViewById(R.id.updateEventSendNotificationButtonProgressBar);
+        imageEventPhotoProgressBar = rootView.findViewById(R.id.updateEventImageProgressBar);
 
         updateEventProgressBar.setVisibility(View.INVISIBLE);
         deleteEventProgressBar.setVisibility(View.INVISIBLE);
@@ -136,6 +138,7 @@ public class UpdateEventFragment extends Fragment {
         FragmentActivity fragmentActivity = requireActivity();
         event = fragmentActivity.getIntent().getParcelableExtra("eventData");
         if (event == null) {
+            Toast.makeText(getContext(), "NULL DATA", Toast.LENGTH_SHORT).show();
             // TODO: Alert when data is null
             fragmentActivity.finish();
         }
@@ -146,14 +149,35 @@ public class UpdateEventFragment extends Fragment {
         eventEndDate.setText(event.getEndDate());
         eventTargetQuantity.setText(String.valueOf(event.getTargetQuantity()));
         eventTotalDonation.setText(String.valueOf(event.getTotalDonation()));
+
+        // Disable the totalDonation text field
+        eventTotalDonation.setFocusableInTouchMode(false);
+        eventTotalDonation.setFocusable(false);
+        eventTotalDonation.setCursorVisible(false);
+
+        // To hide the keyboard when user click in the end date text field
+        eventEndDate.setInputType(InputType.TYPE_NULL);
+
         // ViewModel for Image
         mViewModel = new ViewModelProvider(this).get(UpdateEventViewModel.class);
         if (mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
             eventPhoto.setImageBitmap(bitmap);
-            hasImageChanged = true;
+            imageEventPhotoProgressBar.setVisibility(View.INVISIBLE);
+            hasImageChanged = mViewModel.isHasImageChanged();
         } else {
-            Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventPhoto);
+            Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventPhoto, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    imageEventPhotoProgressBar.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    imageEventPhotoProgressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getContext(), "Error in loading the image", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         deleteEventConfirmation.setOnClickListener(new View.OnClickListener() {
@@ -162,52 +186,27 @@ public class UpdateEventFragment extends Fragment {
                 if (event.getTotalDonation() > 0) {
                     Toast.makeText(getContext(), "Please ensure that the event have no donator", Toast.LENGTH_SHORT).show();
                 } else {
+                    deleteEventConfirmation.setVisibility(View.INVISIBLE);
+                    deleteEventProgressBar.setVisibility(View.VISIBLE);
+                    updateEventConfirmation.setEnabled(false);
+                    sendNotificationConfirmation.setEnabled(false);
+                    eventPhoto.setEnabled(false);
                     deleteEvent();
                 }
             }
         });
 
-        // TODO add glider
         updateEventConfirmation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkingChanges();
-                updateEvent();
-//                eventReference.update("description", eventDescription.getText().toString());
-//                eventReference.update("endDate", chosenDate);
-//                eventReference.update("endDateInMillis", chosenDateInMillis);
-//                eventReference.update("imageURI", "ADD LATER"); // TODO add image URI later
-//                eventReference.update("targetQuantity",targetQuantity.getText().toString());
-//                Event event = new Event(fullName, telephoneNumber, uuid, "donator", 0);
-//                db.collection("events").document(eventID)
-//                        .set(event)
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                Toast.makeText(getContext(), "Event is successfully created", Toast.LENGTH_SHORT).show();
-//                                Intent intent = new Intent(getContext(), MainSocialCommunityActivity.class);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                startActivity(intent);
-//                                Log.d(TAG, "Event successfully written!");
-//                                progressBar.setVisibility(View.INVISIBLE);
-//                                createEventConfirmation.setVisibility(View.VISIBLE);
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Log.e(TAG, "Error writing document", e);
-//                                progressBar.setVisibility(View.INVISIBLE);
-//                                createEventConfirmation.setVisibility(View.VISIBLE);
-//                            }
-//                        });
-//                WriteBatch batch = db.batch();
-//                DocumentReference eventReference = db.collection("events").document(eventID);
-//                batch.update(eventReference, "description", eventDescription.getText().toString());
-//                batch.update(eventReference, "endDate", chosenDate);
-//                batch.update(eventReference, "endDateInMillis", chosenDateInMillis);
-//                batch.update(eventReference, "targetQuantity", targetQuantity.getText().toString());
-//                batch.update(eventReference, "imageURI", eventDescription.getText().toString()); // TODO put image after upload URI
+                if(!hasEmptyField()) {
+                    updateEventConfirmation.setVisibility(View.INVISIBLE);
+                    updateEventProgressBar.setVisibility(View.VISIBLE);
+                    deleteEventConfirmation.setEnabled(false);
+                    sendNotificationConfirmation.setEnabled(false);
+                    eventPhoto.setEnabled(false);
+                    checkingChanges();
+                }
             }
         });
 
@@ -229,32 +228,7 @@ public class UpdateEventFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    calendar = Calendar.getInstance();
-
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    int month = calendar.get(Calendar.MONTH);
-                    int year = calendar.get(Calendar.YEAR);
-
-                    datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                            eventEndDate.setText(chosenDate);
-                            chosenDate += " 23:59:59";
-                            try {
-                                chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Log.d(TAG, "Chosen Date" + chosenDate);
-                            Log.d(TAG, String.valueOf(chosenDateInMillis));
-                            Log.d(TAG, String.valueOf(System.currentTimeMillis()));
-                        }
-                    }, year, month, day);
-                    long now = System.currentTimeMillis() - 1000;
-                    datePickerDialog.getDatePicker().setMinDate(now);
-                    calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
-                    datePickerDialog.show();
+                    setUpCalendar();
                 } else {
                     if (datePickerDialog != null) {
                         datePickerDialog.hide();
@@ -263,7 +237,56 @@ public class UpdateEventFragment extends Fragment {
             }
         });
 
+        eventEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpCalendar();
+            }
+        });
+
         return rootView;
+    }
+
+    private void setUpCalendar() {
+        hideKeyboard(getActivity());
+        // To hide the keyboard when transitioning from other text field to end date text field
+        calendar = Calendar.getInstance();
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                eventEndDate.setText(chosenDate);
+//                            chosenDate += " 23:59:59";
+//                            try {
+//                                chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+                Log.d(TAG, "Chosen Date" + chosenDate);
+//                            Log.d(TAG, String.valueOf(chosenDateInMillis));
+                Log.d(TAG, String.valueOf(System.currentTimeMillis()));
+            }
+        }, year, month, day);
+        long now = System.currentTimeMillis() - 1000;
+        datePickerDialog.getDatePicker().setMinDate(now);
+        calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
+        datePickerDialog.show();
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        // Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        // If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
@@ -277,7 +300,7 @@ public class UpdateEventFragment extends Fragment {
     private void updateEvent() {
         // TODO check has changed to check if the user has change anything
         if (hasChanged) {
-            DocumentReference eventReference = db.collection("events").document(newEvent.getEventID());
+            DocumentReference eventReference = db.collection("events").document(event.getEventID());
             eventReference.update(
                     "description", newEvent.getDescription(),
                     "endDate", newEvent.getEndDate(),
@@ -287,29 +310,87 @@ public class UpdateEventFragment extends Fragment {
             ).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
+                    deleteEventConfirmation.setEnabled(true);
+                    sendNotificationConfirmation.setEnabled(true);
+                    updateEventProgressBar.setVisibility(View.INVISIBLE);
+                    updateEventConfirmation.setVisibility(View.VISIBLE);
+                    eventPhoto.setEnabled(true);
+
+                    // Checking for the new things again
+                    event.setDescription(newEvent.getDescription());
+                    event.setEndDate(newEvent.getEndDate());
+                    event.setEndDateInMillis(newEvent.getEndDateInMillis());
+                    event.setImageURI(newEvent.getImageURI());
+                    event.setTargetQuantity(newEvent.getTargetQuantity());
+                    hasImageChanged = false;
+                    mViewModel.setHasImageChanged(false);
                     Toast.makeText(getContext(), "Event successfully updated", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
             Toast.makeText(getContext(), "Nothing has changed", Toast.LENGTH_SHORT).show();
+            deleteEventConfirmation.setEnabled(true);
+            sendNotificationConfirmation.setEnabled(true);
+            updateEventProgressBar.setVisibility(View.INVISIBLE);
+            updateEventConfirmation.setVisibility(View.VISIBLE);
+            eventPhoto.setEnabled(true);
         }
+    }
+
+    private boolean hasEmptyField() {
+        boolean hasEmpty = true;
+        if (eventDescription.getText().toString().isEmpty()) {
+            eventDescriptionLayout.setError("Please input the event description");
+        } else {
+            eventDescriptionLayout.setErrorEnabled(false);
+        }
+
+        if (eventEndDate.getText().toString().isEmpty()) {
+            eventEndDateLayout.setError("Please input event end date");
+        } else {
+            eventEndDateLayout.setErrorEnabled(false);
+        }
+
+        if (eventTargetQuantity.getText().toString().isEmpty()) {
+            eventTargetQuantityLayout.setError("Please input your target quantity of the event");
+        } else {
+            eventTargetQuantityLayout.setErrorEnabled(false);
+        }
+
+        if (!eventDescription.getText().toString().isEmpty() && !eventEndDate.getText().toString().isEmpty()
+                && !eventTargetQuantity.getText().toString().isEmpty()) {
+            hasEmpty = false;
+        }
+
+        return hasEmpty;
     }
 
     private void checkingChanges() {
         // TODO: add checking if there is empty field
 
-        newEvent = event;
+//        newEvent = event;
         newEvent.setDescription(eventDescription.getText().toString());
         newEvent.setEndDate(eventEndDate.getText().toString());
-        // TODO: Change this later on
+        // Convert the date to Millis
+        try {
+            chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(eventEndDate.getText().toString() + " 23:59:59").getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         newEvent.setEndDateInMillis(chosenDateInMillis);
         newEvent.setTargetQuantity(Double.parseDouble(eventTargetQuantity.getText().toString()));
 
-        hasChanged = !newEvent.isSame(event);
+        hasChanged = !event.isSame(newEvent);
+        Log.d(TAG, "NEW: " + newEvent.getDescription());
+        Log.d(TAG, "OLD: " + event.getDescription());
+        Toast.makeText(getContext(), String.valueOf(!event.isSame(newEvent)), Toast.LENGTH_SHORT).show();
 
         if (hasImageChanged) {
             hasChanged = true;
             handleUpload(bitmap);
+        } else {
+            newEvent.setImageURI(event.getImageURI());
+            updateEvent();
         }
     }
 
@@ -389,6 +470,7 @@ public class UpdateEventFragment extends Fragment {
                 try {
                     bitmap = ImageDecoder.decodeBitmap(source);
                     hasImageChanged = true;
+                    mViewModel.setHasImageChanged(true);
                     eventPhoto.setImageBitmap(bitmap);
                     mViewModel.setImageBitmap(bitmap);
                 } catch (IOException e) {
@@ -434,7 +516,7 @@ public class UpdateEventFragment extends Fragment {
                         Log.d(TAG, "OnSuccess: " + uri);
                         eventImageURI = uri.toString();
                         Log.d(TAG,eventImageURI);
-                        event.setImageURI(eventImageURI);
+                        newEvent.setImageURI(eventImageURI);
                         updateEvent();
                     }
                 });
