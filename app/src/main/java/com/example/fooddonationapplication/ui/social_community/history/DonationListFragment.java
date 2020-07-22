@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.DonationListAdapter;
@@ -23,6 +24,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +42,7 @@ public class DonationListFragment extends Fragment {
 
     private String eventID;
     private String totalDonation;
+    private MaterialSpinner sortBy;
 
     public DonationListFragment() {
         // Required empty public constructor
@@ -51,6 +54,7 @@ public class DonationListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_donation_list, container, false);
+        sortBy = rootView.findViewById(R.id.donationListSpinner);
 
 //        Intent intent = getIntent().;
 //        Event event = intent.getParcelableExtra("Event");
@@ -85,7 +89,26 @@ public class DonationListFragment extends Fragment {
         if (eventID != null) {
             Log.d(TAG, eventID);
         }
-        setUpRecyclerViewDonator(eventID);
+        Query query = donatorRef.whereEqualTo("eventId", eventID);
+        setUpRecyclerViewDonator(query);
+
+        sortBy.setItems("All", "On-Progress", "Completed");
+        sortBy.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                Toast.makeText(getContext(), "Clicked " + item, Toast.LENGTH_SHORT).show();
+                Query newQuery = null;
+                if(item.equals("All")) {
+                    newQuery = donatorRef.whereEqualTo("eventId", eventID);
+                } else if (item.equals("On-Progress")) {
+                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "on-progress");
+                } else if (item.equals("Completed")) {
+                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "completed");
+                }
+                setUpRecyclerViewDonator(newQuery);
+                donatorAdapter.startListening();
+            }
+        });
 
         return rootView;
     }
@@ -102,8 +125,8 @@ public class DonationListFragment extends Fragment {
         donatorAdapter.startListening();
     }
 
-    private void setUpRecyclerViewDonator(String eventID) {
-        Query query = donatorRef.whereEqualTo("eventId", eventID);
+    private void setUpRecyclerViewDonator(Query query) {
+//        Query query = donatorRef.whereEqualTo("eventId", eventID);
 
         FirestoreRecyclerOptions<Donator> options = new FirestoreRecyclerOptions.Builder<Donator>()
                 .setQuery(query, Donator.class)

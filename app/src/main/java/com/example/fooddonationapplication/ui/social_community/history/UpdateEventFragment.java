@@ -322,6 +322,7 @@ public class UpdateEventFragment extends Fragment {
                     event.setEndDateInMillis(newEvent.getEndDateInMillis());
                     event.setImageURI(newEvent.getImageURI());
                     event.setTargetQuantity(newEvent.getTargetQuantity());
+                    hasChanged = false;
                     hasImageChanged = false;
                     mViewModel.setHasImageChanged(false);
                     Toast.makeText(getContext(), "Event successfully updated", Toast.LENGTH_SHORT).show();

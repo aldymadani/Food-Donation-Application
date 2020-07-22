@@ -6,6 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".ui.social_community.history.DonationListFragment">
 
+    <TextView
+        android:id="@+id/donationListTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_horizontal"
+        android:text="@string/donator_history_total_title"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/donationListSpinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/donationListSortByTitle"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:textColor="@color/colorPrimary"-->
+<!--        android:textSize="25sp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:text="Sort By: "-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/donationListSpinner"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/donationListSpinner"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/donationListSpinner" />-->
+
+
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/donationListSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/sort_by_spinner"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/donationListTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/donationListTitle" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/donationListRecyclerView"
         android:layout_width="0dp"
@@ -14,19 +56,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/donationListTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/donationListSpinner" />
 
-    <TextView
-        android:id="@+id/donationListTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:text="@string/donator_history_total_title"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

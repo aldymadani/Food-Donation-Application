@@ -42,6 +42,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // TODO implement double click back to exit application (currently only single click)
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailId = findViewById(R.id.login_email);
         passwordId = findViewById(R.id.login_password);

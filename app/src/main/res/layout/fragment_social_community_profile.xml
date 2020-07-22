@@ -196,6 +196,42 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/socialCommunityProfileImageText"
+            style="@style/ShadowForText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/social_community_image_text"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileConfirmPasswordLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileConfirmPasswordLayout" />
+
+        <ImageView
+            android:id="@+id/socialCommunityProfilePhoto"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/insert_image"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileConfirmPasswordLayout"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileConfirmPasswordLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileImageText" />
+
+        <ProgressBar
+            android:id="@+id/socialCommunityProfilePhotoProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintTop_toTopOf="@+id/socialCommunityProfilePhoto" />
+
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/socialCommunityProfileUpdateButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
@@ -207,9 +243,20 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
             app:backgroundTint="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileConfirmPasswordLayout"
-            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileConfirmPasswordLayout"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileConfirmPasswordLayout" />
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfilePhoto" />
+
+        <ProgressBar
+            android:id="@+id/socialCommunityProfileProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/socialCommunityProfileUpdateButton"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileUpdateButton"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileUpdateButton"
+            app:layout_constraintTop_toTopOf="@+id/socialCommunityProfileUpdateButton" />
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/socialCommunityProfileLogOutButton"

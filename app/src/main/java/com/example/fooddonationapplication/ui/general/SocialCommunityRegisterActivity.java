@@ -297,7 +297,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }
-                });
+                }); // TODO update the profile photo also https://firebase.google.com/docs/auth/android/manage-users
     }
 
     private void registerToDatabase() {

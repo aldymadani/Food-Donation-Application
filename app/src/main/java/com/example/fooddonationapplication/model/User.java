@@ -14,6 +14,38 @@ public class User implements Parcelable {
         // Empty constructor
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setImageURI(String imageURI) {
+        this.imageURI = imageURI;
+    }
+
+    public void setTotalDonation(double totalDonation) {
+        this.totalDonation = totalDonation;
+    }
+
     public User(String name, String phone, String uuid, String role, double totalDonation) {
         this.name = name;
         this.phone = phone;
@@ -53,6 +85,18 @@ public class User implements Parcelable {
 
     public String getImageURI() {
         return imageURI;
+    }
+
+    public boolean isSame(User user) {
+        // TODO: Compare function
+        boolean isSame = true;
+        if (!phone.equals(user.phone)) {
+            isSame = false;
+        }
+        if (!description.equals(user.description)) {
+            isSame = false;
+        }
+        return isSame;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

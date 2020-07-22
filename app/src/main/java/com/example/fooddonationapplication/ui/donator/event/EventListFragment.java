@@ -37,10 +37,10 @@ public class EventListFragment extends Fragment {
     private EventListAdapter adapter;
     private RecyclerView recyclerView;
     private ImageView searchButton;
-    private TextInputLayout searchInputLayout;
+    private TextInputLayout searchKeywordLayout;
     private EditText searchKeyword;
     private FloatingActionButton refreshButton;
-    private MaterialSpinner sortBy;
+//    private MaterialSpinner sortBy;
 
     @Nullable
     @Override
@@ -51,28 +51,46 @@ public class EventListFragment extends Fragment {
 
         Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
         setUpRecyclerView(query);
+        searchKeyword = rootView.findViewById(R.id.eventSearch);
+        searchKeywordLayout = rootView.findViewById(R.id.eventSearchLayout);
+        searchButton = rootView.findViewById(R.id.eventSearchButton);
 
-        sortBy = rootView.findViewById(R.id.spinner);
-        sortBy.setItems("Almost end events", "Newest Events", "Past Events", "Show all events");
-        sortBy.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Toast.makeText(getContext(), "Clicked " + item, Toast.LENGTH_SHORT).show();
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Query newQuery = null;
-                if(item.equals("Show all events")) {
-                    newQuery = eventRef;
-                } else if (item.equals("Newest Events")) {
-                    newQuery = eventRef.orderBy("timestamp", Query.Direction.DESCENDING);
-                } else if (item.equals("Past Events")) {
-                    newQuery = eventRef.whereLessThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
-                } else if (item.equals("Almost end events")) {
-                    newQuery = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
+                String search = searchKeyword.getText().toString().toLowerCase();
+                if (searchKeyword.getText().toString().isEmpty()) {
+                    searchKeywordLayout.setError("Please fill in the title of the event");
+                } else {
+                    searchKeywordLayout.setErrorEnabled(false);
+                    newQuery = eventRef.whereGreaterThanOrEqualTo("title", search).whereLessThanOrEqualTo("title",search + "z");
+                    setUpRecyclerView(newQuery);
+                    adapter.startListening();
                 }
-                setUpRecyclerView(newQuery);
-                adapter.startListening();
             }
         });
 
+//        sortBy = rootView.findViewById(R.id.spinner);
+//        sortBy.setItems("Almost end events", "Newest Events", "Past Events", "Show all events");
+//        sortBy.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+//
+//            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+//                Toast.makeText(getContext(), "Clicked " + item, Toast.LENGTH_SHORT).show();
+//                Query newQuery = null;
+//                if(item.equals("Show all events")) {
+//                    newQuery = eventRef;
+//                } else if (item.equals("Newest Events")) {
+//                    newQuery = eventRef.orderBy("timestamp", Query.Direction.DESCENDING);
+//                } else if (item.equals("Past Events")) {
+//                    newQuery = eventRef.whereLessThanOrEqualTo("endDateInMillis", System.currentTimeMillis());
+//                } else if (item.equals("Almost end events")) {
+//                    newQuery = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
+//                }
+//                setUpRecyclerView(newQuery);
+//                adapter.startListening();
+//            }
+//        });
         return rootView;
     }
 
