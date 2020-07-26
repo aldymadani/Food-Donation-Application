@@ -3,6 +3,7 @@ package com.example.fooddonationapplication.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
@@ -46,23 +47,6 @@ public class User implements Parcelable {
         this.totalDonation = totalDonation;
     }
 
-    public User(String name, String phone, String uuid, String role, double totalDonation) {
-        this.name = name;
-        this.phone = phone;
-        this.uuid = uuid;
-        this.role = role;
-        this.totalDonation = totalDonation;
-    }
-
-    public User(String name, String phone, String description, String uuid, String role, String imageURI) {
-        this.name = name;
-        this.phone = phone;
-        this.description = description;
-        this.uuid = uuid;
-        this.role = role;
-        this.imageURI = imageURI;
-    }
-
     public String getName() {
         return name;
     }
@@ -90,10 +74,10 @@ public class User implements Parcelable {
     public boolean isSame(User user) {
         // TODO: Compare function
         boolean isSame = true;
-        if (!phone.equals(user.phone)) {
+        if (!phone.equalsIgnoreCase(user.getPhone())) {
             isSame = false;
         }
-        if (!description.equals(user.description)) {
+        if (!description.equalsIgnoreCase(user.getDescription())) {
             isSame = false;
         }
         return isSame;

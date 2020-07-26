@@ -7,8 +7,30 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Donator implements Parcelable {
-    public String name, phone, uuid, socialCommunityId, socialCommunityName, eventName, eventId, pickUpAddress, foodItems, pickUpDate, pickUpTime, donationDate, imageURI, donatorId;
+    public String name;
+    public String phone;
+    public String uuid;
+    public String socialCommunityId;
+    public String socialCommunityName;
+    public String eventName;
+    public String eventId;
+    public String pickUpAddress;
+    public String foodItems;
+    public String pickUpDate;
+    public String pickUpTime;
+    public String donationDate;
+    public String imageURI;
+    public String donatorId;
+    public String status;
     double totalDonation;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Donator(){
         // Empty constructor
@@ -146,6 +168,7 @@ public class Donator implements Parcelable {
         imageURI = in.readString();
         totalDonation = in.readDouble();
         donatorId = in.readString();
+        status = in.readString();
     }
 
     public static final Creator<Donator> CREATOR = new Creator<Donator>() {
@@ -177,6 +200,7 @@ public class Donator implements Parcelable {
         dest.writeString(imageURI);
         dest.writeDouble(totalDonation);
         dest.writeString(donatorId);
+        dest.writeString(status);
     }
 
     public double getTotalDonation() {

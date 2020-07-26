@@ -1,9 +1,11 @@
 package com.example.fooddonationapplication.ui.general;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -21,7 +23,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +35,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mFirebaseAuth;
     private ProgressBar progressBar;
     View view;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
     private TextInputLayout textInputEmail, textInputPassword;
 
     @Override
@@ -55,19 +55,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressBar.setVisibility(View.INVISIBLE);
         view = findViewById(R.id.login_activity);
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null) {
-                    String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    checkRole(uuid);
-                } else {
-                    Toast.makeText(LoginActivity.this, "Please login", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
         btnSignIn.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
     }
@@ -76,18 +63,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loginRegisterButton:
+                btnSignIn.setEnabled(false);
+                hideKeyboard(LoginActivity.this);
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
                 View registerDialog = getLayoutInflater().inflate(R.layout.dialog_register, null);
                 mBuilder.setView(registerDialog);
-                AlertDialog dialog = mBuilder.create();
+                final AlertDialog dialog = mBuilder.create();
                 dialog.show();
                 donatorButton = registerDialog.findViewById(R.id.registerDialogDonatorButton);
                 socialCommunityButton = registerDialog.findViewById(R.id.registerDialogSocialCommunityButton);
                 donatorButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                        Intent i = new Intent(LoginActivity.this, DonatorRegisterActivity.class);
                         startActivity(i);
+                        dialog.hide();
+                        btnSignIn.setEnabled(true);
                     }
                 });
                 socialCommunityButton.setOnClickListener(new View.OnClickListener() {
@@ -95,17 +86,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onClick(View v) {
                         Intent i = new Intent(LoginActivity.this, SocialCommunityRegisterActivity.class);
                         startActivity(i);
+                        dialog.hide();
+                        btnSignIn.setEnabled(true);
                     }
                 });
                 break;
             case R.id.login_sign_in_button:
+                btnRegister.setEnabled(false);
+                hideKeyboard(LoginActivity.this);
                 String email = emailId.getText().toString();
                 String password = passwordId.getText().toString(); // TODO needs trim?
-                if(inputValidation(email, password)) {
+                if (inputValidation(email, password)) {
                     authenticateUser(email, password);
                 }
                 break;
         }
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        // Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        // If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     protected boolean inputValidation(String email, String password) {
@@ -152,6 +158,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(LoginActivity.this, "Login error, please try again", Toast.LENGTH_SHORT).show();
                     btnSignIn.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
+                    btnRegister.setEnabled(true);
                 } else {
                     String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     checkRole(uuid);
@@ -176,12 +183,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             startActivity(intent);
                             btnSignIn.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
+                            btnRegister.setEnabled(true);
                         } else {
                             Intent intent = new Intent(LoginActivity.this, MainSocialCommunityActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             btnSignIn.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
+                            btnRegister.setEnabled(true);
                         }
                         Toast.makeText(LoginActivity.this, "You are logged in!", Toast.LENGTH_SHORT).show();
                     } else {
@@ -192,11 +201,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 }

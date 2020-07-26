@@ -25,8 +25,9 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_email_layout"
-            android:layout_width="match_parent"
+            android:id="@+id/register_full_name_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
@@ -38,7 +39,57 @@
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_title"
+            app:layout_constraintTop_toBottomOf="@+id/register_title" >
+
+            <EditText
+                android:id="@+id/register_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:hint="@string/fullname_placeholder"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/register_telephone_number_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="13"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="@+id/register_full_name_layout"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/register_full_name_layout"
+            app:layout_constraintTop_toBottomOf="@+id/register_full_name_layout">
+
+            <EditText
+                android:id="@+id/register_telephone_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:hint="@string/telephone_number_placeholder"
+                android:inputType="phone"
+                android:maxLength="13" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/register_email_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/register_telephone_number_layout"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/register_telephone_number_layout"
+            app:layout_constraintTop_toBottomOf="@+id/register_telephone_number_layout"
             app:helperTextEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" >
 
@@ -81,57 +132,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_full_name_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/register_password_layout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/register_password_layout"
-            app:layout_constraintTop_toBottomOf="@+id/register_password_layout">
-
-            <EditText
-                android:id="@+id/register_full_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="@string/fullname_placeholder"
-                android:inputType="textPersonName" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_telephone_number_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="13"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/register_full_name_layout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/register_full_name_layout"
-            app:layout_constraintTop_toBottomOf="@+id/register_full_name_layout">
-
-            <EditText
-                android:id="@+id/register_telephone_number"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_phone_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="@string/telephone_number_placeholder"
-                android:inputType="phone"
-                android:maxLength="13" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_confirm"
             style="@style/Widget.MaterialComponents.Button.Icon"
@@ -143,9 +143,9 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
             app:backgroundTint="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="@+id/register_telephone_number_layout"
-            app:layout_constraintStart_toStartOf="@+id/register_telephone_number_layout"
-            app:layout_constraintTop_toBottomOf="@+id/register_telephone_number_layout" />
+            app:layout_constraintEnd_toEndOf="@+id/register_password_layout"
+            app:layout_constraintStart_toStartOf="@+id/register_password_layout"
+            app:layout_constraintTop_toBottomOf="@+id/register_password_layout" />
 
         <ProgressBar
             android:id="@+id/progressBar"

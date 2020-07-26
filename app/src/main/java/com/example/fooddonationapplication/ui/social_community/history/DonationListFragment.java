@@ -98,7 +98,7 @@ public class DonationListFragment extends Fragment {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 Toast.makeText(getContext(), "Clicked " + item, Toast.LENGTH_SHORT).show();
                 Query newQuery = null;
-                if(item.equals("All")) {
+                if (item.equals("All")) {
                     newQuery = donatorRef.whereEqualTo("eventId", eventID);
                 } else if (item.equals("On-Progress")) {
                     newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "on-progress");

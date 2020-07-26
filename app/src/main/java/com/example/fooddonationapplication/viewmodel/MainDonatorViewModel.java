@@ -2,7 +2,7 @@ package com.example.fooddonationapplication.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
-public class EventViewModel extends ViewModel {
+public class MainDonatorViewModel extends ViewModel {
 
     private int lastSeen, position;
 

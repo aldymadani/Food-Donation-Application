@@ -38,7 +38,7 @@
         <activity android:name=".ui.donator.event.EventDonateActivity" />
         <activity android:name=".ui.general.LoginActivity">
         </activity>
-        <activity android:name=".ui.general.RegisterActivity" />
+        <activity android:name=".ui.general.DonatorRegisterActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

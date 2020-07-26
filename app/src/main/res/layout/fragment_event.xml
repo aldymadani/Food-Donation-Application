@@ -80,16 +80,21 @@
 <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/event_recyclerView"
-        android:layout_width="match_parent"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/eventSwipeLayout"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventSearchLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/eventSearchLayout">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/event_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 <!--    <ImageView-->
 <!--        android:id="@+id/search_button"-->

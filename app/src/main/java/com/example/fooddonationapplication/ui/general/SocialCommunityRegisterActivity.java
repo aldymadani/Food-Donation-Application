@@ -8,9 +8,11 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -40,15 +42,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SocialCommunityRegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "SocialRegisterActivity";
-    private static final int TAKE_IMAGE_CODE = 1;
+    private static final int GalleryPick = 1;
     private String socialCommunityImageURI, emailData, passwordData, socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData;
 
     private EditText emailId, passwordId, socialCommunityNameId, telephoneNumberId, socialCommunityDescription;
@@ -110,29 +117,55 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
         socialCommunityPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(SocialCommunityRegisterActivity.this, new String[] {Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
+                if (ContextCompat.checkSelfPermission(SocialCommunityRegisterActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
                 } else {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, TAKE_IMAGE_CODE);
-                    }
+                    Intent galleryIntent = new Intent();
+                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    galleryIntent.setType("image/*");
+                    startActivityForResult(galleryIntent, GalleryPick);
                 }
             }
         });
     }
 
+    private void allActionStatus(boolean status) {
+        emailId.setFocusable(status);
+        emailId.setFocusableInTouchMode(status);
+        emailId.setCursorVisible(status);
+        passwordId.setFocusable(status);
+        passwordId.setFocusableInTouchMode(status);
+        passwordId.setCursorVisible(status);
+        socialCommunityNameId.setFocusable(status);
+        socialCommunityNameId.setFocusableInTouchMode(status);
+        socialCommunityNameId.setCursorVisible(status);
+        telephoneNumberId.setFocusable(status);
+        telephoneNumberId.setFocusableInTouchMode(status);
+        telephoneNumberId.setCursorVisible(status);
+        socialCommunityDescription.setFocusable(status);
+        socialCommunityDescription.setFocusableInTouchMode(status);
+        socialCommunityDescription.setCursorVisible(status);
+        socialCommunityPhoto.setEnabled(status);
+        if (status) {
+            btnSignUp.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            btnSignUp.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == TAKE_IMAGE_CODE) {
+        if (requestCode == GalleryPick) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, TAKE_IMAGE_CODE);
-                }
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, GalleryPick);
             } else {
-                Toast.makeText(this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SocialCommunityRegisterActivity.this, "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -140,13 +173,34 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { // TODO mungkin batasi gunakan crop
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TAKE_IMAGE_CODE) {
-            switch (resultCode) {
-                case RESULT_OK:
-                    bitmap = (Bitmap) data.getExtras().get("data");
+        if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
+            Uri ImageURI = data.getData();
+
+            CropImage.activity(ImageURI)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1,1)
+                    .start(this);
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                Uri resultUri = result.getUri();
+                // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
+                ImageDecoder.Source source = ImageDecoder.createSource(SocialCommunityRegisterActivity.this.getContentResolver(), resultUri);
+                try {
+                    bitmap = ImageDecoder.decodeBitmap(source);
+                    hasImage = true;
+                    Log.d(TAG, String.valueOf(bitmap));
                     socialCommunityPhoto.setImageBitmap(bitmap);
                     mViewModel.setImageBitmap(bitmap);
                     hasImage = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG, String.valueOf(error));
             }
         }
     }
@@ -216,15 +270,12 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        btnSignUp.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        allActionStatus(false);
         mFirebaseAuth.createUserWithEmailAndPassword(emailData, passwordData).addOnCompleteListener(SocialCommunityRegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    btnSignUp.setVisibility(View.VISIBLE);
+                    allActionStatus(true);
                     if(task.getException().getMessage().equals("The email address is already in use by another account.")) {
                         textInputEmail.setError("Email is already used");
                         Toast.makeText(SocialCommunityRegisterActivity.this, "The email address is already in use by another account.", Toast.LENGTH_SHORT).show();
@@ -280,6 +331,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
+                .setPhotoUri(Uri.parse(socialCommunityImageURI))
                 .build();
 
         user.updateProfile(profileUpdates)
@@ -288,22 +340,38 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
                             Log.d(TAG, "Error occurred, please try again");
+                            allActionStatus(true);
                         } else {
                             Log.d(TAG, "User profile created");
                             Log.d(TAG, user.getDisplayName());
+                            allActionStatus(true);
                             Intent intent = new Intent(SocialCommunityRegisterActivity.this, MainSocialCommunityActivity.class);
                             Toast.makeText(SocialCommunityRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // TODO try to implement finish
                             startActivity(intent);
                         }
                     }
-                }); // TODO update the profile photo also https://firebase.google.com/docs/auth/android/manage-users
+                });
     }
 
     private void registerToDatabase() {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        User user = new User(socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData, uuid, "social community", socialCommunityImageURI);
+//        User user = new User(socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData, uuid, "social community", socialCommunityImageURI);
+//        User user = new User();
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", socialCommunityNameData);
+        user.put("phone", telephoneNumberData);
+        user.put("description", socialCommunityDescriptionData);
+        user.put("uuid", uuid);
+        user.put("role", "social community");
+        user.put("imageURI", socialCommunityImageURI);
+//        user.setName(socialCommunityNameData);
+//        user.setPhone(telephoneNumberData);
+//        user.setDescription(socialCommunityDescriptionData);
+//        user.setUuid(uuid);
+//        user.setRole("social community");
+//        user.setImageURI(socialCommunityImageURI);
         db.collection("users").document(uuid)
                 .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -253,7 +253,7 @@ public class EventDonateActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == TAKE_IMAGE_CODE) {
+        if (requestCode == TAKE_IMAGE_CODE) { // TODO add request permission later on
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
@@ -327,7 +327,7 @@ public class EventDonateActivity extends AppCompatActivity {
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String donatorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
 
         final String donatorDocumentID = db.collection("donators").document().getId();
 
@@ -346,6 +346,7 @@ public class EventDonateActivity extends AppCompatActivity {
         donator.setDonatorId(donatorDocumentID);
         donator.setSocialCommunityId(socialCommunityId);
         donator.setSocialCommunityName(socialCommunityName);
+        donator.setStatus("On-Progress");
 
         db.collection("users").document(userID)
                 .get()

@@ -114,6 +114,11 @@ public class SocialCommunityProfileFragment extends Fragment {
 
         updateProgressBar.setVisibility(View.INVISIBLE);
 
+        hasChanged = false;
+
+        fullName.setText(user.getDisplayName());
+        email.setText(user.getEmail());
+
         mViewModel = new ViewModelProvider(this).get(SocialCommunityProfileViewModel.class);
         if (mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
@@ -121,7 +126,7 @@ public class SocialCommunityProfileFragment extends Fragment {
             socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE); // TODO add image loading later on
             hasImageChanged = mViewModel.isHasImageChanged();
         } else {
-            Picasso.get().load(user.getPhotoUrl()).error(R.drawable.ic_error_black_24dp).into(socialCommunityPhoto, new com.squareup.picasso.Callback() {
+            Picasso.get().load(user.getPhotoUrl()).error(R.drawable.ic_error_black_24dp).into(socialCommunityPhoto, new com.squareup.picasso.Callback() { // TODO pass the URL from login / register activity, got a little bug if user.getPhotoUrl() don't have value
                 @Override
                 public void onSuccess() {
                     socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE);
@@ -135,18 +140,13 @@ public class SocialCommunityProfileFragment extends Fragment {
             });
         }
 
-        hasChanged = false;
-
-        fullName.setText(user.getDisplayName());
-        email.setText(user.getEmail());
-
         db.collection("users").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            oldUserData.setDescription(documentSnapshot.getString("phone"));
-                            oldUserData.setPhone(documentSnapshot.getString("description")); // TODO try to pass from activity login
+                            oldUserData.setDescription(documentSnapshot.getString("description"));
+                            oldUserData.setPhone(documentSnapshot.getString("phone")); // TODO try to pass from activity login
                             oldUserData.setImageURI(documentSnapshot.getString("imageURI"));
                             telephoneNumber.setText(oldUserData.getPhone());
                             description.setText(oldUserData.getDescription());
@@ -170,7 +170,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                 if (isValidated()) {
                     updateProgressBar.setVisibility(View.VISIBLE);
                     updateProfileButton.setVisibility(View.INVISIBLE);
-                    disableAllEditTextWithImageView();
+                    allActionStatus(false);
                     checkingChanges();
                 }
             }
@@ -192,42 +192,23 @@ public class SocialCommunityProfileFragment extends Fragment {
         return rootView;
     }
 
-    private void disableAllEditTextWithImageView() {
-        email.setFocusable(false);
-        email.setFocusableInTouchMode(false);
-        email.setCursorVisible(false);
-        telephoneNumber.setFocusable(false);
-        telephoneNumber.setFocusableInTouchMode(false);
-        telephoneNumber.setCursorVisible(false);
-        description.setFocusable(false);
-        description.setFocusableInTouchMode(false);
-        description.setCursorVisible(false);
-        password.setFocusable(false);
-        password.setFocusableInTouchMode(false);
-        password.setCursorVisible(false);
-        confirmPassword.setFocusable(false);
-        confirmPassword.setFocusableInTouchMode(false);
-        confirmPassword.setCursorVisible(false);
-        socialCommunityPhoto.setEnabled(false);
-    }
-
-    private void enableAllEditTextWithImageView() {
-        email.setFocusable(true);
-        email.setFocusableInTouchMode(true);
-        email.setCursorVisible(true);
-        telephoneNumber.setFocusable(true);
-        telephoneNumber.setFocusableInTouchMode(true);
-        telephoneNumber.setCursorVisible(true);
-        description.setFocusable(true);
-        description.setFocusableInTouchMode(true);
-        description.setCursorVisible(true);
-        password.setFocusable(true);
-        password.setFocusableInTouchMode(true);
-        password.setCursorVisible(true);
-        confirmPassword.setFocusable(true);
-        confirmPassword.setFocusableInTouchMode(true);
-        confirmPassword.setCursorVisible(true);
-        socialCommunityPhoto.setEnabled(true);
+    private void allActionStatus(boolean status) {
+        email.setFocusable(status);
+        email.setFocusableInTouchMode(status);
+        email.setCursorVisible(status);
+        telephoneNumber.setFocusable(status);
+        telephoneNumber.setFocusableInTouchMode(status);
+        telephoneNumber.setCursorVisible(status);
+        description.setFocusable(status);
+        description.setFocusableInTouchMode(status);
+        description.setCursorVisible(status);
+        password.setFocusable(status);
+        password.setFocusableInTouchMode(status);
+        password.setCursorVisible(status);
+        confirmPassword.setFocusable(status);
+        confirmPassword.setFocusableInTouchMode(status);
+        confirmPassword.setCursorVisible(status);
+        socialCommunityPhoto.setEnabled(status);
     }
 
     private void checkingChanges() {
@@ -272,6 +253,10 @@ public class SocialCommunityProfileFragment extends Fragment {
             }
 
             getData();
+        } else {
+            Toast.makeText(getContext(), "Nothing has changed", Toast.LENGTH_SHORT).show();
+            updateProgressBar.setVisibility(View.INVISIBLE);
+            updateProfileButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -318,7 +303,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "Profile is successfully updated", Toast.LENGTH_SHORT).show();
                 updateProgressBar.setVisibility(View.INVISIBLE);
                 updateProfileButton.setVisibility(View.VISIBLE);
-                enableAllEditTextWithImageView();
+                allActionStatus(true);
 
                 // Make password & confirm password empty after updation
                 password.setText("");

@@ -3,6 +3,7 @@ package com.example.fooddonationapplication.ui.social_community.history;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -190,7 +191,7 @@ public class UpdateEventFragment extends Fragment {
                     deleteEventProgressBar.setVisibility(View.VISIBLE);
                     updateEventConfirmation.setEnabled(false);
                     sendNotificationConfirmation.setEnabled(false);
-                    eventPhoto.setEnabled(false);
+                    allActionStatus(false);
                     deleteEvent();
                 }
             }
@@ -204,7 +205,7 @@ public class UpdateEventFragment extends Fragment {
                     updateEventProgressBar.setVisibility(View.VISIBLE);
                     deleteEventConfirmation.setEnabled(false);
                     sendNotificationConfirmation.setEnabled(false);
-                    eventPhoto.setEnabled(false);
+                    allActionStatus(false);
                     checkingChanges();
                 }
             }
@@ -237,14 +238,23 @@ public class UpdateEventFragment extends Fragment {
             }
         });
 
-        eventEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUpCalendar();
-            }
-        });
-
         return rootView;
+    }
+
+    private void allActionStatus(boolean status) {
+        eventDescription.setFocusable(status);
+        eventDescription.setFocusableInTouchMode(status);
+        eventDescription.setCursorVisible(status);
+        eventEndDate.setFocusable(status);
+        eventEndDate.setFocusableInTouchMode(status);
+        eventEndDate.setCursorVisible(status);
+        eventTargetQuantity.setFocusable(status);
+        eventTargetQuantity.setFocusableInTouchMode(status);
+        eventTargetQuantity.setCursorVisible(status);
+        eventTotalDonation.setFocusable(status);
+        eventTotalDonation.setFocusableInTouchMode(status);
+        eventTotalDonation.setCursorVisible(status);
+        eventPhoto.setEnabled(status);
     }
 
     private void setUpCalendar() {
@@ -273,8 +283,15 @@ public class UpdateEventFragment extends Fragment {
             }
         }, year, month, day);
         long now = System.currentTimeMillis() - 1000;
-        datePickerDialog.getDatePicker().setMinDate(now);
+        datePickerDialog.getDatePicker().setMinDate(now + (1000 * 60 * 60 * 24 * 7));
         calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_NEGATIVE) {
+                    eventEndDate.clearFocus();
+                }
+            }
+        });
         datePickerDialog.show();
     }
 
@@ -314,14 +331,15 @@ public class UpdateEventFragment extends Fragment {
                     sendNotificationConfirmation.setEnabled(true);
                     updateEventProgressBar.setVisibility(View.INVISIBLE);
                     updateEventConfirmation.setVisibility(View.VISIBLE);
-                    eventPhoto.setEnabled(true);
+                    allActionStatus(true);
 
                     // Checking for the new things again
                     event.setDescription(newEvent.getDescription());
                     event.setEndDate(newEvent.getEndDate());
                     event.setEndDateInMillis(newEvent.getEndDateInMillis());
                     event.setImageURI(newEvent.getImageURI());
-                    event.setTargetQuantity(newEvent.getTargetQuantity());
+                    event.setTargetQuantity(newEvent.getTargetQuantity()); // TODO try to shadow copy
+                    // event = newEvent
                     hasChanged = false;
                     hasImageChanged = false;
                     mViewModel.setHasImageChanged(false);
@@ -334,7 +352,7 @@ public class UpdateEventFragment extends Fragment {
             sendNotificationConfirmation.setEnabled(true);
             updateEventProgressBar.setVisibility(View.INVISIBLE);
             updateEventConfirmation.setVisibility(View.VISIBLE);
-            eventPhoto.setEnabled(true);
+            allActionStatus(true);
         }
     }
 
@@ -492,7 +510,7 @@ public class UpdateEventFragment extends Fragment {
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 //        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.v(TAG, date);
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(event.getEventID() + ".jpeg"); // TODO gunakan event ID biar bisa di ganti nanti
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(event.getEventID() + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

@@ -10,10 +10,18 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 public class Event implements Parcelable {
-    private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, socialCommunityTelephoneNumber, endDate;
+    private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, socialCommunityTelephoneNumber, endDate, titleForSearch;
     private double targetQuantity, totalDonation;
     private long endDateInMillis;
     private @ServerTimestamp Date timestamp;
+
+    public String getTitleForSearch() {
+        return titleForSearch;
+    }
+
+    public void setTitleForSearch(String titleForSearch) {
+        this.titleForSearch = titleForSearch;
+    }
 
     public void setSocialCommunityTelephoneNumber(String socialCommunityTelephoneNumber) {
         this.socialCommunityTelephoneNumber = socialCommunityTelephoneNumber;
@@ -133,11 +141,11 @@ public class Event implements Parcelable {
     public boolean isSame(Event event) {
         // TODO: Compare function
         boolean isSame = true;
-        if (!description.equals(event.getDescription())) {
+        if (!description.equalsIgnoreCase(event.getDescription())) {
             isSame=  false;
         }
 
-        if (!endDate.equals(event.getEndDate())) {
+        if (!endDate.equalsIgnoreCase(event.getEndDate())) {
             isSame = false;
         }
 
@@ -160,6 +168,7 @@ public class Event implements Parcelable {
         targetQuantity = in.readDouble();
         totalDonation = in.readDouble();
         endDateInMillis = in.readLong();
+        titleForSearch = in.readString();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -192,5 +201,6 @@ public class Event implements Parcelable {
         dest.writeDouble(targetQuantity);
         dest.writeDouble(totalDonation);
         dest.writeLong(endDateInMillis);
+        dest.writeString(titleForSearch);
     }
 }

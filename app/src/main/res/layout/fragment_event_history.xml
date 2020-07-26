@@ -60,18 +60,18 @@
             android:layout_height="0dp" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/refreshFloatingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#FFFFFF"
-        android:clickable="true"
-        android:tint="#af4448"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:borderWidth="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_reset" />
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/refreshFloatingButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:backgroundTint="#FFFFFF"-->
+<!--        android:clickable="true"-->
+<!--        android:tint="#af4448"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:borderWidth="0dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:srcCompat="@drawable/ic_reset" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

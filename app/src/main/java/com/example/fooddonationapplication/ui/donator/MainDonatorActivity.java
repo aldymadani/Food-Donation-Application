@@ -15,7 +15,7 @@ import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.ui.donator.profile.EditProfileFragment;
 import com.example.fooddonationapplication.ui.donator.event.EventListFragment;
 import com.example.fooddonationapplication.ui.donator.history.DonationHistoryListFragment;
-import com.example.fooddonationapplication.viewmodel.EventViewModel;
+import com.example.fooddonationapplication.viewmodel.MainDonatorViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainDonatorActivity extends AppCompatActivity {
@@ -28,7 +28,7 @@ public class MainDonatorActivity extends AppCompatActivity {
     Fragment activeFragment;
     Fragment firstInactiveFragment;
     Fragment secondInactiveFragment;
-    EventViewModel mViewModel;
+    MainDonatorViewModel mViewModel;
     BottomNavigationView bottomNav;
 
     @Override
@@ -41,7 +41,7 @@ public class MainDonatorActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.fragment_container_donator, editProfileFragment, "3").commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container_donator, donationHistoryFragment, "2").commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container_donator, eventFragment, "1").commit();
-        mViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(MainDonatorViewModel.class);
         Log.d(TAG, String.valueOf(mViewModel.getLastSeen()));
 
         if (mViewModel.getLastSeen() <= 1) {

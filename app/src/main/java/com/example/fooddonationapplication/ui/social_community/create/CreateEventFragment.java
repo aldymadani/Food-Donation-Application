@@ -313,7 +313,8 @@ public class CreateEventFragment extends Fragment {
         final Event event = new Event();
         event.setImageURI(eventImageURI);
         event.setEventID(eventId);
-        event.setTitle(eventNameData.toLowerCase());
+        event.setTitle(eventNameData);
+        event.setTitleForSearch(eventNameData.toLowerCase());
         event.setDescription(eventDescriptionData);
         event.setSocialCommunityID(socialCommunityID);
         event.setSocialCommunityName(socialCommunityName);

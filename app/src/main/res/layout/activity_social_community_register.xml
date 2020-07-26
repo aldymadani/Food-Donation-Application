@@ -26,8 +26,9 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/socialCommunityRegisterEmailLayout"
-            android:layout_width="match_parent"
+            android:id="@+id/socialCommunityRegisterSocialCommunityNameLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
@@ -39,57 +40,7 @@
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterTitle"
-            app:helperTextEnabled="true"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" >
-
-            <EditText
-                android:id="@+id/socialCommunityRegisterEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_email_black_24dp"
-                android:drawablePadding="7dp"
-                android:hint="@string/email_placeholder"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/socialCommunityRegisterPasswordLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/socialCommunityRegisterEmailLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterEmailLayout"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterEmailLayout"
-            app:passwordToggleEnabled="true">
-
-            <EditText
-                android:id="@+id/socialCommunityRegisterPassword"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="@string/password_placeholder"
-                android:inputType="textPassword"
-                app:layout_constraintHorizontal_bias="1.0" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/socialCommunityRegisterSocialCommunityNameLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/socialCommunityRegisterPasswordLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterPasswordLayout"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterPasswordLayout">
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterTitle">
 
             <EditText
                 android:id="@+id/socialCommunityRegisterSocialCommunityName"
@@ -136,11 +87,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="13"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/socialCommunityRegisterTelephoneNumberLayout"
-            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterTelephoneNumberLayout"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterTelephoneNumberLayout">
 
@@ -149,12 +98,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:drawableStart="@drawable/ic_description_black_24dp"
                 android:drawablePadding="7dp"
                 android:ems="10"
                 android:hint="@string/social_community_description_placeholder"
-                android:inputType="textMultiLine"
-                android:maxLength="13" />
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/socialCommunityRegisterEmailLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityRegisterDescriptionLayout"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterDescriptionLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterDescriptionLayout"
+            app:helperTextEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" >
+
+            <EditText
+                android:id="@+id/socialCommunityRegisterEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_email_black_24dp"
+                android:drawablePadding="7dp"
+                android:hint="@string/email_placeholder"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/socialCommunityRegisterPasswordLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityRegisterEmailLayout"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterEmailLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterEmailLayout"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/socialCommunityRegisterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="152dp"
+                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:hint="@string/password_placeholder"
+                android:inputType="textPassword"
+                app:layout_constraintHorizontal_bias="1.0" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -168,8 +165,8 @@
             android:text="@string/social_community_image_text"
             android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterDescriptionLayout"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterDescriptionLayout" />
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterPasswordLayout"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterPasswordLayout" />
 
         <ImageView
             android:id="@+id/socialCommunityRegisterImage"
@@ -188,11 +185,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/sign_up_button"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
             app:backgroundTint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/socialCommunityRegisterImage"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityRegisterImage"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityRegisterImage" />

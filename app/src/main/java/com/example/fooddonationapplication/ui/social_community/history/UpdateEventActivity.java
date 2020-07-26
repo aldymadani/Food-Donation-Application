@@ -45,8 +45,8 @@ public class UpdateEventActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         // Adding icon
-        tabLayout.getTabAt(0).setIcon(R.drawable.event_detail);
-        tabLayout.getTabAt(1).setIcon(R.drawable.donation_logo);
+        tabLayout.getTabAt(0).setIcon(R.drawable.calendar);
+        tabLayout.getTabAt(1).setIcon(R.drawable.donator_list);
 
         // Remove shadow from the action bar
 //        ActionBar actionBar = getSupportActionBar();

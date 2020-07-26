@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.User;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,13 +21,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class RegisterActivity extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.Map;
 
-    private static final String TAG = "RegisterActivity";
+public class DonatorRegisterActivity extends AppCompatActivity {
+
+    private static final String TAG = "DonatorRegisterActivity";
 
     private EditText emailId, passwordId, fullNameId, telephoneNumberId;
     private Button btnSignUp;
@@ -39,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_donator_register);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailId = findViewById(R.id.register_email);
@@ -64,6 +67,28 @@ public class RegisterActivity extends AppCompatActivity {
                 allFieldValidation(email, password, fullName, telephoneNumber);
             }
         });
+    }
+
+    private void allActionStatus(boolean status) {
+        emailId.setFocusable(status);
+        emailId.setFocusableInTouchMode(status);
+        emailId.setCursorVisible(status);
+        passwordId.setFocusable(status);
+        passwordId.setFocusableInTouchMode(status);
+        passwordId.setCursorVisible(status);
+        fullNameId.setFocusable(status);
+        fullNameId.setFocusableInTouchMode(status);
+        fullNameId.setCursorVisible(status);
+        telephoneNumberId.setFocusable(status);
+        telephoneNumberId.setFocusableInTouchMode(status);
+        telephoneNumberId.setCursorVisible(status);
+        if (status) {
+            btnSignUp.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            btnSignUp.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     protected void allFieldValidation(String email, String password, String fullName, String telephoneNumber) {
@@ -109,33 +134,43 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Register user
         if (email.isEmpty() && password.isEmpty() && fullName.isEmpty() && telephoneNumber.isEmpty()) {
-            Toast.makeText(RegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DonatorRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
         } else if (!email.isEmpty() && !password.isEmpty() && passwordValidation && !fullName.isEmpty() && !telephoneNumber.isEmpty() && telephoneNumberValidation) {
             registerUser(email, password, fullName, telephoneNumber);
         } else {
-            Toast.makeText(RegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DonatorRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
     }
 
     protected void registerUser(String email, String password, final String fullName, final String telephoneNumber) {
-        btnSignUp.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
+        allActionStatus(false);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        mFirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+        mFirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(DonatorRegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    btnSignUp.setVisibility(View.VISIBLE);
-                    if(task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                    allActionStatus(true);
+                    if(task.getException() instanceof FirebaseAuthUserCollisionException) {
                         textInputEmail.setError("Email is already used");
-                        Toast.makeText(RegisterActivity.this, "The email address is already in use by another account.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DonatorRegisterActivity.this, "The email address is already in use by another account.", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Sign Up is unsuccessful, please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DonatorRegisterActivity.this, "Sign Up is unsuccessful, please try again", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    User user = new User(fullName, telephoneNumber, uuid, "donator", 0);
+//                    User user = new User(fullName, telephoneNumber, uuid, "donator", 0);
+//                    User user = new User();
+//                    user.setName(fullName);
+//                    user.setPhone(telephoneNumber);
+//                    user.setUuid(uuid);
+//                    user.setRole("donator");
+//                    user.setTotalDonation(0);
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("name", fullName);
+                    user.put("phone", telephoneNumber);
+                    user.put("uuid", uuid);
+                    user.put("role", "donation");
+                    user.put("totalDonation", 0);
                     db.collection("users").document(uuid)
                             .set(user)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -169,11 +204,13 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
                             Log.d(TAG, "Error occurred, please try again");
+                            allActionStatus(true);
                         } else {
                             Log.d(TAG, "User profile created");
                             Log.d(TAG, user.getDisplayName());
-                            Intent intent = new Intent(RegisterActivity.this, MainDonatorActivity.class);
-                            Toast.makeText(RegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+                            allActionStatus(true);
+                            Intent intent = new Intent(DonatorRegisterActivity.this, MainDonatorActivity.class);
+                            Toast.makeText(DonatorRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
