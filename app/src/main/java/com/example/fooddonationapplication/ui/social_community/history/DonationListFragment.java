@@ -3,6 +3,7 @@ package com.example.fooddonationapplication.ui.social_community.history;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,9 +23,15 @@ import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.jaredrummler.materialspinner.MaterialSpinner;
+
+import java.text.DecimalFormat;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,20 +79,26 @@ public class DonationListFragment extends Fragment {
 //        String eventID = updateEventActivity.getEventID();
 //        String totalDonation = updateEventActivity.getTotalDonation();
 
-        FragmentActivity fragmentActivity = requireActivity();
+//        FragmentActivity fragmentActivity = requireActivity();
 //        String eventID =  fragmentActivity.getIntent().getStringExtra("EventID");
 //        String totalDonation = fragmentActivity.getIntent().getStringExtra("totalDonation");
         eventID = "";
         totalDonation = "";
+//        Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
+//        if (eventData != null) {
+//            eventID = eventData.getEventID();
+//            totalDonation = String.valueOf(eventData.getTotalDonation());
+//        }
+
+        FragmentActivity fragmentActivity = requireActivity();
         Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
         if (eventData != null) {
             eventID = eventData.getEventID();
-            totalDonation = String.valueOf(eventData.getTotalDonation());
+//            totalDonation = String.valueOf(eventData.getTotalDonation());
         }
 
-
         titleTotalDonation = rootView.findViewById(R.id.donationListTitle);
-        titleTotalDonation.setText("People have donated " + totalDonation + " Kg of food");
+//        titleTotalDonation.setText("People have donated " + totalDonation + " Kg of food");
         if (eventID != null) {
             Log.d(TAG, eventID);
         }
@@ -101,9 +114,9 @@ public class DonationListFragment extends Fragment {
                 if (item.equals("All")) {
                     newQuery = donatorRef.whereEqualTo("eventId", eventID);
                 } else if (item.equals("On-Progress")) {
-                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "on-progress");
+                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "On-Progress");
                 } else if (item.equals("Completed")) {
-                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "completed");
+                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "Completed");
                 }
                 setUpRecyclerViewDonator(newQuery);
                 donatorAdapter.startListening();
@@ -123,6 +136,17 @@ public class DonationListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         donatorAdapter.startListening();
+        CollectionReference eventRef = db.collection("events");
+        eventRef.document(eventID).addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    DecimalFormat df = new DecimalFormat("#.###");
+                    String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+                    titleTotalDonation.setText("People have donated " + formattedTotalDonation + " Kg of food");
+                }
+            }
+        });
     }
 
     private void setUpRecyclerViewDonator(Query query) {

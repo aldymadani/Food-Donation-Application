@@ -76,6 +76,7 @@ public class EventDonateActivity extends AppCompatActivity {
     private String foodImageURI;
     private String userID;
     private String eventID;
+    final String donatorDocumentID = db.collection("donators").document().getId();
 
     DonatorViewModel mViewModel;
 
@@ -288,7 +289,7 @@ public class EventDonateActivity extends AppCompatActivity {
         String currentDateDetail = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.v(TAG, currentDateDetail);
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(uuid + currentDateDetail + ".jpeg");
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(donatorDocumentID + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -328,8 +329,6 @@ public class EventDonateActivity extends AppCompatActivity {
         String donatorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-
-        final String donatorDocumentID = db.collection("donators").document().getId();
 
         final Donator donator = new Donator();
         donator.setEventId(eventID);

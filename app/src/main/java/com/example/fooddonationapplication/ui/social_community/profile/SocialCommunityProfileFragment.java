@@ -217,6 +217,10 @@ public class SocialCommunityProfileFragment extends Fragment {
 
         hasChanged = !oldUserData.isSame(newUserData);
 
+        if (!password.getText().toString().isEmpty()) {
+            hasChanged = true;
+        }
+
         if (hasImageChanged) {
             hasChanged = true;
             handleUpload(bitmap);

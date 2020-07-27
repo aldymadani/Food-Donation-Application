@@ -42,10 +42,10 @@ public class DonationDetailActivity extends AppCompatActivity {
     private static final String TAG = "DonatorDetailActivity";
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private TextView donatorNameTextView, donatorPhoneNumberTextView, donatorPickUpAddressTextView, donatorFoodItemsTextView, donatorPickUpDateTextView, donatorPickUpTimeTextView, donatorTotalDonationTextView, donatorDonationDateTextView, donatorDonationStatusEditText;
-    private ProgressBar imageLoadingProgressBar, buttonProgressBar, updateDonationStatusProgressBar;
+    private ProgressBar imageLoadingProgressBar, deleteProgressBar, updateDonationStatusProgressBar;
     private ImageView foodImagePhoto;
     private Button deleteDonation, updateDonationStatus;
-    String donatorId, updatedStatus;
+    String donatorId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +64,11 @@ public class DonationDetailActivity extends AppCompatActivity {
         imageLoadingProgressBar = findViewById(R.id.donatorDetailImageProgressBar);
         updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
         foodImagePhoto = findViewById(R.id.donatorDetailFoodImage);
-        buttonProgressBar = findViewById(R.id.donatorDetailButtonProgressBar);
+        deleteProgressBar = findViewById(R.id.donatorDetailButtonProgressBar);
         deleteDonation = findViewById(R.id.donatorDetailButton);
         updateDonationStatus = findViewById(R.id.donatorDetailUpdateStatusButton);
 
-        buttonProgressBar.setVisibility(View.INVISIBLE);
+        deleteProgressBar.setVisibility(View.INVISIBLE);
         updateDonationStatusProgressBar.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
@@ -96,13 +96,8 @@ public class DonationDetailActivity extends AppCompatActivity {
         donatorDonationStatusEditText.setText(donationStatus);
         disableAllTextField();
 
-        if (donationStatus.equalsIgnoreCase("completed")) {
-            updateDonationStatus.setText("Set to On-Progress");
-            updatedStatus = "On-Progress";
+        if (donationStatus.equalsIgnoreCase("Completed")) {
             updateDonationStatus.setVisibility(View.GONE);
-        } else {
-            updateDonationStatus.setText("Set to Completed");
-            updatedStatus = "Completed";
         }
 
         Glide.with(this).load(foodPhoto)
@@ -132,7 +127,7 @@ public class DonationDetailActivity extends AppCompatActivity {
                         dialogInterface.dismiss();
 
                         deleteDonation.setVisibility(View.INVISIBLE);
-                        buttonProgressBar.setVisibility(View.VISIBLE);
+                        deleteProgressBar.setVisibility(View.VISIBLE);
                         updateDonationStatus.setEnabled(false);
 
                         // Delete Operation
@@ -155,18 +150,19 @@ public class DonationDetailActivity extends AppCompatActivity {
                         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(donator.getEventId());
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(donator.getImageURI());
                                 storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         // File deleted successfully
                                         Log.d(TAG, "onSuccess: deleted file");
                                         Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
+//                                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
+//                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                        startActivity(intent);
+                                        finish();
                                         deleteDonation.setVisibility(View.VISIBLE);
-                                        buttonProgressBar.setVisibility(View.INVISIBLE);
+                                        deleteProgressBar.setVisibility(View.INVISIBLE);
                                         updateDonationStatus.setEnabled(true);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -175,7 +171,7 @@ public class DonationDetailActivity extends AppCompatActivity {
                                         // Uh-oh, an error occurred!
                                         Log.d(TAG, "onFailure: did not delete file");
                                         deleteDonation.setVisibility(View.VISIBLE);
-                                        buttonProgressBar.setVisibility(View.INVISIBLE);
+                                        deleteProgressBar.setVisibility(View.INVISIBLE);
                                         updateDonationStatus.setEnabled(true);
                                     }
                                 });
@@ -255,14 +251,23 @@ public class DonationDetailActivity extends AppCompatActivity {
                 // TODO add animation later on
                 // TODO add disable all Edit Text
                 deleteDonation.setEnabled(false);
-                DocumentReference donationReference = db.collection("donator").document(donatorId);
-                donationReference.update("status", updatedStatus)
+                updateDonationStatus.setVisibility(View.INVISIBLE);
+                updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
+                DocumentReference donationReference = db.collection("donators").document(donatorId);
+                donationReference.update("status", "Completed")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // TODO backtrack to the previous activity
-                        Toast.makeText(DonationDetailActivity.this, "Status is updated to " + updatedStatus, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DonationDetailActivity.this, "Status is updated to Completed", Toast.LENGTH_SHORT).show();
                         finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        deleteDonation.setEnabled(true);
+                        updateDonationStatus.setVisibility(View.VISIBLE);
+                        updateDonationStatusProgressBar.setVisibility(View.INVISIBLE);
                     }
                 });
             }

@@ -42,8 +42,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -54,6 +59,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -82,7 +88,7 @@ public class UpdateEventFragment extends Fragment {
     // For photo
     private static final int GalleryPick = 1;
     private Bitmap bitmap;
-    private String eventImageURI;
+    private String eventImageURI, eventId;
     private boolean hasImageChanged;
 
     // For Date Picker
@@ -93,6 +99,8 @@ public class UpdateEventFragment extends Fragment {
 
     // View Model
     private UpdateEventViewModel mViewModel;
+
+    ListenerRegistration eventTotalDonationListerner;
 
     public UpdateEventFragment() {
         // Required empty public constructor
@@ -143,13 +151,14 @@ public class UpdateEventFragment extends Fragment {
             // TODO: Alert when data is null
             fragmentActivity.finish();
         }
+        eventId = event.getEventID();
 
         // Initialize the text in text field
         eventTitle.setText((event.getTitle() + " Details").toUpperCase());
         eventDescription.setText(event.getDescription());
         eventEndDate.setText(event.getEndDate());
         eventTargetQuantity.setText(String.valueOf(event.getTargetQuantity()));
-        eventTotalDonation.setText(String.valueOf(event.getTotalDonation()));
+//        eventTotalDonation.setText(String.valueOf(event.getTotalDonation()));
 
         // Disable the totalDonation text field
         eventTotalDonation.setFocusableInTouchMode(false);
@@ -238,6 +247,18 @@ public class UpdateEventFragment extends Fragment {
             }
         });
 
+        CollectionReference eventRef = db.collection("events");
+        eventTotalDonationListerner = eventRef.document(eventId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    DecimalFormat df = new DecimalFormat("#.###");
+                    String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+                    eventTotalDonation.setText(formattedTotalDonation);
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -293,6 +314,12 @@ public class UpdateEventFragment extends Fragment {
             }
         });
         datePickerDialog.show();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        eventTotalDonationListerner.remove();
     }
 
     public static void hideKeyboard(Activity activity) {

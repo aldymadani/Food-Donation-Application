@@ -169,7 +169,7 @@ public class DonatorRegisterActivity extends AppCompatActivity {
                     user.put("name", fullName);
                     user.put("phone", telephoneNumber);
                     user.put("uuid", uuid);
-                    user.put("role", "donation");
+                    user.put("role", "donator");
                     user.put("totalDonation", 0);
                     db.collection("users").document(uuid)
                             .set(user)
