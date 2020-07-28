@@ -62,14 +62,13 @@ public class EventListFragment extends Fragment {
             public void onClick(View v) {
                 Query newQuery = null;
                 String search = searchKeyword.getText().toString().toLowerCase();
-                if (searchKeyword.getText().toString().isEmpty()) {
-                    searchKeywordLayout.setError("Please fill in the title of the event");
-                } else {
-                    searchKeywordLayout.setErrorEnabled(false);
+                if (!searchKeyword.getText().toString().isEmpty()) {
                     newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
-                    setUpRecyclerView(newQuery);
-                    adapter.startListening();
+                } else {
+                    return;
                 }
+                setUpRecyclerView(newQuery);
+                adapter.startListening();;
             }
         });
 
@@ -79,7 +78,7 @@ public class EventListFragment extends Fragment {
                 Query newQuery = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
                 searchKeywordLayout.setErrorEnabled(false);
                 searchKeyword.setText("");
-                hideKeyboard(getActivity());
+                hideKeyboard(requireActivity());
                 searchKeyword.clearFocus();
                 setUpRecyclerView(newQuery);
                 adapter.startListening();
@@ -101,8 +100,8 @@ public class EventListFragment extends Fragment {
         Log.d(TAG, String.valueOf(adapter));
         Log.d(TAG, String.valueOf(recyclerView));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), gridColumnCount));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
         recyclerView.setAdapter(adapter);
     }
 

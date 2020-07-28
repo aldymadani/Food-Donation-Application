@@ -60,6 +60,7 @@ public class EventDetailActivity extends AppCompatActivity {
         String eventEndDateData = event.getEndDate();
         double eventTargetDonationData = event.getTargetQuantity();
         double eventTotalDonationDataData = event.getTotalDonation();
+        final long endDateInMillis = event.getEndDateInMillis();
 
         DecimalFormat df = new DecimalFormat("#.###");
         String formattedTotalDonation = df.format(eventTotalDonationDataData);
@@ -92,11 +93,12 @@ public class EventDetailActivity extends AppCompatActivity {
         eventDonateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EventDetailActivity.this, EventDonateActivity.class);
+                Intent intent = new Intent(EventDetailActivity.this, CreateDonationActivity.class);
                 intent.putExtra("eventID", eventIDData);
                 intent.putExtra("eventName", eventTitleData);
                 intent.putExtra("socialCommunityId", eventSocialCommunityIdData);
                 intent.putExtra("socialCommunityName", eventSocialCommunityNameData);
+                intent.putExtra("endDateInMillis", endDateInMillis);
                 startActivity(intent);
             }
         });

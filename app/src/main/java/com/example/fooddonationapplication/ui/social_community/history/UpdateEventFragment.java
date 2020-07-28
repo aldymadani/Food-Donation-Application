@@ -21,10 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -34,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.viewmodel.UpdateEventViewModel;
@@ -223,7 +222,7 @@ public class UpdateEventFragment extends Fragment {
         eventPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
                 } else {
                     Intent galleryIntent = new Intent();
@@ -238,7 +237,7 @@ public class UpdateEventFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    setUpCalendar();
+                    setupCalendar();
                 } else {
                     if (datePickerDialog != null) {
                         datePickerDialog.hide();
@@ -278,8 +277,8 @@ public class UpdateEventFragment extends Fragment {
         eventPhoto.setEnabled(status);
     }
 
-    private void setUpCalendar() {
-        hideKeyboard(getActivity());
+    private void setupCalendar() {
+        Util.hideKeyboard(requireActivity());
         // To hide the keyboard when transitioning from other text field to end date text field
         calendar = Calendar.getInstance();
 
@@ -287,7 +286,7 @@ public class UpdateEventFragment extends Fragment {
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
 
-        datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        datePickerDialog = new DatePickerDialog(requireActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
@@ -306,31 +305,19 @@ public class UpdateEventFragment extends Fragment {
         long now = System.currentTimeMillis() - 1000;
         datePickerDialog.getDatePicker().setMinDate(now + (1000 * 60 * 60 * 24 * 7));
         calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_NEGATIVE) {
-                    eventEndDate.clearFocus();
-                }
+        datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                eventEndDate.clearFocus();
             }
         });
         datePickerDialog.show();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         eventTotalDonationListerner.remove();
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        // Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        // If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
@@ -484,7 +471,7 @@ public class UpdateEventFragment extends Fragment {
                 galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, GalleryPick);
             } else {
-                Toast.makeText(getActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -496,7 +483,7 @@ public class UpdateEventFragment extends Fragment {
             Uri ImageURI = data.getData();
             // TODO try this later
 //            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), ImageURI);
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), ImageURI);
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
@@ -512,7 +499,7 @@ public class UpdateEventFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
                 // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
-                ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), resultUri);
+                ImageDecoder.Source source = ImageDecoder.createSource(requireActivity().getContentResolver(), resultUri);
                 try {
                     bitmap = ImageDecoder.decodeBitmap(source);
                     hasImageChanged = true;

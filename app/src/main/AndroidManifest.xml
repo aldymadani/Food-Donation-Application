@@ -35,7 +35,7 @@
         <activity
             android:name=".ui.donator.MainDonatorActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".ui.donator.event.EventDonateActivity" />
+        <activity android:name=".ui.donator.event.CreateDonationActivity" />
         <activity android:name=".ui.general.LoginActivity">
         </activity>
         <activity android:name=".ui.general.DonatorRegisterActivity" />

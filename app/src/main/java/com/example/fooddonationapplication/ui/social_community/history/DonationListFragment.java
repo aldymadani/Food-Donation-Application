@@ -75,7 +75,7 @@ public class DonationListFragment extends Fragment {
 //        String eventID = getArguments().getString("eventID");
 //        String totalDonation = getArguments().getString("totalDonation");
 
-//        UpdateEventActivity updateEventActivity = (UpdateEventActivity) getActivity();
+//        UpdateEventActivity updateEventActivity = (UpdateEventActivity) requireActivity();
 //        String eventID = updateEventActivity.getEventID();
 //        String totalDonation = updateEventActivity.getTotalDonation();
 
@@ -137,7 +137,7 @@ public class DonationListFragment extends Fragment {
         super.onStart();
         donatorAdapter.startListening();
         CollectionReference eventRef = db.collection("events");
-        eventRef.document(eventID).addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+        eventRef.document(eventID).addSnapshotListener(requireActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
@@ -162,8 +162,8 @@ public class DonationListFragment extends Fragment {
 
         donatorAdapter = new DonationListAdapter(options, getContext());
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), gridColumnCount));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
         recyclerView.setAdapter(donatorAdapter);
     }
 }

@@ -397,7 +397,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                 galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, GalleryPick);
             } else {
-                Toast.makeText(getActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -409,7 +409,7 @@ public class SocialCommunityProfileFragment extends Fragment {
             Uri ImageURI = data.getData();
             // TODO try this later
 //            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), ImageURI);
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), ImageURI);
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
@@ -425,7 +425,7 @@ public class SocialCommunityProfileFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
                 // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
-                ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), resultUri);
+                ImageDecoder.Source source = ImageDecoder.createSource(requireActivity().getContentResolver(), resultUri);
                 try {
                     bitmap = ImageDecoder.decodeBitmap(source);
                     hasImageChanged = true;

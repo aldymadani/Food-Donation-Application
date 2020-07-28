@@ -34,7 +34,7 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditProfileFragment extends Fragment {
+public class DonatorProfileFragment extends Fragment {
 
     private static final String TAG = "EditProfileFragment";
 

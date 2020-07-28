@@ -293,11 +293,11 @@
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
-            android:text="Set to Completed"
+            android:text="Mark as Complete"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="12sp"
@@ -325,8 +325,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="32dp"
             android:text="@string/delete_donation_button"
             android:textAllCaps="false"
@@ -339,7 +339,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodImage"
             app:layout_constraintVertical_bias="0.0"
-            app:layout_goneMarginEnd="32dp"/>
+            app:layout_goneMarginEnd="32dp" />
 
         <ProgressBar
             android:id="@+id/donatorDetailButtonProgressBar"
@@ -358,8 +358,10 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/donatorDetailFoodImage"
             app:layout_constraintEnd_toEndOf="@+id/donatorDetailFoodImage"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/donatorDetailFoodImage"
-            app:layout_constraintTop_toTopOf="@+id/donatorDetailFoodImage" />
+            app:layout_constraintTop_toTopOf="@+id/donatorDetailFoodImage"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

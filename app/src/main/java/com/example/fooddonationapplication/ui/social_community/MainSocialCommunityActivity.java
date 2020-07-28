@@ -12,14 +12,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
-import com.example.fooddonationapplication.ui.donator.event.EventListFragment;
-import com.example.fooddonationapplication.ui.donator.history.DonationHistoryListFragment;
-import com.example.fooddonationapplication.ui.donator.profile.EditProfileFragment;
 import com.example.fooddonationapplication.ui.social_community.create.CreateEventFragment;
 import com.example.fooddonationapplication.ui.social_community.history.EventHistoryFragment;
 import com.example.fooddonationapplication.ui.social_community.profile.SocialCommunityProfileFragment;
-import com.example.fooddonationapplication.viewmodel.MainDonatorViewModel;
 import com.example.fooddonationapplication.viewmodel.MainSocialCommunityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -49,25 +44,21 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(MainSocialCommunityViewModel.class);
         Log.d(TAG, String.valueOf(mViewModel.getLastSeen()));
 
-        if (mViewModel.getLastSeen() <= 1) {
-            activeFragment = CreateEventFragment;
-            firstInactiveFragment = EventHistoryFragment;
-            secondInactiveFragment = SocialCommunityProfileFragment;
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
+        if (mViewModel.getLastSeen() == 1) {
+            bottomNav.setSelectedItemId(R.id.nav_create_event);
             Toast.makeText(this, "Last Seen 1", Toast.LENGTH_SHORT).show();
         } else if (mViewModel.getLastSeen() == 2) {
-            activeFragment = EventHistoryFragment;
-            firstInactiveFragment = CreateEventFragment;
-            secondInactiveFragment = SocialCommunityProfileFragment;
+            bottomNav.setSelectedItemId(R.id.nav_event_history);
             Toast.makeText(this, "Last Seen 2", Toast.LENGTH_SHORT).show();
-        } else {
-            activeFragment = SocialCommunityProfileFragment;
-            firstInactiveFragment = CreateEventFragment;
-            secondInactiveFragment = EventHistoryFragment;
+        } else if (mViewModel.getLastSeen() == 3){
+            bottomNav.setSelectedItemId(R.id.nav_social_community_profile);
             Toast.makeText(this, "Last Seen 3", Toast.LENGTH_SHORT).show();
+        } else {
+            bottomNav.setSelectedItemId(R.id.nav_event_history);
         }
-        fragmentManager.beginTransaction().hide(firstInactiveFragment).hide(secondInactiveFragment).show(activeFragment).commit();
-
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        // fragmentManager.beginTransaction().hide(firstInactiveFragment).hide(secondInactiveFragment).show(activeFragment).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

@@ -3,16 +3,19 @@ package com.example.fooddonationapplication.ui.social_community.create;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -103,6 +106,9 @@ public class CreateEventFragment extends Fragment {
 
         progressBar.setVisibility(View.INVISIBLE);
 
+        // To hide the keyboard when user click in the end date text field
+        eventEndDate.setInputType(InputType.TYPE_NULL);
+
         mViewModel = new ViewModelProvider(this).get(CreateEventViewModel.class);
 
         if (mViewModel.getImageBitmap() != null) {
@@ -115,32 +121,7 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    calendar = Calendar.getInstance();
-
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    int month = calendar.get(Calendar.MONTH);
-                    int year = calendar.get(Calendar.YEAR);
-
-                    datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                        eventEndDate.setText(chosenDate);
-                        chosenDate += " 23:59:59";
-                        try {
-                            chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d(TAG, "Chosen Date" + chosenDate);
-                        Log.d(TAG, String.valueOf(chosenDateInMillis));
-                        Log.d(TAG, String.valueOf(System.currentTimeMillis()));
-                        }
-                    }, year, month, day);
-                    long now = System.currentTimeMillis() - 1000;
-                    datePickerDialog.getDatePicker().setMinDate(now);
-                    calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
-                    datePickerDialog.show();
+                    setupCalendar();
                 } else {
                     if (datePickerDialog != null) {
                         datePickerDialog.hide();
@@ -177,6 +158,53 @@ public class CreateEventFragment extends Fragment {
         return rootView;
     }
 
+    private void setupCalendar() {
+        calendar = Calendar.getInstance();
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                eventEndDate.setText(chosenDate);
+                chosenDate += " 23:59:59";
+                try {
+                    chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Chosen Date" + chosenDate);
+                Log.d(TAG, String.valueOf(chosenDateInMillis));
+                Log.d(TAG, String.valueOf(System.currentTimeMillis()));
+            }
+        }, year, month, day);
+        long now = System.currentTimeMillis() - 1000;
+        datePickerDialog.getDatePicker().setMinDate(now + (1000 * 60 * 60 * 24 * 7));
+        calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
+        datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                eventEndDate.clearFocus();
+            }
+        });
+        datePickerDialog.show();
+        hideKeyboard(requireActivity());
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        // Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        // If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -188,7 +216,7 @@ public class CreateEventFragment extends Fragment {
                 galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, GalleryPick);
             } else {
-                Toast.makeText(getActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -210,7 +238,7 @@ public class CreateEventFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
                 // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
-                ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), resultUri);
+                ImageDecoder.Source source = ImageDecoder.createSource(requireActivity().getContentResolver(), resultUri);
                 try {
                     bitmap = ImageDecoder.decodeBitmap(source);
                     hasImage = true;

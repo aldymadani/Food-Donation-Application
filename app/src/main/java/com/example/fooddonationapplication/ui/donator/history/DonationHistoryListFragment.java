@@ -94,8 +94,8 @@ public class DonationHistoryListFragment extends Fragment {
 
         donationHistoryAdapter = new DonationHistoryAdapter(options, getContext());
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), gridColumnCount));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
         recyclerView.setAdapter(donationHistoryAdapter);
     }
 }

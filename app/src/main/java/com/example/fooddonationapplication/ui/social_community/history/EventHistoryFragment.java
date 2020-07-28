@@ -64,10 +64,8 @@ public class EventHistoryFragment extends Fragment {
                 if (!search.isEmpty()) {
                     newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
                 } else {
-                    searchInputLayout.setError("Please fill in");
                     return;
                 }
-                searchInputLayout.setErrorEnabled(false);
                 setUpRecyclerViewEventHistory(newQuery);
                 eventHistoryAdapter.startListening();
             }
@@ -79,7 +77,7 @@ public class EventHistoryFragment extends Fragment {
                 Query newQuery = eventRef.whereEqualTo("socialCommunityID", uuid);
                 searchInputLayout.setErrorEnabled(false);
                 searchKeyword.setText("");
-                hideKeyboard(getActivity());
+                hideKeyboard(requireActivity());
                 searchKeyword.clearFocus();
                 setUpRecyclerViewEventHistory(newQuery);
                 eventHistoryAdapter.startListening();
@@ -101,8 +99,8 @@ public class EventHistoryFragment extends Fragment {
 
         eventHistoryAdapter = new EventHistoryAdapter(options, getContext());
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), gridColumnCount));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
         recyclerView.setAdapter(eventHistoryAdapter);
     }
 
