@@ -41,10 +41,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -431,8 +433,12 @@ public class UpdateEventFragment extends Fragment {
         // TODO disable update and send notification and the rest of the text and image click
         // Perform delete donation on the database
         WriteBatch batch = db.batch();
-        DocumentReference donatorReference = db.collection("events").document(event.getEventID());
-        batch.delete(donatorReference); // TODO don't use batch, use single deletion
+        DocumentReference eventReference = db.collection("events").document(event.getEventID());
+        batch.delete(eventReference); // TODO don't use batch, use single deletion
+
+        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference socialCommunityReference = db.collection("users").document(uuid);
+        batch.update(socialCommunityReference, "totalEventCreated", FieldValue.increment(-1));
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

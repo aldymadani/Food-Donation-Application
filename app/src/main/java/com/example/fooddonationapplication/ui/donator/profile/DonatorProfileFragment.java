@@ -50,7 +50,7 @@ public class DonatorProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_profile,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_donator_profile,container,false);
 
         emailTextView = rootView.findViewById(R.id.edit_profile_email);
         passwordTextView = rootView.findViewById(R.id.edit_profile_password);

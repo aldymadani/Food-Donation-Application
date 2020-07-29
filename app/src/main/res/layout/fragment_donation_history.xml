@@ -12,8 +12,10 @@
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/donatorTitleTotalDonation" />
+        app:layout_constraintTop_toBottomOf="@+id/donatorTitleTotalDonation"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/donatorTitleTotalDonation"
@@ -28,4 +30,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/donationEmptyLogo"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/empty_donation_picture"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/donationEmptyLogoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:text="You have no donation history"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/donationEmptyLogo"
+        app:layout_constraintStart_toStartOf="@+id/donationEmptyLogo"
+        app:layout_constraintTop_toBottomOf="@+id/donationEmptyLogo" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

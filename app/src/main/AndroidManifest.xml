@@ -17,15 +17,16 @@
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/SecondAppTheme">
+        <activity android:name=".ui.donator.event.SocialCommunityDetailActivity"></activity>
         <activity android:name=".ui.general.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.social_community.history.UpdateEventActivity" />
         <activity android:name=".ui.general.SocialCommunityRegisterActivity" />
-        <activity android:name=".ui.social_community.history.DonationListActivity" />
         <activity android:name=".ui.donator.history.DonationHistoryDetailActivity" />
         <activity android:name=".ui.social_community.history.DonationDetailActivity" />
         <activity
@@ -36,8 +37,7 @@
             android:name=".ui.donator.MainDonatorActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".ui.donator.event.CreateDonationActivity" />
-        <activity android:name=".ui.general.LoginActivity">
-        </activity>
+        <activity android:name=".ui.general.LoginActivity"></activity>
         <activity android:name=".ui.general.DonatorRegisterActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

@@ -38,6 +38,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -333,7 +334,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void InitializeEvent() {
-        String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String socialCommunityName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         Log.d(TAG, eventId);
@@ -358,28 +359,35 @@ public class CreateEventFragment extends Fragment {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             event.setSocialCommunityTelephoneNumber(documentSnapshot.getString("phone"));
-                            db.collection("events").document(eventId)
-                                    .set(event)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(getContext(), "Event is successfully created", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getContext(), MainSocialCommunityActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            Log.d(TAG, "Event successfully written!");
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            createEventConfirmation.setVisibility(View.VISIBLE);
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.e(TAG, "Error writing document", e);
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            createEventConfirmation.setVisibility(View.VISIBLE);
-                                        }
-                                    });
+                            db.collection("users").document(socialCommunityID)
+                                    .update("totalEventCreated", FieldValue.increment(1))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    db.collection("events").document(eventId)
+                                            .set(event)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(getContext(), "Event is successfully created", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(getContext(), MainSocialCommunityActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    startActivity(intent);
+                                                    Log.d(TAG, "Event successfully written!");
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    createEventConfirmation.setVisibility(View.VISIBLE);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e(TAG, "Error writing document", e);
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    createEventConfirmation.setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                }
+                            });
                         }
                     }
                 });

@@ -15,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
@@ -26,18 +26,69 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_profile_name_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/fullname_placeholder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_title">
+
+            <EditText
+                android:id="@+id/edit_profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_profile_telephone_number_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/telephone_number_placeholder"
+            app:layout_constraintEnd_toEndOf="@+id/edit_profile_name_layout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/edit_profile_name_layout"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_name_layout">
+
+            <EditText
+                android:id="@+id/edit_profile_telephone_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:inputType="phone" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_profile_email_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/email_placeholder"
-            app:errorEnabled="true"
             app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_name_layout"
+            app:layout_constraintEnd_toEndOf="@+id/edit_profile_telephone_number_layout"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_name_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_name_layout">
+            app:layout_constraintStart_toStartOf="@+id/edit_profile_telephone_number_layout"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout">
 
             <EditText
                 android:id="@+id/edit_profile_email"
@@ -55,11 +106,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/password_placeholder"
-            app:errorEnabled="true"
             app:passwordToggleEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_telephone_number_layout"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_telephone_number_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout">
+            app:layout_constraintEnd_toEndOf="@+id/edit_profile_email_layout"
+            app:layout_constraintStart_toStartOf="@+id/edit_profile_email_layout"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_layout">
 
             <EditText
                 android:id="@+id/edit_profile_password"
@@ -81,7 +131,6 @@
             android:layout_marginTop="8dp"
             android:hint="@string/confirm_password_placeholder"
             app:passwordToggleEnabled="true"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/edit_profile_password_layout"
             app:layout_constraintStart_toStartOf="@+id/edit_profile_password_layout"
             app:layout_constraintTop_toBottomOf="@+id/edit_profile_password_layout">
@@ -98,66 +147,13 @@
                 app:layout_constraintHorizontal_bias="1.0" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_profile_name_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/fullname_placeholder"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="32dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_title" >
-
-            <EditText
-                android:id="@+id/edit_profile_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="textPersonName" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_profile_telephone_number_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/telephone_number_placeholder"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_email_layout"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_email_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_layout">
-
-            <EditText
-                android:id="@+id/edit_profile_telephone_number"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/ic_phone_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="phone" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_profile_confirm"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:text="@string/update_details_button"
             android:textAllCaps="false"

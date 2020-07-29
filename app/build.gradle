@@ -42,6 +42,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-firestore:21.4.1'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'android.arch.paging:runtime:1.0.1'
 
     // Github Firestore implementation
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'

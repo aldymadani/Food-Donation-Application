@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +23,15 @@ import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import java.text.DecimalFormat;
 
 public class EventHistoryFragment extends Fragment {
 
@@ -39,7 +44,8 @@ public class EventHistoryFragment extends Fragment {
     private View rootView;
     private TextInputLayout searchInputLayout;
     private EditText searchKeyword;
-    private ImageView searchButton;
+    private TextView emptyHistoryText;
+    private ImageView searchButton, emptyHistoryImage;
     private SwipeRefreshLayout swipeLayout;
 
     @Nullable
@@ -51,10 +57,38 @@ public class EventHistoryFragment extends Fragment {
         searchInputLayout = rootView.findViewById(R.id.search_layout);
         searchButton = rootView.findViewById(R.id.search_button);
         swipeLayout = rootView.findViewById(R.id.swipeLayout);
+        emptyHistoryImage = rootView.findViewById(R.id.eventHistoryEmptyPicture);
+        emptyHistoryText = rootView.findViewById(R.id.eventHistoryEmptyTextView);
+
         final String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d(TAG, uuid);
         Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
         setUpRecyclerViewEventHistory(query);
+
+        searchKeyword.setVisibility(View.INVISIBLE);
+        searchInputLayout.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        swipeLayout.setVisibility(View.INVISIBLE);
+        emptyHistoryImage.setVisibility(View.INVISIBLE);
+        emptyHistoryText.setVisibility(View.INVISIBLE);
+
+        db.collection("users").document(uuid).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.getDouble("totalEventCreated") > 0) {
+                                searchKeyword.setVisibility(View.VISIBLE);
+                                searchInputLayout.setVisibility(View.VISIBLE);
+                                searchButton.setVisibility(View.VISIBLE);
+                                swipeLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                emptyHistoryImage.setVisibility(View.VISIBLE);
+                                emptyHistoryText.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                });
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override

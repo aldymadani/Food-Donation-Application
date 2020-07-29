@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -97,6 +99,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String email = emailId.getText().toString();
                 String password = passwordId.getText().toString(); // TODO needs trim?
                 if (inputValidation(email, password)) {
+                    passwordId.clearFocus();
+                    emailId.clearFocus();
                     authenticateUser(email, password);
                 }
                 break;
@@ -155,7 +159,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Login error, please try again", Toast.LENGTH_SHORT).show();
+                    if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                        textInputEmail.setError("The account is not registered yet");
+                        Toast.makeText(LoginActivity.this, "The account is not registered yet", Toast.LENGTH_SHORT).show();
+                    } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        textInputPassword.setError("The password doesn't match the email address");
+                        Toast.makeText(LoginActivity.this, "The password doesn't match the email address", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Login error, please try again", Toast.LENGTH_SHORT).show();
+                    }
                     btnSignIn.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
                     btnRegister.setEnabled(true);

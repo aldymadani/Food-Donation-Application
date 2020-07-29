@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,11 +24,14 @@ import com.example.fooddonationapplication.adapter.EventListAdapter;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 public class EventListFragment extends Fragment {
@@ -39,7 +43,8 @@ public class EventListFragment extends Fragment {
 
     private EventListAdapter adapter;
     private RecyclerView recyclerView;
-    private ImageView searchButton;
+    private ImageView searchButton, emptyEventImage;
+    private TextView emptyEventTextView;
     private TextInputLayout searchKeywordLayout;
     private EditText searchKeyword;
     private SwipeRefreshLayout swipeLayout;
@@ -51,11 +56,40 @@ public class EventListFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.event_recyclerView);
         swipeLayout = rootView.findViewById(R.id.eventSwipeLayout);
 
-        Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
-        setUpRecyclerView(query);
         searchKeyword = rootView.findViewById(R.id.eventSearch);
         searchKeywordLayout = rootView.findViewById(R.id.eventSearchLayout);
         searchButton = rootView.findViewById(R.id.eventSearchButton);
+        emptyEventImage = rootView.findViewById(R.id.eventEmptyPicture);
+        emptyEventTextView =rootView.findViewById(R.id.eventEmptyTextView);
+
+        searchKeyword.setVisibility(View.INVISIBLE);
+        searchKeywordLayout.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        swipeLayout.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+        emptyEventImage.setVisibility(View.INVISIBLE);
+        emptyEventTextView.setVisibility(View.INVISIBLE);
+
+        Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
+        setUpRecyclerView(query);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().isEmpty()) {
+                        emptyEventImage.setVisibility(View.VISIBLE);
+                        emptyEventTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        searchKeyword.setVisibility(View.VISIBLE);
+                        searchKeywordLayout.setVisibility(View.VISIBLE);
+                        searchButton.setVisibility(View.VISIBLE);
+                        swipeLayout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override

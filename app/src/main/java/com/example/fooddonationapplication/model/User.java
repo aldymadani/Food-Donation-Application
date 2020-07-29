@@ -9,10 +9,18 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class User implements Parcelable {
     private String name, phone, description, uuid, role, imageURI;
-    private double totalDonation;
+    private double totalDonation, totalEventCreated;
 
     public User(){
         // Empty constructor
+    }
+
+    public double getTotalEventCreated() {
+        return totalEventCreated;
+    }
+
+    public void setTotalEventCreated(double totalEventCreated) {
+        this.totalEventCreated = totalEventCreated;
     }
 
     public String getDescription() {

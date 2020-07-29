@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,9 @@ public class DonationHistoryListFragment extends Fragment {
 
     private static final String TAG = "DonationHistoryFragment";
 
-    private TextView totalDonationTextView;
+    private TextView totalDonationTextView, emptyDonationTextView;
+    private ImageView emptyDonationImage;
+    private RecyclerView recyclerView;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
@@ -45,6 +48,14 @@ public class DonationHistoryListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_donation_history,container,false);
         totalDonationTextView = rootView.findViewById(R.id.donatorTitleTotalDonation);
+        emptyDonationImage = rootView.findViewById(R.id.donationEmptyLogo);
+        recyclerView = rootView.findViewById(R.id.donationHistoryRecyclerView);
+        emptyDonationTextView = rootView.findViewById(R.id.donationEmptyLogoText);
+
+        recyclerView.setVisibility(View.INVISIBLE);
+        emptyDonationImage.setVisibility(View.INVISIBLE);
+        totalDonationTextView.setVisibility(View.INVISIBLE);
+        emptyDonationTextView.setVisibility(View.INVISIBLE);
         setUpRecyclerViewDonationHistory();
 
         db.collection("users").document(user.getUid()).get()
@@ -56,11 +67,13 @@ public class DonationHistoryListFragment extends Fragment {
                             DecimalFormat df = new DecimalFormat("#.###");
                             if (documentSnapshot.getDouble("totalDonation") > 0) {
                                 formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+                                totalDonationTextView.setText("You have donated " + formattedTotalDonation + " Kg of food");
+                                recyclerView.setVisibility(View.VISIBLE);
+                                totalDonationTextView.setVisibility(View.VISIBLE);
                             } else {
-                                // TODO: Tambahkan gambar apabila belum ada donasi
-                                formattedTotalDonation = "0";
+                                emptyDonationTextView.setVisibility(View.VISIBLE);
+                                emptyDonationImage.setVisibility(View.VISIBLE);
                             }
-                            totalDonationTextView.setText("You have donated " + formattedTotalDonation + " Kg of food");
                         }
                     }
                 });
@@ -87,8 +100,6 @@ public class DonationHistoryListFragment extends Fragment {
         FirestoreRecyclerOptions<Donator> options = new FirestoreRecyclerOptions.Builder<Donator>()
                 .setQuery(query, Donator.class)
                 .build();
-
-        RecyclerView recyclerView = rootView.findViewById(R.id.donationHistoryRecyclerView);
 
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
 

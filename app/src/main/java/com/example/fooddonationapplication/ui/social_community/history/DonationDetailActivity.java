@@ -23,7 +23,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
-import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,7 +49,7 @@ public class DonationDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_donator_detail);
+        setContentView(R.layout.activity_donation_detail);
 
         donatorNameTextView = findViewById(R.id.donatorDetailName);
         donatorPhoneNumberTextView = findViewById(R.id.donatorDetailPhoneNumber);

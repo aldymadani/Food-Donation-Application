@@ -288,7 +288,6 @@ public class CreateDonationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == TAKE_IMAGE_CODE) {
             switch (resultCode) {
                 case RESULT_OK:

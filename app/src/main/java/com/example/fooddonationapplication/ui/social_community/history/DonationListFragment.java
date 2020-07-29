@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,9 +40,11 @@ import java.text.DecimalFormat;
 public class DonationListFragment extends Fragment {
 
     private static final String TAG = "DonationListFragment";
-    private TextView titleTotalDonation;
+    private TextView titleTotalDonation, donationListEmptyTextView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference donatorRef = db.collection("donators");
+    private ImageView donationListEmptyImage;
+    private RecyclerView recyclerView;
 
     private DonationListAdapter donatorAdapter;
 
@@ -62,6 +65,16 @@ public class DonationListFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_donation_list, container, false);
         sortBy = rootView.findViewById(R.id.donationListSpinner);
+        donationListEmptyImage = rootView.findViewById(R.id.donationListEmptyImage);
+        donationListEmptyTextView = rootView.findViewById(R.id.donationListEmptyTextView);
+        titleTotalDonation = rootView.findViewById(R.id.donationListTitle);
+        recyclerView = rootView.findViewById(R.id.donationListRecyclerView);
+
+        sortBy.setVisibility(View.INVISIBLE);
+        titleTotalDonation.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+        donationListEmptyImage.setVisibility(View.INVISIBLE);
+        donationListEmptyTextView.setVisibility(View.INVISIBLE);
 
 //        Intent intent = getIntent().;
 //        Event event = intent.getParcelableExtra("Event");
@@ -97,7 +110,6 @@ public class DonationListFragment extends Fragment {
 //            totalDonation = String.valueOf(eventData.getTotalDonation());
         }
 
-        titleTotalDonation = rootView.findViewById(R.id.donationListTitle);
 //        titleTotalDonation.setText("People have donated " + totalDonation + " Kg of food");
         if (eventID != null) {
             Log.d(TAG, eventID);
@@ -141,9 +153,17 @@ public class DonationListFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
-                    DecimalFormat df = new DecimalFormat("#.###");
-                    String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
-                    titleTotalDonation.setText("People have donated " + formattedTotalDonation + " Kg of food");
+                    if (documentSnapshot.getDouble("totalDonation") <= 0) {
+                        donationListEmptyImage.setVisibility(View.VISIBLE);
+                        donationListEmptyTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        sortBy.setVisibility(View.VISIBLE);
+                        titleTotalDonation.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        DecimalFormat df = new DecimalFormat("#.###");
+                        String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+                        titleTotalDonation.setText("People have donated " + formattedTotalDonation + " Kg of food");
+                    }
                 }
             }
         });

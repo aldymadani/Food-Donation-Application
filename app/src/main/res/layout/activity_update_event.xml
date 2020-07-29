@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabGravity="fill"
         app:tabIndicatorColor="#ff5f52"
-        app:tabMode="fixed"></com.google.android.material.tabs.TabLayout>
+        app:tabMode="fixed" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/updateEventViewPager"

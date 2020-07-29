@@ -74,4 +74,30 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:srcCompat="@drawable/ic_reset" />-->
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/eventHistoryEmptyPicture"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/empty_event_history"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/eventHistoryEmptyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:text="You haven't created any event yet"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/eventHistoryEmptyPicture"
+        app:layout_constraintStart_toStartOf="@+id/eventHistoryEmptyPicture"
+        app:layout_constraintTop_toBottomOf="@+id/eventHistoryEmptyPicture" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

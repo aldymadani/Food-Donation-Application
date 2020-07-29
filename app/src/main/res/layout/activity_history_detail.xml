@@ -12,38 +12,35 @@
 
         <TextView
             android:id="@+id/historyDetailTitle"
+            style="@style/ShadowForText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:textStyle="bold"
             android:text="@string/donation_details_title"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/ShadowForText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/historyDetailEventNameLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            app:errorEnabled="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/event_name_placeholder"
+            app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailTitle"
-            app:helperTextEnabled="true"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="@string/event_name_placeholder" >
+            app:layout_constraintTop_toBottomOf="@+id/historyDetailTitle">
 
             <EditText
                 android:id="@+id/historyDetailEventName"
@@ -51,9 +48,9 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/event_title_icon"
                 android:drawablePadding="7dp"
-                android:inputType="text"
                 android:enabled="false"
-                android:textColor="#000000"/>
+                android:inputType="text"
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +61,6 @@
             android:layout_marginTop="8dp"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailEventNameLayout"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/historyDetailEventNameLayout"
@@ -96,7 +92,6 @@
             android:layout_marginTop="8dp"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailSocialCommunityNameLayout"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityNameLayout"
@@ -155,7 +150,6 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:hint="@string/food_items_placeholder"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailPickUpAddressLayout"
             app:layout_constraintStart_toStartOf="@+id/historyDetailPickUpAddressLayout"
             app:layout_constraintTop_toBottomOf="@+id/historyDetailPickUpAddressLayout">
@@ -182,7 +176,6 @@
             android:hint="@string/pick_up_date_placeholder"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailFoodItemsLayout"
             app:layout_constraintStart_toStartOf="@+id/historyDetailFoodItemsLayout"
             app:layout_constraintTop_toBottomOf="@+id/historyDetailFoodItemsLayout">
@@ -209,7 +202,6 @@
             android:hint="@string/time_placeholder"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailDateLayout"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/historyDetailDateLayout"
@@ -238,7 +230,6 @@
             android:hint="@string/donate_quantity_placeholder"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailTimeLayout"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/historyDetailTimeLayout"
@@ -266,7 +257,6 @@
             android:hint="@string/donation_date_placeholder"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailTotalDonationLayout"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/historyDetailTotalDonationLayout"
@@ -280,8 +270,8 @@
                 android:drawableStart="@drawable/pick_up_icon"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="date"
                 android:enabled="false"
+                android:inputType="date"
                 android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -305,18 +295,20 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/historyDetailFoodPhoto"
             app:layout_constraintEnd_toEndOf="@+id/historyDetailFoodPhoto"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintTop_toTopOf="@+id/historyDetailFoodPhoto" />
+            app:layout_constraintTop_toTopOf="@+id/historyDetailFoodPhoto"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/donate_insert_image_text"
             style="@style/ShadowForText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:text="@string/food_image_text"
-            android:layout_marginTop="8dp"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/historyDetailDonationDateLayout"

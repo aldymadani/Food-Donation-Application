@@ -58,7 +58,6 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
         } else {
             bottomNav.setSelectedItemId(R.id.nav_event_history);
         }
-        // fragmentManager.beginTransaction().hide(firstInactiveFragment).hide(secondInactiveFragment).show(activeFragment).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

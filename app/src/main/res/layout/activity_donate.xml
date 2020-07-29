@@ -12,15 +12,15 @@
 
         <TextView
             android:id="@+id/register_title"
+            style="@style/ShadowForText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:textStyle="bold"
             android:text="@string/donate_activity_title"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/ShadowForText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,16 +30,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_title" >
+            app:layout_constraintTop_toBottomOf="@+id/register_title">
 
             <EditText
                 android:id="@+id/donate_food_item"
@@ -64,7 +61,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/pick_up_date_placeholder"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/donate_food_item_layout"
             app:layout_constraintStart_toStartOf="@+id/donate_food_item_layout"
             app:layout_constraintTop_toBottomOf="@+id/donate_food_item_layout">
@@ -87,7 +83,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/time_placeholder"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/donate_date_layout"
             app:layout_constraintStart_toStartOf="@+id/donate_date_layout"
             app:layout_constraintTop_toBottomOf="@+id/donate_date_layout">
@@ -110,7 +105,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/donate_quantity_placeholder"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="@+id/donate_time_layout"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/donate_time_layout"
@@ -132,7 +126,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:errorEnabled="true"
             app:helperText="*Optional"
             app:layout_constraintEnd_toEndOf="@+id/donate_quantity_layout"
             app:layout_constraintHorizontal_bias="0.452"
@@ -156,7 +149,7 @@
             style="@style/ShadowForText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:text="@string/food_image_text"
