@@ -15,15 +15,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.fooddonationapplication.adapter.EventListAdapter;
+import com.example.fooddonationapplication.adapter.EventViewHolder;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.firebase.ui.firestore.paging.LoadingState;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,6 +53,7 @@ public class EventListFragment extends Fragment {
     private TextInputLayout searchKeywordLayout;
     private EditText searchKeyword;
     private SwipeRefreshLayout swipeLayout;
+    FirestorePagingAdapter mAdapter;
 
     @Nullable
     @Override
@@ -102,7 +108,7 @@ public class EventListFragment extends Fragment {
                     return;
                 }
                 setUpRecyclerView(newQuery);
-                adapter.startListening();;
+                mAdapter.startListening();;
             }
         });
 
@@ -115,7 +121,7 @@ public class EventListFragment extends Fragment {
                 hideKeyboard(requireActivity());
                 searchKeyword.clearFocus();
                 setUpRecyclerView(newQuery);
-                adapter.startListening();
+                mAdapter.refresh();
                 swipeLayout.setRefreshing(false);
             }
         });
@@ -124,19 +130,84 @@ public class EventListFragment extends Fragment {
     }
 
     private void setUpRecyclerView(Query query) {
-        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
-                .setQuery(query, Event.class)
+        // Init Paging Configuration
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(2)
+                .setPageSize(3) // Remember that, the size you will pass to setPageSize() a method will load x3 items of that size at first load. Total initial is 9 https://medium.com/firebase-developers/firestore-pagination-in-android-using-firebaseui-library-1d7fe1a75704
                 .build();
+
+        // Init Adapter Configuration
+        FirestorePagingOptions options = new FirestorePagingOptions.Builder<Event>()
+                .setLifecycleOwner(this)
+                .setQuery(query, config, Event.class)
+                .build();
+
+        mAdapter = new FirestorePagingAdapter<Event, EventViewHolder>(options) {
+            @NonNull
+            @Override
+            public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = getLayoutInflater().inflate(R.layout.event_item, parent, false);
+                return new EventViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull EventViewHolder viewHolder, int i, @NonNull Event event) {
+                // Bind to ViewHolder
+                viewHolder.bind(event);
+            }
+
+            @Override
+            protected void onError(@NonNull Exception e) {
+                super.onError(e);
+                Log.e(TAG, e.getMessage());
+            }
+
+            @Override
+            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+                switch (state) {
+                    case LOADING_INITIAL:
+                    case LOADING_MORE:
+                        swipeLayout.setRefreshing(true);
+                        break;
+
+                    case LOADED:
+                        swipeLayout.setRefreshing(false);
+                        break;
+
+                    case ERROR:
+                        Toast.makeText(
+                                getActivity(),
+                                "Error Occurred!",
+                                Toast.LENGTH_SHORT
+                        ).show();
+
+                        swipeLayout.setRefreshing(false);
+                        mAdapter.retry();
+                        break;
+
+                    case FINISHED:
+                        swipeLayout.setRefreshing(false);
+                        break;
+                }
+            }
+
+        };
+
+
+//        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
+//                .setQuery(query, Event.class)
+//                .build();
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
-        adapter = new EventListAdapter(options, getContext());
-        adapter.notifyDataSetChanged();
-        Log.d(TAG, String.valueOf(options));
-        Log.d(TAG, String.valueOf(adapter));
-        Log.d(TAG, String.valueOf(recyclerView));
+//        adapter = new EventListAdapter(options, getContext());
+//        adapter.notifyDataSetChanged();
+//        Log.d(TAG, String.valueOf(options));
+//        Log.d(TAG, String.valueOf(adapter));
+//        Log.d(TAG, String.valueOf(recyclerView));
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mAdapter);
     }
 
     public static void hideKeyboard(Activity activity) {
@@ -153,12 +224,12 @@ public class EventListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
+        mAdapter.startListening();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        adapter.stopListening();
+        mAdapter.stopListening();
     }
 }

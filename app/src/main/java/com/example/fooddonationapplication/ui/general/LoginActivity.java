@@ -172,6 +172,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     progressBar.setVisibility(View.INVISIBLE);
                     btnRegister.setEnabled(true);
                 } else {
+                    textInputEmail.setErrorEnabled(false);
+                    textInputPassword.setErrorEnabled(false);
                     String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     checkRole(uuid);
                 }
