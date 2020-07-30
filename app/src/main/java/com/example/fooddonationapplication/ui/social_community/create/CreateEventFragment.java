@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.viewmodel.CreateEventViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -192,18 +193,7 @@ public class CreateEventFragment extends Fragment {
             }
         });
         datePickerDialog.show();
-        hideKeyboard(requireActivity());
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        // Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        // If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        Util.hideKeyboard(requireActivity());
     }
 
     @Override
@@ -346,7 +336,7 @@ public class CreateEventFragment extends Fragment {
         event.setTitleForSearch(eventNameData.toLowerCase());
         event.setDescription(eventDescriptionData);
         event.setSocialCommunityID(socialCommunityID);
-        event.setSocialCommunityName(socialCommunityName);
+//        event.setSocialCommunityName(socialCommunityName);
         event.setEndDate(endDateData);
         event.setEndDateInMillis(chosenDateInMillis);
         event.setTargetQuantity(Double.parseDouble(targetQuantityData));
@@ -358,7 +348,7 @@ public class CreateEventFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            event.setSocialCommunityTelephoneNumber(documentSnapshot.getString("phone"));
+//                            event.setSocialCommunityTelephoneNumber(documentSnapshot.getString("phone"));
                             db.collection("users").document(socialCommunityID)
                                     .update("totalEventCreated", FieldValue.increment(1))
                             .addOnSuccessListener(new OnSuccessListener<Void>() {

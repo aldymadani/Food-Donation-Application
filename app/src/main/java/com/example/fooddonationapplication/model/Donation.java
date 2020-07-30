@@ -10,19 +10,28 @@ public class Donation implements Parcelable {
     public String name;
     public String phone;
     public String uuid;
-    public String socialCommunityId;
-    public String socialCommunityName;
-    public String eventName;
-    public String eventId;
-    public String pickUpAddress;
-    public String foodItems;
-    public String pickUpDate;
-    public String pickUpTime;
-    public String donationDate;
-    public String imageURI;
-    public String donatorId;
-    public String status;
-    double totalDonation;
+    private String socialCommunityId;
+    private String socialCommunityName;
+    private String socialCommunityPhoneNumber;
+    private String eventName;
+    private String eventId;
+    private String pickUpAddress;
+    private String foodItems;
+    private String pickUpDate;
+    private String pickUpTime;
+    private String donationDate;
+    private String imageURI;
+    private String donatorId;
+    private String status;
+    private double totalDonation;
+
+    public String getSocialCommunityPhoneNumber() {
+        return socialCommunityPhoneNumber;
+    }
+
+    public void setSocialCommunityPhoneNumber(String socialCommunityPhoneNumber) {
+        this.socialCommunityPhoneNumber = socialCommunityPhoneNumber;
+    }
 
     public String getStatus() {
         return status;
@@ -158,6 +167,7 @@ public class Donation implements Parcelable {
         uuid = in.readString();
         socialCommunityId = in.readString();
         socialCommunityName = in.readString();
+        socialCommunityPhoneNumber = in.readString();
         eventName = in.readString();
         eventId = in.readString();
         pickUpAddress = in.readString();
@@ -190,6 +200,7 @@ public class Donation implements Parcelable {
         dest.writeString(uuid);
         dest.writeString(socialCommunityId);
         dest.writeString(socialCommunityName);
+        dest.writeString(socialCommunityPhoneNumber);
         dest.writeString(eventName);
         dest.writeString(eventId);
         dest.writeString(pickUpAddress);

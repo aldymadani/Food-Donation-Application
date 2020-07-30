@@ -85,7 +85,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailPickUpAddressLayout"
+            android:id="@+id/historyDetailSocialCommunityTelephoneNumberLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -96,6 +96,37 @@
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityNameLayout"
             app:layout_constraintTop_toBottomOf="@+id/historyDetailSocialCommunityNameLayout">
+
+            <EditText
+                android:id="@+id/historyDetailSocialCommunityTelephoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="152dp"
+                android:drawableStart="@drawable/social_community_name_icon"
+                android:drawablePadding="7dp"
+                android:ems="10"
+                android:hint="Social Community Telephone Number"
+                android:inputType="phone"
+                android:enabled="false"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
+                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/historyDetailPickUpAddressLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            app:layout_constraintEnd_toEndOf="@+id/historyDetailSocialCommunityTelephoneNumberLayout"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityTelephoneNumberLayout"
+            app:layout_constraintTop_toBottomOf="@+id/historyDetailSocialCommunityTelephoneNumberLayout">
 
             <EditText
                 android:id="@+id/historyDetailPickUpAddress"

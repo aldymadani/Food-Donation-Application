@@ -20,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.EventListAdapter;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.util.Util;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -93,6 +94,8 @@ public class EventListFragment extends Fragment {
                 Query newQuery = null;
                 String search = searchKeyword.getText().toString().toLowerCase();
                 if (!searchKeyword.getText().toString().isEmpty()) {
+                    Util.hideKeyboard(requireActivity());
+                    searchKeyword.clearFocus();
                     newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
                 } else {
                     return;
@@ -108,7 +111,7 @@ public class EventListFragment extends Fragment {
                 Query newQuery = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
                 searchKeywordLayout.setErrorEnabled(false);
                 searchKeyword.setText("");
-                hideKeyboard(requireActivity());
+                Util.hideKeyboard(requireActivity());
                 searchKeyword.clearFocus();
                 setUpRecyclerView(newQuery);
                 mAdapter.refresh();
@@ -140,17 +143,6 @@ public class EventListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
         recyclerView.setAdapter(mAdapter);
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        // Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        // If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

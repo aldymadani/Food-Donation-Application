@@ -23,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.util.Util;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,7 +81,7 @@ public class EventHistoryFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            if (documentSnapshot.getDouble("totalEventCreated") > 0) {
+                            if (documentSnapshot.getLong("totalEventCreated") > 0) {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 searchField.setVisibility(View.VISIBLE);
                                 searchInputLayout.setVisibility(View.VISIBLE);
@@ -100,6 +101,8 @@ public class EventHistoryFragment extends Fragment {
                 Query newQuery = null;
                 String search = searchField.getText().toString().toLowerCase();
                 if (!search.isEmpty()) {
+                    Util.hideKeyboard(requireActivity());
+                    searchField.clearFocus();
                     newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
                 } else {
                     return;
@@ -115,7 +118,7 @@ public class EventHistoryFragment extends Fragment {
                 Query newQuery = eventRef.whereEqualTo("socialCommunityID", uuid);
                 searchInputLayout.setErrorEnabled(false);
                 searchField.setText("");
-                hideKeyboard(requireActivity());
+                Util.hideKeyboard(requireActivity());
                 searchField.clearFocus();
                 setUpRecyclerViewEventHistory(newQuery);
                 eventHistoryAdapter.refresh();
@@ -152,17 +155,6 @@ public class EventHistoryFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
         recyclerView.setAdapter(eventHistoryAdapter);
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        // Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        // If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

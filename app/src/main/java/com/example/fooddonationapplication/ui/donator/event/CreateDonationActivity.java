@@ -57,7 +57,7 @@ public class CreateDonationActivity extends AppCompatActivity {
     private static final String TAG = "DonateActivity";
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Button btnConfirm;
-    private TextInputLayout textInputAddress, textInputFoodItems, textInputDate, textInputTime, textInputQuantity;
+    private TextInputLayout textInputFoodItems, textInputDate, textInputTime, textInputQuantity;
     private ProgressBar progressBar;
     private ImageView foodImage;
     private EditText etAddress, etFoodItems, etDate, etTime, etQuantity;
@@ -87,7 +87,6 @@ public class CreateDonationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation_create);
         hasImage = false;
-        textInputAddress = findViewById(R.id.donate_address_layout);
         textInputFoodItems = findViewById(R.id.donate_food_item_layout);
         textInputDate = findViewById(R.id.donate_date_layout);
         textInputQuantity = findViewById(R.id.donate_quantity_layout);
@@ -304,9 +303,9 @@ public class CreateDonationActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        String currentDateDetail = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.v(TAG, currentDateDetail);
+//        String currentDateDetail = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+//        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        Log.v(TAG, currentDateDetail);
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(donatorDocumentID + ".jpeg");
 
         reference.putBytes(baos.toByteArray())

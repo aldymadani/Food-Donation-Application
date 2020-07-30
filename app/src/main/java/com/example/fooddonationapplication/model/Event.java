@@ -11,7 +11,7 @@ import java.util.Date;
 @IgnoreExtraProperties
 public class Event implements Parcelable {
     // TODO add Social Community Description
-    private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, socialCommunityTelephoneNumber, endDate, titleForSearch;
+    private String imageURI, eventID, title, description, socialCommunityID, endDate, titleForSearch;
     private double targetQuantity, totalDonation;
     private long endDateInMillis;
     private @ServerTimestamp Date timestamp;
@@ -24,9 +24,6 @@ public class Event implements Parcelable {
         this.titleForSearch = titleForSearch;
     }
 
-    public void setSocialCommunityTelephoneNumber(String socialCommunityTelephoneNumber) {
-        this.socialCommunityTelephoneNumber = socialCommunityTelephoneNumber;
-    }
 
     public Event() {
         // Empty constructor required
@@ -52,13 +49,6 @@ public class Event implements Parcelable {
         this.socialCommunityID = socialCommunityID;
     }
 
-    public void setSocialCommunityName(String socialCommunityName) {
-        this.socialCommunityName = socialCommunityName;
-    }
-
-    public String getSocialCommunityTelephoneNumber() {
-        return socialCommunityTelephoneNumber;
-    }
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
@@ -90,8 +80,6 @@ public class Event implements Parcelable {
         this.title = title;
         this.description = description;
         this.socialCommunityID = socialCommunityID;
-        this.socialCommunityName = socialCommunityName;
-        this.socialCommunityTelephoneNumber = socialCommunityTelephoneNumber;
         this.endDate = endDate;
         this.endDateInMillis = endDateInMillis;
         this.targetQuantity = targetQuantity;
@@ -121,10 +109,6 @@ public class Event implements Parcelable {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getSocialCommunityName() {
-        return socialCommunityName;
     }
 
     public double getTotalDonation() {
@@ -163,8 +147,6 @@ public class Event implements Parcelable {
         title = in.readString();
         description = in.readString();
         socialCommunityID = in.readString();
-        socialCommunityName = in.readString();
-        socialCommunityTelephoneNumber = in.readString();
         endDate = in.readString();
         targetQuantity = in.readDouble();
         totalDonation = in.readDouble();
@@ -196,8 +178,6 @@ public class Event implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeString(socialCommunityID);
-        dest.writeString(socialCommunityName);
-        dest.writeString(socialCommunityTelephoneNumber);
         dest.writeString(endDate);
         dest.writeDouble(targetQuantity);
         dest.writeDouble(totalDonation);

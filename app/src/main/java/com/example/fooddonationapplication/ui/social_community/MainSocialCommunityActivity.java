@@ -19,6 +19,9 @@ import com.example.fooddonationapplication.ui.social_community.history.EventHist
 import com.example.fooddonationapplication.ui.social_community.profile.SocialCommunityProfileFragment;
 import com.example.fooddonationapplication.viewmodel.MainSocialCommunityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
 
 public class MainSocialCommunityActivity extends AppCompatActivity {
 

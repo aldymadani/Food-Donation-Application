@@ -31,11 +31,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.services.MyFirebaseMessagingService;
+import com.example.fooddonationapplication.services.MySingleton;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.viewmodel.UpdateEventViewModel;
+import com.google.android.gms.common.api.Response;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,12 +57,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,6 +75,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -102,6 +115,15 @@ public class UpdateEventFragment extends Fragment {
     private UpdateEventViewModel mViewModel;
 
     ListenerRegistration eventTotalDonationListerner;
+
+    // Send Notification
+    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    final private String serverKey = "key=" + "AAAA_kQBhCI:APA91bFc0c2ZXDUJdQRzTIESv_qs2SLJocXUPqPII0WSjaeTEZgshflKKBOk74lJAWkoFBCcz7THIBlXEmDoCaHzfaMOwv4ZEh-5ZiQP1GBAREorM8mypdYwvvbxx87aY3ZuVLzib_tJ";
+    final private String contentType = "application/json";
+
+    private String NOTIFICATION_TITLE;
+    private String NOTIFICATION_MESSAGE;
+    private String TOPIC;
 
     public UpdateEventFragment() {
         // Required empty public constructor
@@ -260,7 +282,58 @@ public class UpdateEventFragment extends Fragment {
             }
         });
 
+        sendNotificationConfirmation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TOPIC = "/topics/FoodDonation"; //topic must match with what the receiver subscribed to
+                NOTIFICATION_TITLE = "ALGO TITLE";
+                NOTIFICATION_MESSAGE = "ALGO SUBTITLE";
+
+                JSONObject notification = new JSONObject();
+                JSONObject notifcationBody = new JSONObject();
+                try {
+                    notifcationBody.put("title", NOTIFICATION_TITLE);
+                    notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                    notification.put("to", TOPIC);
+                    notification.put("data", notifcationBody);
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCreate: " + e.getMessage() );
+                }
+                Toast.makeText(getContext(), "JSON " + notification, Toast.LENGTH_SHORT).show();
+                sendNotification(notification);
+
+            }
+        });
+
         return rootView;
+    }
+
+    private void sendNotification(JSONObject notification) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(getContext(), "onResponse" + response.toString(), Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "onResponse: " + response.toString());
+                    }
+                },
+                new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getContext(), "Request error", Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "onErrorResponse: Didn't work");
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", serverKey);
+                params.put("Content-Type", contentType);
+                return params;
+            }
+        };
+        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
 
     private void allActionStatus(boolean status) {
@@ -329,8 +402,6 @@ public class UpdateEventFragment extends Fragment {
             eventEndDate.clearFocus();
         }
     }
-
-
 
     private void updateEvent() {
         // TODO check has changed to check if the user has change anything

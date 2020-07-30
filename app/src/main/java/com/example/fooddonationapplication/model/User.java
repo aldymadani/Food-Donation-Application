@@ -9,17 +9,18 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class User implements Parcelable {
     private String name, phone, description, uuid, role, imageURI;
-    private double totalDonation, totalEventCreated;
+    private int totalEventCreated;
+    private double totalDonation;
 
     public User(){
         // Empty constructor
     }
 
-    public double getTotalEventCreated() {
+    public int getTotalEventCreated() {
         return totalEventCreated;
     }
 
-    public void setTotalEventCreated(double totalEventCreated) {
+    public void setTotalEventCreated(int totalEventCreated) {
         this.totalEventCreated = totalEventCreated;
     }
 
@@ -79,7 +80,19 @@ public class User implements Parcelable {
         return imageURI;
     }
 
-    public boolean isSame(User user) {
+    public boolean isSameDonator(User user) {
+        // TODO: Compare function
+        boolean isSame = true;
+        if (!name.equalsIgnoreCase(user.getName())) {
+            isSame = false;
+        }
+        if (!phone.equalsIgnoreCase(user.getPhone())) {
+            isSame = false;
+        }
+        return isSame;
+    }
+
+    public boolean isSameSocialCommunity(User user) {
         // TODO: Compare function
         boolean isSame = true;
         if (!phone.equalsIgnoreCase(user.getPhone())) {

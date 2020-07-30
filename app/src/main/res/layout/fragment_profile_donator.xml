@@ -60,6 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/telephone_number_placeholder"
+            app:counterEnabled="true"
+            app:counterMaxLength="13"
             app:layout_constraintEnd_toEndOf="@+id/edit_profile_name_layout"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/edit_profile_name_layout"
@@ -73,97 +75,55 @@
                 android:drawableStart="@drawable/ic_phone_black_24dp"
                 android:drawablePadding="7dp"
                 android:ems="10"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:maxLength="13" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_profile_email_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/donatorProfileUpdateCredentialButton"
+            style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/email_placeholder"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_telephone_number_layout"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_telephone_number_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout">
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Update Credential"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textSize="12sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_constraintEnd_toStartOf="@+id/edit_profile_confirm"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout" />
 
-            <EditText
-                android:id="@+id/edit_profile_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_email_black_24dp"
-                android:drawablePadding="7dp"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_profile_password_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+        <ProgressBar
+            android:id="@+id/donatorProfileUpdateCredentialProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/password_placeholder"
-            app:passwordToggleEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_email_layout"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_email_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_layout">
-
-            <EditText
-                android:id="@+id/edit_profile_password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="textPassword"
-                app:layout_constraintHorizontal_bias="1.0" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_profile_password_confirm_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/confirm_password_placeholder"
-            app:passwordToggleEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/edit_profile_password_layout"
-            app:layout_constraintStart_toStartOf="@+id/edit_profile_password_layout"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_password_layout">
-
-            <EditText
-                android:id="@+id/edit_profile_password_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="textPassword"
-                app:layout_constraintHorizontal_bias="1.0" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintBottom_toBottomOf="@+id/donatorProfileUpdateCredentialButton"
+            app:layout_constraintEnd_toEndOf="@+id/donatorProfileUpdateCredentialButton"
+            app:layout_constraintStart_toStartOf="@+id/donatorProfileUpdateCredentialButton"
+            app:layout_constraintTop_toTopOf="@+id/donatorProfileUpdateCredentialButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_profile_confirm"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="32dp"
             android:text="@string/update_details_button"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-            android:textSize="14sp"
+            android:textSize="12sp"
             app:backgroundTint="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_password_confirm_layout" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/donatorProfileUpdateCredentialButton"
+            app:layout_constraintTop_toTopOf="@+id/donatorProfileUpdateCredentialButton" />
 
         <ProgressBar
             android:id="@+id/edit_profile_progressbar"
@@ -186,7 +146,7 @@
             android:text="@string/log_out_button"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-            android:textSize="14sp"
+            android:textSize="12sp"
             app:backgroundTint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

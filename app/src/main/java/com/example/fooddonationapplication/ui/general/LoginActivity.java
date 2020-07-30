@@ -112,8 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loginRegisterButton:
-                btnSubmit.setEnabled(false);
-                hideKeyboard(LoginActivity.this);
+                Util.hideKeyboard(LoginActivity.this);
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
                 View registerDialog = getLayoutInflater().inflate(R.layout.dialog_option, null);
                 mBuilder.setView(registerDialog);
@@ -127,7 +126,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent i = new Intent(LoginActivity.this, DonatorRegisterActivity.class);
                         startActivity(i);
                         dialog.hide();
-                        btnSubmit.setEnabled(true);
                     }
                 });
                 socialCommunityButton.setOnClickListener(new View.OnClickListener() {
@@ -136,13 +134,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent i = new Intent(LoginActivity.this, SocialCommunityRegisterActivity.class);
                         startActivity(i);
                         dialog.hide();
-                        btnSubmit.setEnabled(true);
                     }
                 });
                 break;
             case R.id.loginSubmitButton:
                 btnRegister.setEnabled(false);
-                hideKeyboard(LoginActivity.this);
+                Util.hideKeyboard(LoginActivity.this);
                 String email = emailField.getText().toString();
                 String password = passwordField.getText().toString(); // TODO needs trim?
                 if (inputValidation(email, password)) {
@@ -152,17 +149,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
         }
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        // Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        // If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     protected boolean inputValidation(String email, String password) {

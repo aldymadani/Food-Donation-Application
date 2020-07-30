@@ -1,16 +1,22 @@
 package com.example.fooddonationapplication.ui.donator.event;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -19,6 +25,17 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
+import com.example.fooddonationapplication.ui.general.LoginActivity;
+import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
 
@@ -26,10 +43,15 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "EventDetailActivity";
 
-    private TextView eventTitle, eventDescription, eventSocialCommunityName, eventTotalDonation, eventEndDate, eventSocialCommunityTelephoneNumber;
+    private CardView socialCommunityLayout;
+
+    private TextView eventTitle, eventSocialCommunityName, eventSocialCommunityTelephoneNumber;
+    private EditText eventDescription, eventEndDate, eventTotalDonation;
     private Button eventDonateButton;
-    private ImageView eventImage;
-    private ProgressBar eventProgressBar;
+    private ImageView eventImage, socialCommunityLogo;
+    private ProgressBar eventProgressBar, socialCommunityLogoProgressBar;
+    private String socialCommunityNameData, socialCommunityTelephoneNumberData, socialCommunityDescription, socialCommunityImageURI;
+    private int totalEventCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +59,31 @@ public class EventDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         eventTitle = findViewById(R.id.event_detail_title);
-        eventDescription = findViewById(R.id.event_detail_description);
-        eventSocialCommunityName = findViewById(R.id.event_detail_social_community);
-        eventSocialCommunityTelephoneNumber = findViewById(R.id.event_detail_social_community_telephone_number);
-        eventTotalDonation = findViewById(R.id.event_detail_total_donation);
-        eventEndDate = findViewById(R.id.event_detail_end_date);
         eventDonateButton = findViewById(R.id.event_detail_donate_button);
         eventImage = findViewById(R.id.event_detail_image);
         eventDonateButton = findViewById(R.id.event_detail_donate_button);
         eventProgressBar = findViewById(R.id.event_detail_progressBar);
+
+        eventDescription = findViewById(R.id.eventDetailEventDescription);
+        eventEndDate = findViewById(R.id.eventDetailEventEndDate);
+        eventTotalDonation = findViewById(R.id.eventDetailEventTotalDonation);
+
+        socialCommunityLayout = findViewById(R.id.eventDetailSocialCommunityLayout);
+        socialCommunityLogo = findViewById(R.id.eventDetailSocialCommunityLogo);
+        socialCommunityLogoProgressBar = findViewById(R.id.eventDetailSocialCommunityLogoProgressBar);
+        eventSocialCommunityName = findViewById(R.id.eventDetailSocialCommunityName);
+        eventSocialCommunityTelephoneNumber = findViewById(R.id.eventDetailSocialCommunityPhoneNumber);
+
+        // Disable all Event Information Edit Text
+        eventDescription.setFocusable(false);
+        eventDescription.setFocusableInTouchMode(false);
+        eventDescription.setCursorVisible(false);
+        eventEndDate.setFocusable(false);
+        eventEndDate.setFocusableInTouchMode(false);
+        eventEndDate.setCursorVisible(false);
+        eventTotalDonation.setFocusable(false);
+        eventTotalDonation.setFocusableInTouchMode(false);
+        eventTotalDonation.setCursorVisible(false);
 
         Intent intent = getIntent();
         Event event = intent.getParcelableExtra("Event");
@@ -55,12 +93,49 @@ public class EventDetailActivity extends AppCompatActivity {
         String eventImageData = event.getImageURI();
         String eventDescriptionData = event.getDescription();
         final String eventSocialCommunityIdData = event.getSocialCommunityID();
-        final String eventSocialCommunityNameData = event.getSocialCommunityName();
-        String eventSocialCommunityTelephoneNumberData = event.getSocialCommunityTelephoneNumber();
         String eventEndDateData = event.getEndDate();
         double eventTargetDonationData = event.getTargetQuantity();
         double eventTotalDonationDataData = event.getTotalDonation();
         final long endDateInMillis = event.getEndDateInMillis();
+
+        // Initialize Event Information Data on the Edit Text
+        eventDescription.setText(eventDescriptionData);
+        eventEndDate.setText(Util.convertToFullDate(eventEndDateData));
+        eventTotalDonation.setText(String.valueOf(eventTotalDonationDataData) + " / " + String.valueOf(eventTargetDonationData) + " kg");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference socialCommunityRef = db.collection("users").document(eventSocialCommunityIdData);
+        db.collection("users").document(eventSocialCommunityIdData).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            socialCommunityTelephoneNumberData = documentSnapshot.getString("phone");
+                            socialCommunityNameData = documentSnapshot.getString("name"); // TODO later pass from login to reduce read
+                            socialCommunityDescription  = documentSnapshot.getString("description");
+                            socialCommunityImageURI = documentSnapshot.getString("imageURI");
+                            totalEventCreated = documentSnapshot.getLong("totalEventCreated").intValue();
+
+                            // Initialize Data on Social Community Layout
+                            eventSocialCommunityName.setText(socialCommunityNameData);
+                            eventSocialCommunityTelephoneNumber.setText(socialCommunityTelephoneNumberData);
+                            Glide.with(getApplicationContext()).load(socialCommunityImageURI)
+                                    .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        socialCommunityLogoProgressBar.setVisibility(View.GONE);
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                        socialCommunityLogoProgressBar.setVisibility(View.GONE);
+                                        return false;
+                                    }
+                                }).error(R.drawable.ic_error_black_24dp).into(socialCommunityLogo);
+                        }
+                    }
+                });
 
         DecimalFormat df = new DecimalFormat("#.###");
         String formattedTotalDonation = df.format(eventTotalDonationDataData);
@@ -84,11 +159,11 @@ public class EventDetailActivity extends AppCompatActivity {
                         return false;
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(eventImage);
-        eventDescription.setText("Event Description :\n" + eventDescriptionData);
-        eventSocialCommunityName.setText( "Conductor: " + eventSocialCommunityNameData);
-        eventSocialCommunityTelephoneNumber.setText("Telephone number : " + eventSocialCommunityTelephoneNumberData);
-        eventTotalDonation.setText(String.valueOf("Total Donation : " + formattedTotalDonation + " / " + eventTargetDonationData) + " Kg");
-        eventEndDate.setText("Event End Date : " + eventEndDateData);
+//        eventDescription.setText("Event Description :\n" + eventDescriptionData);
+//        eventSocialCommunityName.setText( "Conductor: " + eventSocialCommunityNameData);
+//        eventSocialCommunityTelephoneNumber.setText("Telephone number : " + eventSocialCommunityTelephoneNumberData);
+//        eventTotalDonation.setText(String.valueOf("Total Donation : " + formattedTotalDonation + " / " + eventTargetDonationData) + " Kg");
+//        eventEndDate.setText("Event End Date : " + eventEndDateData);
 
         eventDonateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,9 +172,74 @@ public class EventDetailActivity extends AppCompatActivity {
                 intent.putExtra("eventID", eventIDData);
                 intent.putExtra("eventName", eventTitleData);
                 intent.putExtra("socialCommunityId", eventSocialCommunityIdData);
-                intent.putExtra("socialCommunityName", eventSocialCommunityNameData);
+                intent.putExtra("socialCommunityName", socialCommunityNameData);
                 intent.putExtra("endDateInMillis", endDateInMillis);
                 startActivity(intent);
+            }
+        });
+
+        socialCommunityLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(EventDetailActivity.this);
+                View socialCommunityDialog = getLayoutInflater().inflate(R.layout.fragment_profile_social_community, null);
+                mBuilder.setView(socialCommunityDialog);
+                final AlertDialog dialog = mBuilder.create();
+                dialog.show();
+                ImageView socialCommunityProfile = socialCommunityDialog.findViewById(R.id.socialCommunityProfilePhoto);
+                ImageView pencilIcon = socialCommunityDialog.findViewById(R.id.socialCommunityProfilePencilIcon);
+                EditText socialCommunityName = socialCommunityDialog.findViewById(R.id.socialCommunityProfileFullName);
+                EditText socialCommunityTelephoneNumber = socialCommunityDialog.findViewById(R.id.socialCommunityProfileTelephoneNumber);
+                EditText socialCommunityDescriptionField = socialCommunityDialog.findViewById(R.id.socialCommunityProfileDescription);
+                EditText socialCommunityTotalEventCreated = socialCommunityDialog.findViewById(R.id.socialCommunityProfileTotalEventCreated);
+                Button updateCredentialButton = socialCommunityDialog.findViewById(R.id.socialCommunityProfileUpdateCredentialButton);
+                Button updateProfileButton = socialCommunityDialog.findViewById(R.id.socialCommunityProfileUpdateButton);
+                Button logOutButton = socialCommunityDialog.findViewById(R.id.socialCommunityProfileLogOutButton);
+                final ProgressBar socialCommunityProfileProgressBar = socialCommunityDialog.findViewById(R.id.socialCommunityProfilePhotoProgressBar);
+                ProgressBar updateCredentialProgressBar = socialCommunityDialog.findViewById(R.id.socialCommunityProfileUpdateCredentialProgressBar);
+                ProgressBar updateProfileProgressBar = socialCommunityDialog.findViewById(R.id.socialCommunityProfileProgressBar);
+
+                pencilIcon.setVisibility(View.GONE);
+                updateCredentialButton.setVisibility(View.GONE);
+                updateProfileButton.setVisibility(View.GONE);
+                logOutButton.setVisibility(View.GONE);
+                updateCredentialProgressBar.setVisibility(View.GONE);
+                updateProfileProgressBar.setVisibility(View.GONE);
+
+                Glide.with(getApplicationContext()).load(socialCommunityImageURI)
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                socialCommunityProfileProgressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                socialCommunityProfileProgressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+                        }).error(R.drawable.ic_error_black_24dp).into(socialCommunityProfile);
+                
+                socialCommunityName.setText(socialCommunityNameData);
+                socialCommunityTelephoneNumber.setText(socialCommunityTelephoneNumberData);
+                socialCommunityDescriptionField.setText(socialCommunityDescription);
+                socialCommunityTotalEventCreated.setText(String.valueOf(totalEventCreated));
+
+                // Disable the Edit Text
+                socialCommunityName.setFocusable(false);
+                socialCommunityName.setFocusableInTouchMode(false);
+                socialCommunityName.setCursorVisible(false);
+                socialCommunityTelephoneNumber.setFocusable(false);
+                socialCommunityTelephoneNumber.setFocusableInTouchMode(false);
+                socialCommunityTelephoneNumber.setCursorVisible(false);
+                socialCommunityDescriptionField.setFocusable(false);
+                socialCommunityDescriptionField.setFocusableInTouchMode(false);
+                socialCommunityDescriptionField.setCursorVisible(false);
+                socialCommunityTotalEventCreated.setFocusable(false);
+                socialCommunityTotalEventCreated.setFocusableInTouchMode(false);
+                socialCommunityTotalEventCreated.setCursorVisible(false);
+                
             }
         });
     }

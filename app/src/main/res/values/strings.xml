@@ -20,7 +20,7 @@
     <string name="donate_quantity_placeholder">Donate Quantity in Kg</string>
     <string name="confirm_donation_button">Confirm Donation</string>
     <string name="food_image_text">Food Image :</string>
-    <string name="social_community_image_text">Social Community Profile Picture:</string>
+    <string name="social_community_image_text">Social Community Logo:</string>
     <string name="donator_details_title">Donator Details</string>
     <string name="donator_name_placeholder">Donator Name</string>
     <string name="donator_phone_number_placeholder">Donator Phone Number</string>
@@ -47,7 +47,7 @@
     <string name="confirm_event_button">Confirm Event</string>
     <string name="profile_information_title">Profile Information</string>
     <string name="confirm_password_placeholder">Confirm Password</string>
-    <string name="update_details_button">Update Details</string>
+    <string name="update_details_button">Update Profile</string>
     <string name="log_out_button">Log Out</string>
     <string name="create_event_bottom_navbar">Create</string>
     <string name="event_history_bottom_navbar">History</string>

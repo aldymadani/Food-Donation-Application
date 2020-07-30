@@ -45,6 +45,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -69,8 +70,8 @@ public class SocialCommunityProfileFragment extends Fragment {
 
     private FragmentActivity activity;
 
-    private EditText fullName, email, telephoneNumber, description, password, confirmPassword;
-    private TextInputLayout emailLayout, telephoneNumberLayout, descriptionLayout, passwordLayout, confirmPasswordLayout;
+    private EditText fullName, telephoneNumber, description, totalEventCreated;
+    private TextInputLayout telephoneNumberLayout, descriptionLayout;
     private Button updateCredentialButton, updateProfileButton, logOutButton;
     private ProgressBar updateProgressBar, socialCommunityProfilePhotoProgressBar, updateCredentialProgressBar;
     private ImageView socialCommunityPhoto;
@@ -91,7 +92,7 @@ public class SocialCommunityProfileFragment extends Fragment {
     private String eventImageURI;
     private boolean hasImageChanged;
 
-    View rootView;
+    private View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,17 +100,12 @@ public class SocialCommunityProfileFragment extends Fragment {
         activity = requireActivity();
 
         fullName = rootView.findViewById(R.id.socialCommunityProfileFullName);
-        email = rootView.findViewById(R.id.socialCommunityProfileEmail);
         telephoneNumber = rootView.findViewById(R.id.socialCommunityProfileTelephoneNumber);
         description = rootView.findViewById(R.id.socialCommunityProfileDescription);
-        password = rootView.findViewById(R.id.socialCommunityProfilePassword);
-        confirmPassword = rootView.findViewById(R.id.socialCommunityProfileConfirmPassword);
+        totalEventCreated = rootView.findViewById(R.id.socialCommunityProfileTotalEventCreated);
 
-        emailLayout = rootView.findViewById(R.id.socialCommunityProfileEmailLayout);
         telephoneNumberLayout = rootView.findViewById(R.id.socialCommunityProfileTelephoneNumberLayout);
         descriptionLayout = rootView.findViewById(R.id.socialCommunityProfileDescriptionLayout);
-        passwordLayout = rootView.findViewById(R.id.socialCommunityProfilePasswordLayout);
-        confirmPasswordLayout = rootView.findViewById(R.id.socialCommunityProfileConfirmPasswordLayout);
 
         updateCredentialButton = rootView.findViewById(R.id.socialCommunityProfileUpdateCredentialButton);
         updateProfileButton = rootView.findViewById(R.id.socialCommunityProfileUpdateButton);
@@ -124,16 +120,22 @@ public class SocialCommunityProfileFragment extends Fragment {
         updateProgressBar.setVisibility(View.INVISIBLE);
         updateCredentialProgressBar.setVisibility(View.INVISIBLE);
 
+        // Disable Total Event Created Edit Text
+        totalEventCreated.setFocusable(false);
+        totalEventCreated.setFocusableInTouchMode(false);
+        totalEventCreated.setCursorVisible(false);
+
         hasChanged = false;
 
-        fullName.setText(user.getDisplayName());
-        email.setText(user.getEmail());
+        if (user != null) {
+            fullName.setText(user.getDisplayName());
+        }
 
         mViewModel = new ViewModelProvider(this).get(SocialCommunityProfileViewModel.class);
         if (mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
             socialCommunityPhoto.setImageBitmap(bitmap);
-            socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE); // TODO add image loading later on
+            socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE);
             hasImageChanged = mViewModel.isHasImageChanged();
         } else {
             Picasso.get().load(user.getPhotoUrl()).error(R.drawable.ic_error_black_24dp).into(socialCommunityPhoto, new com.squareup.picasso.Callback() { // TODO pass the URL from login / register activity, got a little bug if user.getPhotoUrl() don't have value
@@ -160,6 +162,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                             oldUserData.setImageURI(documentSnapshot.getString("imageURI"));
                             telephoneNumber.setText(oldUserData.getPhone());
                             description.setText(oldUserData.getDescription());
+                            totalEventCreated.setText(String.valueOf(documentSnapshot.getLong("totalEventCreated")));
                         }
                     }
                 });
@@ -182,13 +185,6 @@ public class SocialCommunityProfileFragment extends Fragment {
                 loginIntent.putExtra(IntentNameExtra.USER_EMAIL, user.getEmail());
 
                 startActivityForResult(loginIntent, RequestCodeConstant.REAUTH_REQUEST_CODE);
-
-                /*final AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
-                View updateCredentialDialog = getLayoutInflater().inflate(R.layout.activity_login, null);
-                mBuilder.setView(updateCredentialDialog);
-                final AlertDialog dialog = mBuilder.create();
-                dialog.show();*/
-//                ImageView background = updateCredentialDialog.findViewById(R.id.)
             }
         });
 
@@ -198,6 +194,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                 if (isValidated()) {
                     updateProgressBar.setVisibility(View.VISIBLE);
                     updateProfileButton.setVisibility(View.INVISIBLE);
+                    updateCredentialButton.setEnabled(false);
                     allActionStatus(false);
                     checkingChanges();
                 }
@@ -221,21 +218,12 @@ public class SocialCommunityProfileFragment extends Fragment {
     }
 
     private void allActionStatus(boolean status) {
-        email.setFocusable(status);
-        email.setFocusableInTouchMode(status);
-        email.setCursorVisible(status);
         telephoneNumber.setFocusable(status);
         telephoneNumber.setFocusableInTouchMode(status);
         telephoneNumber.setCursorVisible(status);
         description.setFocusable(status);
         description.setFocusableInTouchMode(status);
         description.setCursorVisible(status);
-        password.setFocusable(status);
-        password.setFocusableInTouchMode(status);
-        password.setCursorVisible(status);
-        confirmPassword.setFocusable(status);
-        confirmPassword.setFocusableInTouchMode(status);
-        confirmPassword.setCursorVisible(status);
         socialCommunityPhoto.setEnabled(status);
     }
 
@@ -243,11 +231,7 @@ public class SocialCommunityProfileFragment extends Fragment {
         newUserData.setPhone(telephoneNumber.getText().toString());
         newUserData.setDescription(description.getText().toString());
 
-        hasChanged = !oldUserData.isSame(newUserData);
-
-        if (!password.getText().toString().isEmpty()) {
-            hasChanged = true;
-        }
+        hasChanged = !oldUserData.isSameSocialCommunity(newUserData);
 
         if (hasImageChanged) {
             hasChanged = true;
@@ -260,29 +244,17 @@ public class SocialCommunityProfileFragment extends Fragment {
 
     private void updateUserData() {
         if (hasChanged) {
-
-//            if (!confirmPassword.getText().toString().isEmpty()) {
-//                user.updatePassword(confirmPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            Toast.makeText(getContext(), "User password updated.", Toast.LENGTH_SHORT).show();
-//                            Log.d(TAG, "User password updated.");
-//                        }
-//                    }
-//                });
-//            }
-
             getData();
         } else {
             Toast.makeText(getContext(), "Nothing has changed", Toast.LENGTH_SHORT).show();
+            updateCredentialButton.setEnabled(true);
             updateProgressBar.setVisibility(View.INVISIBLE);
             updateProfileButton.setVisibility(View.VISIBLE);
         }
     }
 
     private void getData() {
-        db.collection("events").whereEqualTo("socialCommunityID", user.getUid()).get()
+        db.collection("donators").whereEqualTo("socialCommunityID", user.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -301,8 +273,8 @@ public class SocialCommunityProfileFragment extends Fragment {
     private void updateData(ArrayList list) {
         WriteBatch batch = db.batch();
         for (int i = 0; i < list.size(); i++) {
-            DocumentReference eventReference = db.collection("events").document((String) list.get(i));
-            batch.update(eventReference, "socialCommunityTelephoneNumber", newUserData.getPhone());
+            DocumentReference eventReference = db.collection("donators").document((String) list.get(i));
+            batch.update(eventReference, "socialCommunityPhoneNumber", newUserData.getPhone());
 //            if (!newPhoneNumber.equals(oldPhoneNumber)) {
 //                DocumentReference ref = db.collection("donators").document((String) list.get(i));
 //                batch.update(ref, "name", user.getDisplayName());
@@ -322,13 +294,10 @@ public class SocialCommunityProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getContext(), "Profile is successfully updated", Toast.LENGTH_SHORT).show();
+                updateCredentialButton.setEnabled(true);
                 updateProgressBar.setVisibility(View.INVISIBLE);
                 updateProfileButton.setVisibility(View.VISIBLE);
                 allActionStatus(true);
-
-                // Make password & confirm password empty after updation
-                password.setText("");
-                confirmPassword.setText("");
 
                 // Checking for the new things again
                 oldUserData.setDescription(newUserData.getDescription());
@@ -344,14 +313,6 @@ public class SocialCommunityProfileFragment extends Fragment {
 
     private boolean isValidated() {
         boolean isValidated = false;
-        boolean emailValidation = false;
-        if (email.getText().toString().isEmpty()) {
-            emailLayout.setError("Please insert your email");
-        } else {
-            emailValidation = true;
-            emailLayout.setErrorEnabled(false);
-        }
-
         boolean telephoneNumberValidation = false;
         if (telephoneNumber.getText().toString().isEmpty()) {
             telephoneNumberLayout.setError("Please input your telephone number");
@@ -370,34 +331,7 @@ public class SocialCommunityProfileFragment extends Fragment {
             descriptionLayout.setErrorEnabled(false);
         }
 
-        boolean passwordValidation = false;
-        if (password.getText().toString().isEmpty() && confirmPassword.getText().toString().isEmpty()) {
-            passwordValidation = true;
-        } else if (!password.getText().toString().isEmpty() || !confirmPassword.getText().toString().isEmpty()) {
-            if (password.getText().toString().isEmpty()) {
-                passwordLayout.setError("Please insert your new password");
-            } else if (password.getText().toString().length() <= 5) {
-                passwordLayout.setError("Password minimum is 6 digit");
-            } else {
-                passwordLayout.setErrorEnabled(false);
-            }
-
-            if (confirmPassword.getText().toString().isEmpty()) {
-                confirmPasswordLayout.setError("Please insert your new password");
-            } else if (confirmPassword.getText().toString().length() <= 5) {
-                confirmPasswordLayout.setError("Password minimum is 6 digit");
-            } else {
-                confirmPasswordLayout.setErrorEnabled(false);
-            }
-
-            if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
-                confirmPasswordLayout.setError("The password is not matching");
-            } else {
-                passwordValidation = true;
-            }
-        }
-
-        if (emailValidation && telephoneNumberValidation && descriptionValidation && passwordValidation) {
+        if (telephoneNumberValidation && descriptionValidation) {
             isValidated = true;
         }
         return isValidated;
@@ -566,7 +500,7 @@ public class SocialCommunityProfileFragment extends Fragment {
 
             CropImage.activity(ImageURI)
                     .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(16,9) // TODO change to 1x1 later on
+                    .setAspectRatio(1,1)
                     .start(getContext(), this);
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
