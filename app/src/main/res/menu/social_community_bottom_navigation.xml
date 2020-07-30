@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/nav_create_event"
-        android:icon="@drawable/create_event_icon"
+        android:icon="@drawable/ic_create"
         android:title="@string/create_event_bottom_navbar" />
 
     <item
         android:id="@+id/nav_event_history"
-        android:icon="@drawable/history"
-        android:title="@string/event_history_bottom_navbar" />
+        android:icon="@drawable/ic_history"
+        android:title="@string/event_history_bottom_navbar"/>
 
     <item
         android:id="@+id/nav_social_community_profile"
-        android:icon="@drawable/edit_profile"
-        android:title="@string/profile_bottom_navbar_social_community" />
+        android:icon="@drawable/ic_person"
+        android:title="@string/edit_profile_bottom_navbar" />
 </menu>

@@ -1,11 +1,13 @@
 package com.example.fooddonationapplication.ui.social_community;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -48,13 +50,10 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
 
         if (mViewModel.getLastSeen() == 1) {
             bottomNav.setSelectedItemId(R.id.nav_create_event);
-            Toast.makeText(this, "Last Seen 1", Toast.LENGTH_SHORT).show();
         } else if (mViewModel.getLastSeen() == 2) {
             bottomNav.setSelectedItemId(R.id.nav_event_history);
-            Toast.makeText(this, "Last Seen 2", Toast.LENGTH_SHORT).show();
         } else if (mViewModel.getLastSeen() == 3){
             bottomNav.setSelectedItemId(R.id.nav_social_community_profile);
-            Toast.makeText(this, "Last Seen 3", Toast.LENGTH_SHORT).show();
         } else {
             bottomNav.setSelectedItemId(R.id.nav_event_history);
         }
@@ -70,21 +69,18 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
                             firstInactiveFragment = EventHistoryFragment;
                             secondInactiveFragment = SocialCommunityProfileFragment;
                             mViewModel.setLastSeen(1);
-                            Toast.makeText(MainSocialCommunityActivity.this, "Create Event", Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.nav_event_history:
                             activeFragment = EventHistoryFragment;
                             firstInactiveFragment = CreateEventFragment;
                             secondInactiveFragment = SocialCommunityProfileFragment;
                             mViewModel.setLastSeen(2);
-                            Toast.makeText(MainSocialCommunityActivity.this, "Event History", Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.nav_social_community_profile:
                             activeFragment = SocialCommunityProfileFragment;
                             firstInactiveFragment = CreateEventFragment;
                             secondInactiveFragment = EventHistoryFragment;
                             mViewModel.setLastSeen(3);
-                            Toast.makeText(MainSocialCommunityActivity.this, "Edit Profile", Toast.LENGTH_SHORT).show();
                             break;
                     }
                     fragmentManager.beginTransaction().hide(firstInactiveFragment).hide(secondInactiveFragment).show(activeFragment).commit();

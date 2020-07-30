@@ -111,7 +111,7 @@ public class UpdateEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_update_event, container, false);
+        rootView = inflater.inflate(R.layout.fragment_event_update, container, false);
 
         eventTitle = rootView.findViewById(R.id.updateEventTitle);
 
@@ -329,6 +329,8 @@ public class UpdateEventFragment extends Fragment {
             eventEndDate.clearFocus();
         }
     }
+
+
 
     private void updateEvent() {
         // TODO check has changed to check if the user has change anything

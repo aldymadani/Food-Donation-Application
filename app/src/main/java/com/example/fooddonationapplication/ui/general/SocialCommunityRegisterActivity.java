@@ -3,7 +3,6 @@ package com.example.fooddonationapplication.ui.general;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.User;
-import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.viewmodel.SocialCommunityRegisterViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,8 +43,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +66,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_social_community_register);
+        setContentView(R.layout.activity_register_social_community);
 
         hasImage = false;
 

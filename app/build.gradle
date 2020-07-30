@@ -79,6 +79,6 @@ dependencies {
     // Lottie Animation Library
     implementation 'com.airbnb.android:lottie:3.4.0'
 
-    // Circle image
-//    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    // Circle image https://github.com/hdodenhof/CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

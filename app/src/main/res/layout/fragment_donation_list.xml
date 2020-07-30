@@ -52,37 +52,45 @@
         android:id="@+id/donationListRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/donationListSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/donationListSpinner"
+        tools:listitem="@layout/item_donation"
+        tools:itemCount="5" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/donationListEmptyImage"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/event_empty"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/donationListEmptyTextView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:text="Currently, there are donation on this event"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/donationListEmptyImage"
-        app:layout_constraintStart_toStartOf="@+id/donationListEmptyImage"
-        app:layout_constraintTop_toBottomOf="@+id/donationListEmptyImage" />
-
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/donationListEmptyImage"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/event_empty"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/donationListEmptyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:gravity="center_horizontal"
+            android:lineSpacingMultiplier="1.15"
+            android:text="Currently, there are donation on this event"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/donationListEmptyImage"
+            app:layout_constraintStart_toStartOf="@+id/donationListEmptyImage"
+            app:layout_constraintTop_toBottomOf="@+id/donationListEmptyImage" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,73 +6,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/search_layout"
+        android:id="@+id/eventSearchLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/search_button"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/eventSearchButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/search"
+            android:id="@+id/eventSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="152dp"
-            android:drawablePadding="7dp"
             android:hint="@string/search_event_title_placeholder"
             android:inputType="text"
             app:layout_constraintHorizontal_bias="1.0" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
-        android:id="@+id/search_button"
+        android:id="@+id/eventSearchButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
         android:tint="#af4448"
-        app:layout_constraintBottom_toBottomOf="@+id/search_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/eventSearchLayout"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/search_layout"
+        app:layout_constraintTop_toTopOf="@+id/eventSearchLayout"
         app:srcCompat="@drawable/ic_search_black_24dp" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:paddingTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_layout"
+        app:layout_constraintTop_toBottomOf="@+id/eventSearchLayout"
         app:layout_constraintVertical_bias="0.0">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/eventHistoryRecyclerView"
             android:layout_width="0dp"
-            android:layout_height="0dp" />
+            android:layout_height="0dp"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_event_history" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/refreshFloatingButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:backgroundTint="#FFFFFF"-->
-<!--        android:clickable="true"-->
-<!--        android:tint="#af4448"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:borderWidth="0dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:srcCompat="@drawable/ic_reset" />-->
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/eventHistoryEmptyPicture"
@@ -84,20 +73,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone"/>
 
     <TextView
         android:id="@+id/eventHistoryEmptyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:paddingStart="64dp"
+        android:paddingEnd="64dp"
         android:gravity="center_horizontal"
+        android:lineSpacingMultiplier="1.15"
         android:text="You haven't created any event yet"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/eventHistoryEmptyPicture"
         app:layout_constraintStart_toStartOf="@+id/eventHistoryEmptyPicture"
-        app:layout_constraintTop_toBottomOf="@+id/eventHistoryEmptyPicture" />
+        app:layout_constraintTop_toBottomOf="@+id/eventHistoryEmptyPicture"
+        tools:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

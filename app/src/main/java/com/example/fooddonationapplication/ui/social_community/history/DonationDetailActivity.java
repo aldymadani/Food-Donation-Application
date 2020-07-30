@@ -22,7 +22,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.model.Donation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -71,18 +71,18 @@ public class DonationDetailActivity extends AppCompatActivity {
         updateDonationStatusProgressBar.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
-        final Donator donator = intent.getParcelableExtra("Donator");
-        String donatorName = donator.getName();
-        String donatorPhoneNumber = donator.getPhone();
-        String donatorPickUpAddress = donator.getPickUpAddress();
-        String foodItems = donator.getFoodItems();
-        String pickupDate = donator.getPickUpDate();
-        String pickUpTime = donator.getPickUpTime();
-        String donationDate = donator.getDonationDate();
-        String foodPhoto = donator.getImageURI();
-        final double totalDonation = donator.getTotalDonation();
-        String donationStatus = donator.getStatus();
-        donatorId = donator.getDonatorId();
+        final Donation donation = intent.getParcelableExtra("Donator");
+        String donatorName = donation.getName();
+        String donatorPhoneNumber = donation.getPhone();
+        String donatorPickUpAddress = donation.getPickUpAddress();
+        String foodItems = donation.getFoodItems();
+        String pickupDate = donation.getPickUpDate();
+        String pickUpTime = donation.getPickUpTime();
+        String donationDate = donation.getDonationDate();
+        String foodPhoto = donation.getImageURI();
+        final double totalDonation = donation.getTotalDonation();
+        String donationStatus = donation.getStatus();
+        donatorId = donation.getDonatorId();
 
         donatorNameTextView.setText(donatorName);
         donatorPhoneNumberTextView.setText(donatorPhoneNumber);
@@ -131,25 +131,25 @@ public class DonationDetailActivity extends AppCompatActivity {
 
                         // Delete Operation
                         WriteBatch batch = db.batch();
-                        DocumentReference donatorReference = db.collection("donators").document(donator.getDonatorId());
+                        DocumentReference donatorReference = db.collection("donators").document(donation.getDonatorId());
                         batch.delete(donatorReference);
 
                         double decreaseTotalDonation = totalDonation * -1;
                         Log.d(TAG, String.valueOf(decreaseTotalDonation));
 
-                        DocumentReference userReference = db.collection("users").document(donator.getUuid());
+                        DocumentReference userReference = db.collection("users").document(donation.getUuid());
                         batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
 //                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
 
 
-                        DocumentReference eventReference = db.collection("events").document(donator.getEventId());
+                        DocumentReference eventReference = db.collection("events").document(donation.getEventId());
                         batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
 //                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
 
                         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(donator.getImageURI());
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(donation.getImageURI());
                                 storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {

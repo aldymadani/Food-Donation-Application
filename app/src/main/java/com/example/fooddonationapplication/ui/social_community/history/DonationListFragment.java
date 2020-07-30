@@ -1,6 +1,5 @@
 package com.example.fooddonationapplication.ui.social_community.history;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,11 +19,10 @@ import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.DonationListAdapter;
-import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -172,8 +170,8 @@ public class DonationListFragment extends Fragment {
     private void setUpRecyclerViewDonator(Query query) {
 //        Query query = donatorRef.whereEqualTo("eventId", eventID);
 
-        FirestoreRecyclerOptions<Donator> options = new FirestoreRecyclerOptions.Builder<Donator>()
-                .setQuery(query, Donator.class)
+        FirestoreRecyclerOptions<Donation> options = new FirestoreRecyclerOptions.Builder<Donation>()
+                .setQuery(query, Donation.class)
                 .build();
 
         RecyclerView recyclerView = rootView.findViewById(R.id.donationListRecyclerView);

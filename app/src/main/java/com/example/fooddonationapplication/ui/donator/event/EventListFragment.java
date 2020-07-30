@@ -2,7 +2,6 @@ package com.example.fooddonationapplication.ui.donator.event;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,28 +17,21 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.example.fooddonationapplication.adapter.EventListAdapter;
-import com.example.fooddonationapplication.adapter.EventViewHolder;
-import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.R;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.example.fooddonationapplication.adapter.EventListAdapter;
+import com.example.fooddonationapplication.model.Event;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.firebase.ui.firestore.paging.LoadingState;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 
 public class EventListFragment extends Fragment {
-
-    private static final String TAG = "EventFragment";
+    private static final String TAG = "EventListFragment";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventRef = db.collection("events");
@@ -58,7 +48,7 @@ public class EventListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_event, container,false);
+        View rootView = inflater.inflate(R.layout.fragment_event_list, container,false);
         recyclerView = rootView.findViewById(R.id.event_recyclerView);
         swipeLayout = rootView.findViewById(R.id.eventSwipeLayout);
 
@@ -143,67 +133,9 @@ public class EventListFragment extends Fragment {
                 .setQuery(query, config, Event.class)
                 .build();
 
-        mAdapter = new FirestorePagingAdapter<Event, EventViewHolder>(options) {
-            @NonNull
-            @Override
-            public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = getLayoutInflater().inflate(R.layout.event_item, parent, false);
-                return new EventViewHolder(view);
-            }
+        mAdapter = new EventListAdapter(options, requireActivity(), swipeLayout);
 
-            @Override
-            protected void onBindViewHolder(@NonNull EventViewHolder viewHolder, int i, @NonNull Event event) {
-                // Bind to ViewHolder
-                viewHolder.bind(event);
-            }
-
-            @Override
-            protected void onError(@NonNull Exception e) {
-                super.onError(e);
-                Log.e(TAG, e.getMessage());
-            }
-
-            @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
-                switch (state) {
-                    case LOADING_INITIAL:
-                    case LOADING_MORE:
-                        swipeLayout.setRefreshing(true);
-                        break;
-
-                    case LOADED:
-                        swipeLayout.setRefreshing(false);
-                        break;
-
-                    case ERROR:
-                        Toast.makeText(
-                                getActivity(),
-                                "Error Occurred!",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                        swipeLayout.setRefreshing(false);
-                        mAdapter.retry();
-                        break;
-
-                    case FINISHED:
-                        swipeLayout.setRefreshing(false);
-                        break;
-                }
-            }
-
-        };
-
-
-//        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
-//                .setQuery(query, Event.class)
-//                .build();
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
-//        adapter = new EventListAdapter(options, getContext());
-//        adapter.notifyDataSetChanged();
-//        Log.d(TAG, String.valueOf(options));
-//        Log.d(TAG, String.valueOf(adapter));
-//        Log.d(TAG, String.valueOf(recyclerView));
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));

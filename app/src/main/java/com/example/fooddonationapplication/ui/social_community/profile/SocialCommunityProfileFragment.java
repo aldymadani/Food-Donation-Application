@@ -2,6 +2,7 @@ package com.example.fooddonationapplication.ui.social_community.profile;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -29,8 +31,10 @@ import android.widget.Toast;
 import com.example.fooddonationapplication.model.User;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
+import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.example.fooddonationapplication.viewmodel.SocialCommunityProfileViewModel;
-import com.example.fooddonationapplication.viewmodel.UpdateEventViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,10 +67,12 @@ public class SocialCommunityProfileFragment extends Fragment {
 
     private static final String TAG = "SocialProfileFragment";
 
+    private FragmentActivity activity;
+
     private EditText fullName, email, telephoneNumber, description, password, confirmPassword;
     private TextInputLayout emailLayout, telephoneNumberLayout, descriptionLayout, passwordLayout, confirmPasswordLayout;
-    private Button updateProfileButton, logOutButton;
-    private ProgressBar updateProgressBar, socialCommunityProfilePhotoProgressBar;
+    private Button updateCredentialButton, updateProfileButton, logOutButton;
+    private ProgressBar updateProgressBar, socialCommunityProfilePhotoProgressBar, updateCredentialProgressBar;
     private ImageView socialCommunityPhoto;
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -89,7 +95,8 @@ public class SocialCommunityProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_social_community_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_profile_social_community, container, false);
+        activity = requireActivity();
 
         fullName = rootView.findViewById(R.id.socialCommunityProfileFullName);
         email = rootView.findViewById(R.id.socialCommunityProfileEmail);
@@ -104,15 +111,18 @@ public class SocialCommunityProfileFragment extends Fragment {
         passwordLayout = rootView.findViewById(R.id.socialCommunityProfilePasswordLayout);
         confirmPasswordLayout = rootView.findViewById(R.id.socialCommunityProfileConfirmPasswordLayout);
 
+        updateCredentialButton = rootView.findViewById(R.id.socialCommunityProfileUpdateCredentialButton);
         updateProfileButton = rootView.findViewById(R.id.socialCommunityProfileUpdateButton);
         logOutButton = rootView.findViewById(R.id.socialCommunityProfileLogOutButton);
 
+        updateCredentialProgressBar = rootView.findViewById(R.id.socialCommunityProfileUpdateCredentialProgressBar);
         updateProgressBar = rootView.findViewById(R.id.socialCommunityProfileProgressBar);
         socialCommunityProfilePhotoProgressBar = rootView.findViewById(R.id.socialCommunityProfilePhotoProgressBar);
 
         socialCommunityPhoto = rootView.findViewById(R.id.socialCommunityProfilePhoto);
 
         updateProgressBar.setVisibility(View.INVISIBLE);
+        updateCredentialProgressBar.setVisibility(View.INVISIBLE);
 
         hasChanged = false;
 
@@ -161,6 +171,24 @@ public class SocialCommunityProfileFragment extends Fragment {
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+            }
+        });
+
+        updateCredentialButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent loginIntent = new Intent(activity, LoginActivity.class);
+                loginIntent.putExtra(IntentNameExtra.IS_REAUTH, true);
+                loginIntent.putExtra(IntentNameExtra.USER_EMAIL, user.getEmail());
+
+                startActivityForResult(loginIntent, RequestCodeConstant.REAUTH_REQUEST_CODE);
+
+                /*final AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
+                View updateCredentialDialog = getLayoutInflater().inflate(R.layout.activity_login, null);
+                mBuilder.setView(updateCredentialDialog);
+                final AlertDialog dialog = mBuilder.create();
+                dialog.show();*/
+//                ImageView background = updateCredentialDialog.findViewById(R.id.)
             }
         });
 
@@ -232,29 +260,18 @@ public class SocialCommunityProfileFragment extends Fragment {
 
     private void updateUserData() {
         if (hasChanged) {
-            if (!email.getText().toString().equals(user.getEmail())) {
-                emailLayout.setErrorEnabled(false);
-                user.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
 
-            if (!confirmPassword.getText().toString().isEmpty()) {
-                user.updatePassword(confirmPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), "User password updated.", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "User password updated.");
-                        }
-                    }
-                });
-            }
+//            if (!confirmPassword.getText().toString().isEmpty()) {
+//                user.updatePassword(confirmPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Toast.makeText(getContext(), "User password updated.", Toast.LENGTH_SHORT).show();
+//                            Log.d(TAG, "User password updated.");
+//                        }
+//                    }
+//                });
+//            }
 
             getData();
         } else {
@@ -386,6 +403,139 @@ public class SocialCommunityProfileFragment extends Fragment {
         return isValidated;
     }
 
+    private void openChangeCredential() {
+        Util.hideKeyboard(requireActivity());
+        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
+        View updateCredentialDialog = getLayoutInflater().inflate(R.layout.dialog_option, null);
+        mBuilder.setView(updateCredentialDialog);
+        final AlertDialog dialog = mBuilder.create();
+        dialog.show();
+        TextView dialogTitle = updateCredentialDialog.findViewById(R.id.registerDialogTitle);
+        Button emailButton = updateCredentialDialog.findViewById(R.id.registerDialogDonatorButton);
+        Button passwordButton = updateCredentialDialog.findViewById(R.id.registerDialogSocialCommunityButton);
+        dialogTitle.setText("Choose Credential:");
+        emailButton.setText("E-mail");
+        passwordButton.setText("Password");
+
+        emailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                View updateCredentialDialog = getLayoutInflater().inflate(R.layout.dialog_credential_update_email, null);
+                mBuilder.setView(updateCredentialDialog);
+                final AlertDialog emailDialog = mBuilder.create();
+                emailDialog.show();
+                final TextInputLayout emailInputLayout = updateCredentialDialog.findViewById(R.id.updateEmailCredentialDialogEmailLayout);
+                final EditText emailInput = updateCredentialDialog.findViewById(R.id.updateEmailCredentialDialogEmail);
+                Button updateEmailButton = updateCredentialDialog.findViewById(R.id.updateEmailCredentialDialogButton);
+                updateEmailButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                        if (emailInput.getText().toString().isEmpty()) {
+                            emailInputLayout.setError("Please input your new email");
+                        } else if (!emailInput.getText().toString().matches(emailPattern)) {
+                            emailInputLayout.setError("Please input a valid email");
+                        } else if (emailInput.getText().toString().equalsIgnoreCase(user.getEmail())) {
+                            emailInputLayout.setError("The new email is the same with the current email");
+                        } else {
+                            String newEmail = emailInput.getText().toString();
+                            emailDialog.dismiss();
+                            updateProfileButton.setEnabled(false);
+                            logOutButton.setEnabled(false);
+                            updateCredentialButton.setVisibility(View.INVISIBLE);
+                            updateCredentialProgressBar.setVisibility(View.VISIBLE);
+                            user.updateEmail(newEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        updateCredentialButton.setVisibility(View.VISIBLE);
+                                        updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+                                        updateProfileButton.setEnabled(true);
+                                        logOutButton.setEnabled(true);
+                                        Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
+                                    } else if (!task.isSuccessful()) {
+                                        Log.d(TAG, String.valueOf(task.getException()));
+                                        Toast.makeText(getContext(), String.valueOf(task.getException()), Toast.LENGTH_SHORT).show();
+                                        updateCredentialButton.setVisibility(View.VISIBLE);
+                                        updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+                                        updateProfileButton.setEnabled(true);
+                                        logOutButton.setEnabled(true);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        passwordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                View updateCredentialDialog = getLayoutInflater().inflate(R.layout.dialog_credential_update_password, null);
+                mBuilder.setView(updateCredentialDialog);
+                final AlertDialog passwordDialog = mBuilder.create();
+                passwordDialog.show();
+
+                final TextInputLayout passwordInputLayout = updateCredentialDialog.findViewById(R.id.updatePasswordCredentialDialogPasswordLayout);
+                final EditText passwordInput = updateCredentialDialog.findViewById(R.id.updatePasswordCredentialDialogPassword);
+                final TextInputLayout confirmPasswordInputLayout = updateCredentialDialog.findViewById(R.id.updatePasswordCredentialDialogConfirmPasswordLayout);
+                final EditText confirmPasswordInput = updateCredentialDialog.findViewById(R.id.updatePasswordCredentialDialogConfirmPassword);
+                Button updatePasswordButton = updateCredentialDialog.findViewById(R.id.updatePasswordCredentialPassDialogUpdateButton);
+                updatePasswordButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (passwordInput.getText().toString().isEmpty() && confirmPasswordInput.getText().toString().isEmpty()) {
+                            passwordInputLayout.setError("Please insert your new password");
+                            confirmPasswordInputLayout.setError("Please input your new password");
+                        } else if (!passwordInput.getText().toString().isEmpty() || !confirmPasswordInput.getText().toString().isEmpty()) {
+                            if (passwordInput.getText().toString().isEmpty()) {
+                                passwordInputLayout.setError("Please insert your new password");
+                            } else if (passwordInput.getText().toString().length() <= 5) {
+                                passwordInputLayout.setError("Password minimum is 6 digit");
+                            } else {
+                                passwordInputLayout.setErrorEnabled(false);
+                            }
+
+                            if (confirmPasswordInput.getText().toString().isEmpty()) {
+                                confirmPasswordInputLayout.setError("Please insert your new password");
+                            } else if (confirmPasswordInput.getText().toString().length() <= 5) {
+                                confirmPasswordInputLayout.setError("Password minimum is 6 digit");
+                            } else {
+                                confirmPasswordInputLayout.setErrorEnabled(false);
+                            }
+
+                            if (!passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
+                                confirmPasswordInputLayout.setError("The password is not matching");
+                            } else {
+                                passwordDialog.dismiss();
+                                Util.hideKeyboard(requireActivity());
+                                updateProfileButton.setEnabled(false);
+                                logOutButton.setEnabled(false);
+                                updateCredentialButton.setVisibility(View.INVISIBLE);
+                                updateCredentialProgressBar.setVisibility(View.VISIBLE);
+                                user.updatePassword(passwordInput.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            updateCredentialButton.setVisibility(View.VISIBLE);
+                                            updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+                                            updateProfileButton.setEnabled(true);
+                                            logOutButton.setEnabled(true);
+                                            Toast.makeText(getContext(), "User password updated.", Toast.LENGTH_SHORT).show();
+                                            Log.d(TAG, "User password updated.");
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -419,7 +569,6 @@ public class SocialCommunityProfileFragment extends Fragment {
                     .setAspectRatio(16,9) // TODO change to 1x1 later on
                     .start(getContext(), this);
         }
-
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
@@ -439,6 +588,21 @@ public class SocialCommunityProfileFragment extends Fragment {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Log.e(TAG, String.valueOf(error));
+            }
+        }
+        if (requestCode == RequestCodeConstant.REAUTH_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    boolean isReauthSuccess = data.getBooleanExtra(IntentNameExtra.REAUTH_RESULT, false);
+                    if (isReauthSuccess) {
+                        Toast.makeText(activity, "Reauthentication successful.", Toast.LENGTH_SHORT).show();
+                        openChangeCredential();
+                    } else {
+                        Toast.makeText(activity, "Reauthentication failed.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                Toast.makeText(activity, "Reauthentication failed.", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -28,9 +28,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -85,7 +85,7 @@ public class CreateDonationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_donate);
+        setContentView(R.layout.activity_donation_create);
         hasImage = false;
         textInputAddress = findViewById(R.id.donate_address_layout);
         textInputFoodItems = findViewById(R.id.donate_food_item_layout);
@@ -348,22 +348,22 @@ public class CreateDonationActivity extends AppCompatActivity {
 
         String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
 
-        final Donator donator = new Donator();
-        donator.setEventId(eventID);
-        donator.setEventName(eventTitle);
-        donator.setUuid(userID);
-        donator.setName(donatorName);
-        donator.setPickUpAddress(pickUpAddressData);
-        donator.setFoodItems(foodItemsData);
-        donator.setPickUpDate(pickUpData);
-        donator.setPickUpTime(timeData);
-        donator.setDonationDate(currentDate);
-        donator.setImageURI(foodImageURI);
-        donator.setTotalDonation(Double.parseDouble(totalDonationData));
-        donator.setDonatorId(donatorDocumentID);
-        donator.setSocialCommunityId(socialCommunityId);
-        donator.setSocialCommunityName(socialCommunityName);
-        donator.setStatus("On-Progress");
+        final Donation donation = new Donation();
+        donation.setEventId(eventID);
+        donation.setEventName(eventTitle);
+        donation.setUuid(userID);
+        donation.setName(donatorName);
+        donation.setPickUpAddress(pickUpAddressData);
+        donation.setFoodItems(foodItemsData);
+        donation.setPickUpDate(pickUpData);
+        donation.setPickUpTime(timeData);
+        donation.setDonationDate(currentDate);
+        donation.setImageURI(foodImageURI);
+        donation.setTotalDonation(Double.parseDouble(totalDonationData));
+        donation.setDonatorId(donatorDocumentID);
+        donation.setSocialCommunityId(socialCommunityId);
+        donation.setSocialCommunityName(socialCommunityName);
+        donation.setStatus("On-Progress");
 
         db.collection("users").document(userID)
                 .get()
@@ -371,9 +371,9 @@ public class CreateDonationActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            donator.setPhone(documentSnapshot.getString("phone"));
+                            donation.setPhone(documentSnapshot.getString("phone"));
                             db.collection("donators").document(donatorDocumentID)
-                                    .set(donator)
+                                    .set(donation)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {

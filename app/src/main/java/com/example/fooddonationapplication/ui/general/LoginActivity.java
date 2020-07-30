@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,13 +19,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,43 +38,84 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
-    private EditText emailId, passwordId;
-    private Button btnSignIn, btnRegister, donatorButton, socialCommunityButton;
+    private EditText emailField, passwordField;
+    private Button btnSubmit, btnRegister, donatorButton, socialCommunityButton;
     private FirebaseAuth mFirebaseAuth;
     private ProgressBar progressBar;
-    View view;
+    private TextView loginTitle;
     private TextInputLayout textInputEmail, textInputPassword;
+
+    private boolean isReauth = false;
+    private String userEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        isReauth = getIntent().getBooleanExtra(IntentNameExtra.IS_REAUTH, false);
+        userEmail = getIntent().getStringExtra(IntentNameExtra.USER_EMAIL);
+
         // TODO implement double click back to exit application (currently only single click)
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        emailId = findViewById(R.id.login_email);
-        passwordId = findViewById(R.id.login_password);
-        btnSignIn = findViewById(R.id.login_sign_in_button);
+        emailField = findViewById(R.id.login_email);
+        passwordField = findViewById(R.id.login_password);
+        loginTitle = findViewById(R.id.loginTitle);
+        btnSubmit = findViewById(R.id.loginSubmitButton);
         btnRegister = findViewById(R.id.loginRegisterButton);
         textInputEmail = findViewById(R.id.login_email_layout);
         textInputPassword = findViewById(R.id.login_password_layout);
         progressBar = findViewById(R.id.login_progressBar);
         progressBar.setVisibility(View.INVISIBLE);
-        view = findViewById(R.id.login_activity);
 
-        btnSignIn.setOnClickListener(this);
+        if (isReauth) {
+            loginTitle.setText("Re-authentication");
+            btnSubmit.setText("Re-authenticate");
+            Util.hide(btnRegister);
+            emailField.setText(userEmail);
+            emailField.setFocusable(false);
+            passwordField.requestFocus();
+            Util.showKeyboard(this);
+        }
+
+        textInputEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                textInputEmail.setErrorEnabled(false);
+            }
+        });
+
+        textInputPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                textInputPassword.setErrorEnabled(false);
+            }
+        });
+
+        btnSubmit.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+    }
+
+    private void reauthResult(boolean isSuccess) {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(IntentNameExtra.REAUTH_RESULT, isSuccess);
+        if (isSuccess) {
+            setResult(RESULT_OK, returnIntent);
+        } else {
+            setResult(RESULT_CANCELED, returnIntent);
+        }
+        finish();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loginRegisterButton:
-                btnSignIn.setEnabled(false);
+                btnSubmit.setEnabled(false);
                 hideKeyboard(LoginActivity.this);
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
-                View registerDialog = getLayoutInflater().inflate(R.layout.dialog_register, null);
+                View registerDialog = getLayoutInflater().inflate(R.layout.dialog_option, null);
                 mBuilder.setView(registerDialog);
                 final AlertDialog dialog = mBuilder.create();
                 dialog.show();
@@ -80,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent i = new Intent(LoginActivity.this, DonatorRegisterActivity.class);
                         startActivity(i);
                         dialog.hide();
-                        btnSignIn.setEnabled(true);
+                        btnSubmit.setEnabled(true);
                     }
                 });
                 socialCommunityButton.setOnClickListener(new View.OnClickListener() {
@@ -89,18 +136,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent i = new Intent(LoginActivity.this, SocialCommunityRegisterActivity.class);
                         startActivity(i);
                         dialog.hide();
-                        btnSignIn.setEnabled(true);
+                        btnSubmit.setEnabled(true);
                     }
                 });
                 break;
-            case R.id.login_sign_in_button:
+            case R.id.loginSubmitButton:
                 btnRegister.setEnabled(false);
                 hideKeyboard(LoginActivity.this);
-                String email = emailId.getText().toString();
-                String password = passwordId.getText().toString(); // TODO needs trim?
+                String email = emailField.getText().toString();
+                String password = passwordField.getText().toString(); // TODO needs trim?
                 if (inputValidation(email, password)) {
-                    passwordId.clearFocus();
-                    emailId.clearFocus();
+                    passwordField.clearFocus();
+                    emailField.clearFocus();
                     authenticateUser(email, password);
                 }
                 break;
@@ -127,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             textInputEmail.setError("Please enter your email");
         } else if (!email.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
-        } else {
+        } else { // TODO elsenya nanti dihapus
             textInputEmail.setErrorEnabled(false);
         }
 
@@ -142,43 +189,73 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (email.isEmpty() && password.isEmpty()) {
             Toast.makeText(LoginActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
         } else if (!email.isEmpty() && !password.isEmpty()) {
-            btnSignIn.setVisibility(View.INVISIBLE);
+            btnSubmit.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
             btnRegister.setEnabled(false);
             isValid = true;
         } else {
-            btnSignIn.setVisibility(View.VISIBLE);
+            btnSubmit.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(LoginActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
+
+        // TODO To change focus to title so error text wouldn't be gone (NEED RECHECK IF IT'S NECESSARY)
+        // loginTitle.requestFocus();
         return isValid;
     }
 
-    protected  void authenticateUser(String email, String password) {
-        mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                        textInputEmail.setError("The account is not registered yet");
-                        Toast.makeText(LoginActivity.this, "The account is not registered yet", Toast.LENGTH_SHORT).show();
-                    } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        textInputPassword.setError("The password doesn't match the email address");
-                        Toast.makeText(LoginActivity.this, "The password doesn't match the email address", Toast.LENGTH_SHORT).show();
+    protected void authenticateUser(String email, String password) {
+        if (!isReauth) {
+            mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (!task.isSuccessful()) {
+                        if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                            textInputEmail.setError("The account is not registered yet");
+                        } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            textInputPassword.setError("The password doesn't match the email address");
+                            // TODO toast not needed if setError is used
+                            Toast.makeText(LoginActivity.this, "The password doesn't match the email address", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Login error, please try again", Toast.LENGTH_SHORT).show();
+                        }
+                        btnSubmit.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        btnRegister.setEnabled(true);
                     } else {
-                        Toast.makeText(LoginActivity.this, "Login error, please try again", Toast.LENGTH_SHORT).show();
+                        textInputPassword.setErrorEnabled(false);
+                        String uuid = mFirebaseAuth.getCurrentUser().getUid();
+                        checkRole(uuid);
                     }
-                    btnSignIn.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    btnRegister.setEnabled(true);
-                } else {
-                    textInputEmail.setErrorEnabled(false);
-                    textInputPassword.setErrorEnabled(false);
-                    String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    checkRole(uuid);
                 }
-            }
-        });
+            });
+        } else {
+            // https://firebase.google.com/docs/auth/android/manage-users#re-authenticate_a_user
+            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+
+            // Get auth credentials from the user for re-authentication. The example below shows
+            // email and password credentials but there are multiple possible providers,
+            // such as GoogleAuthProvider or FacebookAuthProvider.
+            AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+            // Prompt the user to re-provide their sign-in credentials
+            user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        reauthResult(true);
+                    } else {
+                        btnSubmit.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            textInputPassword.setError("The password doesn't match the email address");
+                        } else {
+                            reauthResult(false);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     protected void checkRole(String uuid) {
@@ -195,14 +272,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Intent intent = new Intent(LoginActivity.this, MainDonatorActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-                            btnSignIn.setVisibility(View.VISIBLE);
+                            btnSubmit.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                             btnRegister.setEnabled(true);
                         } else {
                             Intent intent = new Intent(LoginActivity.this, MainSocialCommunityActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-                            btnSignIn.setVisibility(View.VISIBLE);
+                            btnSubmit.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                             btnRegister.setEnabled(true);
                         }

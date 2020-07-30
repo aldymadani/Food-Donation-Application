@@ -25,6 +25,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:labelVisibilityMode="selected"
         app:itemHorizontalTranslationEnabled="false"
-        android:background="?android:attr/windowBackground"/>
+        app:itemTextColor="@color/colorWhite"
+        app:itemIconTint="@color/colorWhite"
+        android:background="@color/colorPrimaryDark"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

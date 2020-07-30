@@ -12,7 +12,7 @@
     <string name="sign_up_button">Sign Up</string>
     <string name="sign_in_title">Sign In</string>
     <string name="sign_in_button">Sign In</string>
-    <string name="donate_activity_title">Donate for Charity</string>
+    <string name="donate_activity_title">Create Donation</string>
     <string name="pick_up_address_placeholder">Pick Up Address</string>
     <string name="food_items_placeholder">Food item(s)</string>
     <string name="pick_up_date_placeholder">Pick Up / Send Date</string>
@@ -37,7 +37,7 @@
     <string name="event_name_placeholder">Event Name</string>
     <string name="social_community_name_placeholder">Social Community Name</string>
     <string name="donate_quantity_text">Donate Quantity :</string>
-    <string name="create_event_title">Create Food Donation Event for Charity</string>
+    <string name="create_event_title">Create Donation Event</string>
     <string name="update_event_title">Event Title</string>
     <string name="event_title_placeholder">Event Title</string>
     <string name="event_description_placeholder">Event Description</string>
@@ -49,13 +49,12 @@
     <string name="confirm_password_placeholder">Confirm Password</string>
     <string name="update_details_button">Update Details</string>
     <string name="log_out_button">Log Out</string>
-    <string name="create_event_bottom_navbar">Create Event</string>
-    <string name="event_history_bottom_navbar">Event History</string>
+    <string name="create_event_bottom_navbar">Create</string>
+    <string name="event_history_bottom_navbar">History</string>
     <string name="donate_bottom_navbar">Donate</string>
-    <string name="donation_history_bottom_navbar">Donation History</string>
-    <string name="edit_profile_bottom_navbar">Edit profile</string>
+    <string name="donation_history_bottom_navbar">History</string>
+    <string name="edit_profile_bottom_navbar">Profile</string>
     <string name="search_event_title_placeholder">Search Event Title</string>
-    <string name="profile_bottom_navbar_social_community">Profile</string>
     <string name="donation_history_total_title">You have donated … Kg of Food</string>
     <string name="donator_history_total_title">People have donated … Kg of food</string>
     <string name="sort_by_spinner">Sort By</string>

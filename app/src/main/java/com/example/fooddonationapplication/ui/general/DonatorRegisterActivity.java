@@ -42,7 +42,7 @@ public class DonatorRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_donator_register);
+        setContentView(R.layout.activity_register_donator);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailId = findViewById(R.id.register_email);

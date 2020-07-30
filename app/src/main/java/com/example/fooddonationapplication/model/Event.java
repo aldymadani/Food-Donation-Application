@@ -10,6 +10,7 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 public class Event implements Parcelable {
+    // TODO add Social Community Description
     private String imageURI, eventID, title, description, socialCommunityID, socialCommunityName, socialCommunityTelephoneNumber, endDate, titleForSearch;
     private double targetQuantity, totalDonation;
     private long endDateInMillis;

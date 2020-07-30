@@ -18,7 +18,7 @@
             android:layout_marginTop="32dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="@string/donator_details_title"
+            android:text="@string/donation_details_title"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginBottom="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="5dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    app:cardElevation="6dp"
+    app:cardCornerRadius="8dp"
     app:cardBackgroundColor="#af4448"
     android:id="@+id/donator_item_fragment_id">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp">
-<!--        android:src="@drawable/donator_list"-->
+        android:padding="16dp">
+
         <ImageView
             android:id="@+id/eventHistoryImage"
             android:layout_width="70dp"
@@ -32,37 +32,51 @@
             android:id="@+id/donatorName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/donator_name_placeholder"
+            android:layout_marginStart="16dp"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/colorWhite"
+            android:gravity="center_vertical|start"
             android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventHistoryImage"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Donator Name" />
 
         <TextView
             android:id="@+id/donatorTotalDonation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="@string/donate_quantity_placeholder"
+            android:drawableStart="@drawable/ic_weight"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/colorWhite"
+            android:gravity="center_vertical|start"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/donatorDate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventHistoryImage"
-            app:layout_constraintTop_toBottomOf="@+id/donatorName" />
+            app:layout_constraintTop_toBottomOf="@+id/donatorName"
+            tools:text="50 kg" />
 
         <TextView
             android:id="@+id/donatorDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/donation_date_placeholder"
+            android:layout_marginStart="16dp"
+            android:drawableStart="@drawable/ic_date_black_24dp"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/colorWhite"
+            android:gravity="center_vertical|start"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/eventHistoryImage" />
+            app:layout_constraintStart_toEndOf="@+id/eventHistoryImage"
+            tools:text="Thursday, July 30, 2020"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

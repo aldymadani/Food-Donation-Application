@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,14 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.adapter.EventHistoryViewHolder;
+import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
 import com.example.fooddonationapplication.model.Event;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.firebase.ui.firestore.paging.LoadingState;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,8 +32,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-import java.text.DecimalFormat;
 
 public class EventHistoryFragment extends Fragment {
 
@@ -49,7 +43,7 @@ public class EventHistoryFragment extends Fragment {
     private FirestorePagingAdapter eventHistoryAdapter;
     private View rootView;
     private TextInputLayout searchInputLayout;
-    private EditText searchKeyword;
+    private EditText searchField;
     private TextView emptyHistoryText;
     private ImageView searchButton, emptyHistoryImage;
     private SwipeRefreshLayout swipeLayout;
@@ -61,9 +55,9 @@ public class EventHistoryFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_event_history,container,false);
 
         recyclerView = rootView.findViewById(R.id.eventHistoryRecyclerView);
-        searchKeyword = rootView.findViewById(R.id.search);
-        searchInputLayout = rootView.findViewById(R.id.search_layout);
-        searchButton = rootView.findViewById(R.id.search_button);
+        searchField = rootView.findViewById(R.id.eventSearch);
+        searchInputLayout = rootView.findViewById(R.id.eventSearchLayout);
+        searchButton = rootView.findViewById(R.id.eventSearchButton);
         swipeLayout = rootView.findViewById(R.id.swipeLayout);
         emptyHistoryImage = rootView.findViewById(R.id.eventHistoryEmptyPicture);
         emptyHistoryText = rootView.findViewById(R.id.eventHistoryEmptyTextView);
@@ -74,7 +68,7 @@ public class EventHistoryFragment extends Fragment {
         setUpRecyclerViewEventHistory(query);
 
         recyclerView.setVisibility(View.INVISIBLE);
-        searchKeyword.setVisibility(View.INVISIBLE);
+        searchField.setVisibility(View.INVISIBLE);
         searchInputLayout.setVisibility(View.INVISIBLE);
         searchButton.setVisibility(View.INVISIBLE);
         swipeLayout.setVisibility(View.INVISIBLE);
@@ -88,7 +82,7 @@ public class EventHistoryFragment extends Fragment {
                         if (documentSnapshot.exists()) {
                             if (documentSnapshot.getDouble("totalEventCreated") > 0) {
                                 recyclerView.setVisibility(View.VISIBLE);
-                                searchKeyword.setVisibility(View.VISIBLE);
+                                searchField.setVisibility(View.VISIBLE);
                                 searchInputLayout.setVisibility(View.VISIBLE);
                                 searchButton.setVisibility(View.VISIBLE);
                                 swipeLayout.setVisibility(View.VISIBLE);
@@ -104,7 +98,7 @@ public class EventHistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Query newQuery = null;
-                String search = searchKeyword.getText().toString().toLowerCase();
+                String search = searchField.getText().toString().toLowerCase();
                 if (!search.isEmpty()) {
                     newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
                 } else {
@@ -120,9 +114,9 @@ public class EventHistoryFragment extends Fragment {
             public void onRefresh() {
                 Query newQuery = eventRef.whereEqualTo("socialCommunityID", uuid);
                 searchInputLayout.setErrorEnabled(false);
-                searchKeyword.setText("");
+                searchField.setText("");
                 hideKeyboard(requireActivity());
-                searchKeyword.clearFocus();
+                searchField.clearFocus();
                 setUpRecyclerViewEventHistory(newQuery);
                 eventHistoryAdapter.refresh();
                 swipeLayout.setRefreshing(false);
@@ -146,56 +140,7 @@ public class EventHistoryFragment extends Fragment {
                 .setQuery(query, config, Event.class)
                 .build();
 
-        eventHistoryAdapter = new FirestorePagingAdapter<Event, EventHistoryViewHolder>(options) {
-            @NonNull
-            @Override
-            public EventHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = getLayoutInflater().inflate(R.layout.event_history_item, parent, false);
-                return new EventHistoryViewHolder(view);
-            }
-
-            @Override
-            protected void onBindViewHolder(@NonNull EventHistoryViewHolder viewHolder, int i, @NonNull Event event) {
-                // Bind to ViewHolder
-                viewHolder.bind(event);
-            }
-
-            @Override
-            protected void onError(@NonNull Exception e) {
-                super.onError(e);
-                Log.e(TAG, e.getMessage());
-            }
-
-            @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
-                switch (state) {
-                    case LOADING_INITIAL:
-                    case LOADING_MORE:
-                        swipeLayout.setRefreshing(true);
-                        break;
-
-                    case LOADED:
-                        swipeLayout.setRefreshing(false);
-                        break;
-
-                    case ERROR:
-                        Toast.makeText(
-                                getActivity(),
-                                "Error Occurred!",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                        swipeLayout.setRefreshing(false);
-                        eventHistoryAdapter.retry();
-                        break;
-
-                    case FINISHED:
-                        swipeLayout.setRefreshing(false);
-                        break;
-                }
-            }
-
-        };
+        eventHistoryAdapter = new EventHistoryAdapter(options, requireActivity(), swipeLayout);
 //        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
 //                .setQuery(query, Event.class)
 //                .build();

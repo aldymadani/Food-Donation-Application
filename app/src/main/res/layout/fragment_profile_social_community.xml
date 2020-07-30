@@ -91,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileTelephoneNumberLayout"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileTelephoneNumberLayout"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileTelephoneNumberLayout" >
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileTelephoneNumberLayout">
 
             <EditText
                 android:id="@+id/socialCommunityProfileDescription"
@@ -116,7 +116,7 @@
             app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileDescriptionLayout"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileDescriptionLayout"
-            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileDescriptionLayout" >
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileDescriptionLayout">
 
             <EditText
                 android:id="@+id/socialCommunityProfileEmail"
@@ -139,7 +139,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileEmailLayout"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileEmailLayout"
-            app:passwordToggleEnabled="true" >
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/socialCommunityProfilePassword"
@@ -165,7 +165,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityProfilePasswordLayout"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfilePasswordLayout"
-            app:passwordToggleEnabled="true" >
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/socialCommunityProfileConfirmPassword"
@@ -194,16 +194,30 @@
             app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileConfirmPasswordLayout"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileConfirmPasswordLayout" />
 
-        <ImageView
+        <!--        <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--            android:id="@+id/socialCommunityProfilePhoto"-->
+        <!--            android:layout_width="96dp"-->
+        <!--            android:layout_height="96dp"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:adjustViewBounds="true"-->
+        <!--            android:src="@drawable/insert_image"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileConfirmPasswordLayout"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileConfirmPasswordLayout"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileImageText"-->
+        <!--            app:civ_border_width="2dp"-->
+        <!--            app:civ_border_color="#FF000000"/>-->
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/socialCommunityProfilePhoto"
-            android:layout_width="0dp"
+            android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
             android:src="@drawable/insert_image"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileConfirmPasswordLayout"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileConfirmPasswordLayout"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileImageText" />
+
 
         <ProgressBar
             android:id="@+id/socialCommunityProfilePhotoProgressBar"
@@ -212,23 +226,55 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/socialCommunityProfilePhoto"
             app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/socialCommunityProfilePhoto"
-            app:layout_constraintTop_toTopOf="@+id/socialCommunityProfilePhoto" />
+            app:layout_constraintTop_toTopOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintVertical_bias="0.0" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/socialCommunityProfileUpdateCredentialButton"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Update Credential"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textSize="14sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_constraintEnd_toStartOf="@+id/socialCommunityProfileUpdateButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfilePhoto" />
+
+        <ProgressBar
+            android:id="@+id/socialCommunityProfileUpdateCredentialProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/socialCommunityProfileUpdateCredentialButton"
+            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfileUpdateCredentialButton"
+            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfileUpdateCredentialButton"
+            app:layout_constraintTop_toTopOf="@+id/socialCommunityProfileUpdateCredentialButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/socialCommunityProfileUpdateButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
             android:text="Update Profile"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
             app:backgroundTint="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="@+id/socialCommunityProfilePhoto"
-            app:layout_constraintStart_toStartOf="@+id/socialCommunityProfilePhoto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/socialCommunityProfileUpdateCredentialButton"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfilePhoto" />
 
         <ProgressBar

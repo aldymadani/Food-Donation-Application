@@ -11,31 +11,32 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.ui.donator.history.DonationHistoryDetailActivity;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.util.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.text.DecimalFormat;
 
-public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, DonationHistoryAdapter.DonationHistoryHolder>{
+public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donation, DonationHistoryAdapter.DonationHistoryHolder>{
 
     private Context context;
 
-    public DonationHistoryAdapter(@NonNull FirestoreRecyclerOptions<Donator> options, Context context) {
+    public DonationHistoryAdapter(@NonNull FirestoreRecyclerOptions<Donation> options, Context context) {
         super(options);
         this.context = context;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull DonationHistoryHolder holder, int position, @NonNull final Donator model) {
+    protected void onBindViewHolder(@NonNull DonationHistoryHolder holder, int position, @NonNull final Donation model) {
         DecimalFormat df = new DecimalFormat("#.###");
         String formattedTotalDonation = df.format(model.getTotalDonation());
 
-        holder.eventName.setText("Event Name : " + model.getEventName());
-        holder.totalDonation.setText("Total Donation : " + formattedTotalDonation + " Kg");
-        holder.donationDate.setText("Donation Date : " + model.getDonationDate());
+        holder.eventName.setText(model.getEventName());
+        holder.totalDonation.setText(formattedTotalDonation + " kg");
+        holder.donationDate.setText(Util.convertToFullDate(model.getDonationDate()));
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +51,7 @@ public class DonationHistoryAdapter extends FirestoreRecyclerAdapter <Donator, D
     @NonNull
     @Override
     public DonationHistoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.donation_history_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_donation_history, parent, false);
         return new DonationHistoryHolder(v);
     }
 

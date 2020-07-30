@@ -89,7 +89,7 @@ public class CreateEventFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_create_event, container, false);
+        rootView = inflater.inflate(R.layout.fragment_event_create, container, false);
         hasImage = false;
         eventName = rootView.findViewById(R.id.create_event_name);
         eventDescription = rootView.findViewById(R.id.create_event_description_);

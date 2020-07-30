@@ -5,62 +5,79 @@
     android:id="@+id/donation_history_fragment_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="5dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    app:cardElevation="6dp"
+    app:cardCornerRadius="8dp"
+
     app:cardBackgroundColor="#af4448">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/donationHistoryImage"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/basket_history_icon"
             app:layout_constraintBottom_toBottomOf="@+id/donationHistoryDate"
+            app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/donationHistoryEventName"
-            app:srcCompat="@drawable/basket_history_icon" />
+            app:layout_constraintTop_toTopOf="@+id/donationHistoryEventName" />
 
         <TextView
             android:id="@+id/donationHistoryEventName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/event_name_placeholder"
+            android:layout_marginStart="16dp"
+            android:drawableStart="@drawable/ic_donate_black_24dp"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/colorWhite"
+            android:gravity="center_vertical|start"
             android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Event Name"/>
 
         <TextView
             android:id="@+id/donatorTitleTotalDonation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="@string/donate_quantity_placeholder"
+            android:drawableStart="@drawable/ic_weight"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/colorWhite"
+            android:gravity="center_vertical|start"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/donationHistoryDate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/donationHistoryImage"
-            app:layout_constraintTop_toBottomOf="@+id/donationHistoryEventName" />
+            app:layout_constraintTop_toBottomOf="@+id/donationHistoryEventName"
+            tools:text="50 kg"/>
 
         <TextView
             android:id="@+id/donationHistoryDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
+            android:drawableStart="@drawable/ic_date_black_24dp"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/colorWhite"
+            android:gravity="center_vertical|start"
             android:text="@string/donation_date_placeholder"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/donationHistoryImage" />
+            app:layout_constraintStart_toEndOf="@+id/donationHistoryImage"
+            tools:text="Thursday, July 30th, 2020"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

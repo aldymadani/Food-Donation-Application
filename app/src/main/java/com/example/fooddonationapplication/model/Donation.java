@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class Donator implements Parcelable {
+public class Donation implements Parcelable {
     public String name;
     public String phone;
     public String uuid;
@@ -32,7 +32,7 @@ public class Donator implements Parcelable {
         this.status = status;
     }
 
-    public Donator(){
+    public Donation(){
         // Empty constructor
     }
 
@@ -152,7 +152,7 @@ public class Donator implements Parcelable {
         return donatorId;
     }
 
-    protected Donator(Parcel in) {
+    protected Donation(Parcel in) {
         name = in.readString();
         phone = in.readString();
         uuid = in.readString();
@@ -171,15 +171,15 @@ public class Donator implements Parcelable {
         status = in.readString();
     }
 
-    public static final Creator<Donator> CREATOR = new Creator<Donator>() {
+    public static final Creator<Donation> CREATOR = new Creator<Donation>() {
         @Override
-        public Donator createFromParcel(Parcel in) {
-            return new Donator(in);
+        public Donation createFromParcel(Parcel in) {
+            return new Donation(in);
         }
 
         @Override
-        public Donator[] newArray(int size) {
-            return new Donator[size];
+        public Donation[] newArray(int size) {
+            return new Donation[size];
         }
     };
 

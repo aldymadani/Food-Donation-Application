@@ -17,7 +17,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.model.Donation;
 
 public class DonationHistoryDetailActivity extends AppCompatActivity {
 
@@ -30,7 +30,7 @@ public class DonationHistoryDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history_detail);
+        setContentView(R.layout.activity_donation_history_detail);
 
         eventNameTextView = findViewById(R.id.historyDetailEventName);
         socialCommunityNameTextView = findViewById(R.id.historyDetailSocialCommunityName);
@@ -44,16 +44,16 @@ public class DonationHistoryDetailActivity extends AppCompatActivity {
         foodImageProgressBar = findViewById(R.id.historyDetailFoodImageProgressBar);
 
         Intent intent = getIntent();
-        Donator donator = intent.getParcelableExtra("Donator");
-        String eventName = donator.getEventName();
-        String socialCommunityName = donator.getSocialCommunityName();
-        String donatorPickUpAddress = donator.getPickUpAddress();
-        String foodItems = donator.getFoodItems();
-        String pickupDate = donator.getPickUpDate();
-        String pickUpTime = donator.getPickUpTime();
-        String donationDate = donator.getDonationDate();
-        String foodPhotoData = donator.getImageURI();
-        double totalDonation = donator.getTotalDonation();
+        Donation donation = intent.getParcelableExtra("Donator");
+        String eventName = donation.getEventName();
+        String socialCommunityName = donation.getSocialCommunityName();
+        String donatorPickUpAddress = donation.getPickUpAddress();
+        String foodItems = donation.getFoodItems();
+        String pickupDate = donation.getPickUpDate();
+        String pickUpTime = donation.getPickUpTime();
+        String donationDate = donation.getDonationDate();
+        String foodPhotoData = donation.getImageURI();
+        double totalDonation = donation.getTotalDonation();
         if (totalDonation <= 0) {
             totalDonation = 0;
         }

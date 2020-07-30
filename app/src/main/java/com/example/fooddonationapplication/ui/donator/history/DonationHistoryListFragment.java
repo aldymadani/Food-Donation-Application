@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fooddonationapplication.adapter.DonationHistoryAdapter;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.model.Donation;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,7 +67,7 @@ public class DonationHistoryListFragment extends Fragment {
                             DecimalFormat df = new DecimalFormat("#.###");
                             if (documentSnapshot.getDouble("totalDonation") > 0) {
                                 formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
-                                totalDonationTextView.setText("You have donated " + formattedTotalDonation + " Kg of food");
+                                totalDonationTextView.setText("You have donated " + formattedTotalDonation + " kg of food");
                                 recyclerView.setVisibility(View.VISIBLE);
                                 totalDonationTextView.setVisibility(View.VISIBLE);
                             } else {
@@ -97,8 +97,8 @@ public class DonationHistoryListFragment extends Fragment {
         Query query = donatorRef.whereEqualTo("uuid", uuid);
         Log.d(TAG, uuid);
 
-        FirestoreRecyclerOptions<Donator> options = new FirestoreRecyclerOptions.Builder<Donator>()
-                .setQuery(query, Donator.class)
+        FirestoreRecyclerOptions<Donation> options = new FirestoreRecyclerOptions.Builder<Donation>()
+                .setQuery(query, Donation.class)
                 .build();
 
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);

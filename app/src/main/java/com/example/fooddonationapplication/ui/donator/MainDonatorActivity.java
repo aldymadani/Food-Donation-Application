@@ -34,7 +34,7 @@ public class MainDonatorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_donator);
 
         bottomNav = findViewById(R.id.bottom_navigation_donator);
 
@@ -48,13 +48,10 @@ public class MainDonatorActivity extends AppCompatActivity {
 
         if (mViewModel.getLastSeen() == 1) {
             bottomNav.setSelectedItemId(R.id.nav_event);
-            Toast.makeText(this, "Last Seen 1", Toast.LENGTH_SHORT).show();
         } else if (mViewModel.getLastSeen() == 2) {
             bottomNav.setSelectedItemId(R.id.nav_history);
-            Toast.makeText(this, "Last Seen 2", Toast.LENGTH_SHORT).show();
         } else if (mViewModel.getLastSeen() == 3) {
             bottomNav.setSelectedItemId(R.id.nav_edit_profile);
-            Toast.makeText(this, "Last Seen 3", Toast.LENGTH_SHORT).show();
         } else {
             bottomNav.setSelectedItemId(R.id.nav_event);
         }
@@ -71,21 +68,18 @@ public class MainDonatorActivity extends AppCompatActivity {
                         firstInactiveFragment = donationHistoryFragment;
                         secondInactiveFragment = editProfileFragment;
                         mViewModel.setLastSeen(1);
-                        Toast.makeText(MainDonatorActivity.this, "Event", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_history:
                         activeFragment = donationHistoryFragment;
                         firstInactiveFragment = eventFragment;
                         secondInactiveFragment = editProfileFragment;
                         mViewModel.setLastSeen(2);
-                        Toast.makeText(MainDonatorActivity.this, "History", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_edit_profile:
                         activeFragment = editProfileFragment;
                         firstInactiveFragment = eventFragment;
                         secondInactiveFragment = donationHistoryFragment;
                         mViewModel.setLastSeen(3);
-                        Toast.makeText(MainDonatorActivity.this, "Edit", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 fragmentManager.beginTransaction().hide(firstInactiveFragment).hide(secondInactiveFragment).show(activeFragment).commit();
