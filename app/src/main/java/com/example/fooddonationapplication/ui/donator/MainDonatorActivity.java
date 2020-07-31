@@ -15,8 +15,16 @@ import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.ui.donator.profile.DonatorProfileFragment;
 import com.example.fooddonationapplication.ui.donator.event.EventListFragment;
 import com.example.fooddonationapplication.ui.donator.history.DonationHistoryListFragment;
+import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.viewmodel.MainDonatorViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class MainDonatorActivity extends AppCompatActivity {
 
@@ -56,6 +64,26 @@ public class MainDonatorActivity extends AppCompatActivity {
             bottomNav.setSelectedItemId(R.id.nav_event);
         }
         // fragmentManager.beginTransaction().hide(firstInactiveFragment).hide(secondInactiveFragment).show(activeFragment).commit();
+        FirebaseMessaging.getInstance().subscribeToTopic("FoodDonation")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "SubscribeToTopic To Topic FoodDonation";
+                        if (!task.isSuccessful()) {
+                            msg = "Failed: SubscribeToTopic To Topic FoodDonation";
+                        }
+                        Log.d(TAG, msg);
+//                        Toast.makeText(MainSocialCommunityActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        System.out.println(formatter.format(calendar.getTime()));
+        Log.d("CEK", formatter.format(calendar.getTime()));
+        Toast.makeText(this, formatter.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

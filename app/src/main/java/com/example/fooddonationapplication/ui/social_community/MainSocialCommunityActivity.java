@@ -18,8 +18,11 @@ import com.example.fooddonationapplication.ui.social_community.create.CreateEven
 import com.example.fooddonationapplication.ui.social_community.history.EventHistoryFragment;
 import com.example.fooddonationapplication.ui.social_community.profile.SocialCommunityProfileFragment;
 import com.example.fooddonationapplication.viewmodel.MainSocialCommunityViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
 
@@ -60,6 +63,19 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
         } else {
             bottomNav.setSelectedItemId(R.id.nav_event_history);
         }
+
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("FoodDonation")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "UnsubscribeFromTopic To Topic FoodDonation";
+                        if (!task.isSuccessful()) {
+                            msg = "Failed: UnsubscribeFromTopic To Topic FoodDonation";
+                        }
+                        Log.d(TAG, msg);
+//                        Toast.makeText(MainSocialCommunityActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

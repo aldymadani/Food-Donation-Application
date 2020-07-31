@@ -45,6 +45,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventImage" />
 
+
+
         <ImageView
             android:id="@+id/eventTotalDonationIcon"
             android:layout_width="32dp"

@@ -254,7 +254,7 @@ public class SocialCommunityProfileFragment extends Fragment {
     }
 
     private void getData() {
-        db.collection("donators").whereEqualTo("socialCommunityID", user.getUid()).get()
+        db.collection("donators").whereEqualTo("socialCommunityId", user.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

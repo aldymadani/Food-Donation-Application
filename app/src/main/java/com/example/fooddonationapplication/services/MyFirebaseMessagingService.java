@@ -19,6 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.ui.general.SplashScreenActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.ui.social_community.history.UpdateEventActivity;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -54,7 +55,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         createNotificationChannel(notificationManager);
 
-        Intent intent = new Intent(this, UpdateEventActivity.class); // the activity you want the notification to open
+        Intent intent = new Intent(this, SplashScreenActivity.class); // the activity you want the notification to open
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -76,7 +77,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         //Set notification color to match your app color template
-        notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+//        notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
         notificationManager.notify(notificationID, notificationBuilder.build());
     }
 

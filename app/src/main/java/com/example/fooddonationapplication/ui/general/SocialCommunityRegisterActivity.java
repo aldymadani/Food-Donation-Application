@@ -361,6 +361,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
         user.put("role", "social community");
         user.put("imageURI", socialCommunityImageURI);
         user.put("totalEventCreated", 0);
+        user.put("notificationAvailabilityInMillis", System.currentTimeMillis());
 //        user.setName(socialCommunityNameData);
 //        user.setPhone(telephoneNumberData);
 //        user.setDescription(socialCommunityDescriptionData);

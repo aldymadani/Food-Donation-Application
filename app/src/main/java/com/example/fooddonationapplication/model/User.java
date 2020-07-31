@@ -3,7 +3,6 @@ package com.example.fooddonationapplication.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
@@ -11,9 +10,18 @@ public class User implements Parcelable {
     private String name, phone, description, uuid, role, imageURI;
     private int totalEventCreated;
     private double totalDonation;
+    private long notificationAvailabilityInMillis;
 
     public User(){
         // Empty constructor
+    }
+
+    public long getNotificationAvailabilityInMillis() {
+        return notificationAvailabilityInMillis;
+    }
+
+    public void setNotificationAvailabilityInMillis(long notificationAvailabilityInMillis) {
+        this.notificationAvailabilityInMillis = notificationAvailabilityInMillis;
     }
 
     public int getTotalEventCreated() {
@@ -81,7 +89,6 @@ public class User implements Parcelable {
     }
 
     public boolean isSameDonator(User user) {
-        // TODO: Compare function
         boolean isSame = true;
         if (!name.equalsIgnoreCase(user.getName())) {
             isSame = false;
@@ -93,7 +100,6 @@ public class User implements Parcelable {
     }
 
     public boolean isSameSocialCommunity(User user) {
-        // TODO: Compare function
         boolean isSame = true;
         if (!phone.equalsIgnoreCase(user.getPhone())) {
             isSame = false;
@@ -124,6 +130,7 @@ public class User implements Parcelable {
         role = in.readString();
         totalDonation = in.readDouble();
         imageURI = in.readString();
+        notificationAvailabilityInMillis = in.readLong();
     }
 
     @Override
@@ -135,6 +142,7 @@ public class User implements Parcelable {
         dest.writeString(role);
         dest.writeDouble(totalDonation);
         dest.writeString(imageURI);
+        dest.writeLong(notificationAvailabilityInMillis);
     }
 
     @Override

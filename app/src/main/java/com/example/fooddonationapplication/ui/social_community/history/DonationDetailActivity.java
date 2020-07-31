@@ -191,7 +191,7 @@ public class DonationDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Show Dialog
-                LottieAnimationView animationView = mDialog.getAnimationView();
+//                LottieAnimationView animationView = mDialog.getAnimationView();
                 mDialog.show();
 
 //                final DocumentReference userDocumentReference = db.collection("users").document(donator.getUuid());

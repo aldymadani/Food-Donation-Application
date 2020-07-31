@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,13 +35,11 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.services.MyFirebaseMessagingService;
 import com.example.fooddonationapplication.services.MySingleton;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.viewmodel.UpdateEventViewModel;
-import com.google.android.gms.common.api.Response;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,11 +55,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.JsonObject;
+import com.shreyaspatil.MaterialDialog.MaterialDialog;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -88,7 +85,7 @@ public class UpdateEventFragment extends Fragment {
     private EditText eventDescription, eventEndDate, eventTargetQuantity, eventTotalDonation;
     private TextInputLayout eventDescriptionLayout, eventEndDateLayout, eventTargetQuantityLayout;
     private ImageView eventPhoto;
-    private Button updateEventConfirmation, deleteEventConfirmation, sendNotificationConfirmation;
+    private Button updateEventButton, deleteEventButton, sendNotificationButton;
     private ProgressBar updateEventProgressBar, deleteEventProgressBar, sendNotificationProgressBar, imageEventPhotoProgressBar;
 
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -121,10 +118,6 @@ public class UpdateEventFragment extends Fragment {
     final private String serverKey = "key=" + "AAAA_kQBhCI:APA91bFc0c2ZXDUJdQRzTIESv_qs2SLJocXUPqPII0WSjaeTEZgshflKKBOk74lJAWkoFBCcz7THIBlXEmDoCaHzfaMOwv4ZEh-5ZiQP1GBAREorM8mypdYwvvbxx87aY3ZuVLzib_tJ";
     final private String contentType = "application/json";
 
-    private String NOTIFICATION_TITLE;
-    private String NOTIFICATION_MESSAGE;
-    private String TOPIC;
-
     public UpdateEventFragment() {
         // Required empty public constructor
     }
@@ -148,9 +141,9 @@ public class UpdateEventFragment extends Fragment {
 
         eventPhoto = rootView.findViewById(R.id.updateEventImage);
 
-        updateEventConfirmation = rootView.findViewById(R.id.updateEventConfirmButton);
-        deleteEventConfirmation = rootView.findViewById(R.id.updateEventDeleteButton);
-        sendNotificationConfirmation = rootView.findViewById(R.id.updateEventSendNotificationButton);
+        updateEventButton = rootView.findViewById(R.id.updateEventConfirmButton);
+        deleteEventButton = rootView.findViewById(R.id.updateEventDeleteButton);
+        sendNotificationButton = rootView.findViewById(R.id.updateEventSendNotificationButton);
 
         updateEventProgressBar = rootView.findViewById(R.id.updateEventConfirmProgressBar);
         deleteEventProgressBar = rootView.findViewById(R.id.updateEventDeleteProgressBar);
@@ -181,6 +174,8 @@ public class UpdateEventFragment extends Fragment {
         eventDescription.setText(event.getDescription());
         eventEndDate.setText(event.getEndDate());
         eventTargetQuantity.setText(String.valueOf(event.getTargetQuantity()));
+
+        // Initialize data for end date in Millis
 //        eventTotalDonation.setText(String.valueOf(event.getTotalDonation()));
 
         // Disable the totalDonation text field
@@ -213,31 +208,22 @@ public class UpdateEventFragment extends Fragment {
             });
         }
 
-        deleteEventConfirmation.setOnClickListener(new View.OnClickListener() {
+        deleteEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (event.getTotalDonation() > 0) {
                     Toast.makeText(getContext(), "Please ensure that the event have no donator", Toast.LENGTH_SHORT).show();
                 } else {
-                    deleteEventConfirmation.setVisibility(View.INVISIBLE);
-                    deleteEventProgressBar.setVisibility(View.VISIBLE);
-                    updateEventConfirmation.setEnabled(false);
-                    sendNotificationConfirmation.setEnabled(false);
-                    allActionStatus(false);
-                    deleteEvent();
+                    setUpDeleteEventDialog();
                 }
             }
         });
 
-        updateEventConfirmation.setOnClickListener(new View.OnClickListener() {
+        updateEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!hasEmptyField()) {
-                    updateEventConfirmation.setVisibility(View.INVISIBLE);
-                    updateEventProgressBar.setVisibility(View.VISIBLE);
-                    deleteEventConfirmation.setEnabled(false);
-                    sendNotificationConfirmation.setEnabled(false);
-                    allActionStatus(false);
+                    allActionStatus(false, "UPDATE_START");
                     checkingChanges();
                 }
             }
@@ -282,31 +268,78 @@ public class UpdateEventFragment extends Fragment {
             }
         });
 
-        sendNotificationConfirmation.setOnClickListener(new View.OnClickListener() {
+        sendNotificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TOPIC = "/topics/FoodDonation"; //topic must match with what the receiver subscribed to
-                NOTIFICATION_TITLE = "ALGO TITLE";
-                NOTIFICATION_MESSAGE = "ALGO SUBTITLE";
-
-                JSONObject notification = new JSONObject();
-                JSONObject notifcationBody = new JSONObject();
-                try {
-                    notifcationBody.put("title", NOTIFICATION_TITLE);
-                    notifcationBody.put("message", NOTIFICATION_MESSAGE);
-
-                    notification.put("to", TOPIC);
-                    notification.put("data", notifcationBody);
-                } catch (JSONException e) {
-                    Log.e(TAG, "onCreate: " + e.getMessage() );
+                allActionStatus(false, "NOTIFICATION_START");
+                if (event.getEndDateInMillis() < System.currentTimeMillis()) {
+                    allActionStatus(true, "NOTIFICATION_FINISH");
+                    Toast.makeText(requireActivity(), "Sorry, your event is expired already", Toast.LENGTH_SHORT).show();
+                } else {
+                    sendNotificationButton.setVisibility(View.INVISIBLE);
+                    String userUuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    db.collection("users").document(userUuid)
+                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists()) {
+                                        long notificationDateInMillis = documentSnapshot.getLong("notificationAvailabilityInMillis");
+                                        if (System.currentTimeMillis() > notificationDateInMillis) {
+                                            setUpNotificationData();
+                                        } else {
+                                            allActionStatus(true, "NOTIFICATION_FINISH");
+                                            Toast.makeText(requireActivity(), "Sorry, you can only sent notification once every two weeks", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+                            });
                 }
-                Toast.makeText(getContext(), "JSON " + notification, Toast.LENGTH_SHORT).show();
-                sendNotification(notification);
-
             }
         });
-
         return rootView;
+    }
+
+    private void setUpDeleteEventDialog() {
+        final MaterialDialog mDialog = new MaterialDialog.Builder(requireActivity())
+                .setAnimation(R.raw.delete_animation)
+                .setTitle("Delete Event")
+                .setMessage("Are you sure want to delete this Event?")
+                .setCancelable(false)
+                .setPositiveButton("Delete", R.drawable.ic_delete_forever_black_24dp, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(com.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                        // Hide the dialog again
+                        dialogInterface.dismiss();
+                        deleteEvent();
+                    }
+                })
+                .setNegativeButton("Cancel", R.drawable.ic_cancel_black_24dp, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(com.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .build();
+        mDialog.show();
+    }
+
+    private void setUpNotificationData() {
+        String TOPIC = "/topics/FoodDonation"; //topic must match with what the receiver subscribed to
+        String NOTIFICATION_TITLE = event.getTitle();
+        String NOTIFICATION_MESSAGE = event.getDescription();
+
+        JSONObject notification = new JSONObject();
+        JSONObject notifcationBody = new JSONObject();
+        try {
+            notifcationBody.put("title", NOTIFICATION_TITLE);
+            notifcationBody.put("message", NOTIFICATION_MESSAGE);
+            notification.put("to", TOPIC);
+            notification.put("data", notifcationBody);
+        } catch (JSONException e) {
+            Log.e(TAG, "onCreate: " + e.getMessage() );
+        }
+//                Toast.makeText(getContext(), "JSON " + notification, Toast.LENGTH_SHORT).show();
+        sendNotification(notification);
     }
 
     private void sendNotification(JSONObject notification) {
@@ -314,14 +347,14 @@ public class UpdateEventFragment extends Fragment {
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getContext(), "onResponse" + response.toString(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), "onResponse" + response.toString(), Toast.LENGTH_LONG).show();
                         Log.i(TAG, "onResponse: " + response.toString());
                     }
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getContext(), "Request error", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), "Request error", Toast.LENGTH_LONG).show();
                         Log.i(TAG, "onErrorResponse: Didn't work");
                     }
                 }){
@@ -334,9 +367,23 @@ public class UpdateEventFragment extends Fragment {
             }
         };
         MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+        updateUserDatabase();
     }
 
-    private void allActionStatus(boolean status) {
+    private void updateUserDatabase() {
+        String userUuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference userReference = db.collection("users").document(userUuid);
+        userReference.update("notificationAvailabilityInMillis", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7 * 2)) // 2 Weeks
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        allActionStatus(true, "NOTIFICATION_FINISH");
+                        Toast.makeText(requireActivity(), "Sending notification is completed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void allActionStatus(boolean status, String action) {
         eventDescription.setFocusable(status);
         eventDescription.setFocusableInTouchMode(status);
         eventDescription.setCursorVisible(status);
@@ -350,6 +397,37 @@ public class UpdateEventFragment extends Fragment {
         eventTotalDonation.setFocusableInTouchMode(status);
         eventTotalDonation.setCursorVisible(status);
         eventPhoto.setEnabled(status);
+        if (action.equalsIgnoreCase("UPDATE_START")) {
+            updateEventButton.setVisibility(View.INVISIBLE);
+            updateEventProgressBar.setVisibility(View.VISIBLE);
+            sendNotificationButton.setEnabled(false);
+            deleteEventButton.setEnabled(false);
+        } else if (action.equalsIgnoreCase("UPDATE_FINISH")) {
+            updateEventProgressBar.setVisibility(View.INVISIBLE);
+            updateEventButton.setVisibility(View.VISIBLE);
+            sendNotificationButton.setEnabled(true);
+            deleteEventButton.setEnabled(true);
+        } else if (action.equalsIgnoreCase("DELETE_START")) {
+            deleteEventButton.setVisibility(View.INVISIBLE);
+            deleteEventProgressBar.setVisibility(View.VISIBLE);
+            updateEventButton.setEnabled(false);
+            sendNotificationButton.setEnabled(false);
+        } else if (action.equalsIgnoreCase("DELETE_FINISH")) {
+            deleteEventProgressBar.setVisibility(View.INVISIBLE);
+            deleteEventButton.setVisibility(View.VISIBLE);
+            updateEventButton.setEnabled(true);
+            sendNotificationButton.setEnabled(true);
+        } else if (action.equalsIgnoreCase("NOTIFICATION_START")) {
+            sendNotificationButton.setVisibility(View.INVISIBLE);
+            sendNotificationProgressBar.setVisibility(View.VISIBLE);
+            updateEventButton.setEnabled(false);
+            deleteEventButton.setEnabled(false);
+        } else if (action.equalsIgnoreCase("NOTIFICATION_FINISH")) {
+            sendNotificationProgressBar.setVisibility(View.INVISIBLE);
+            sendNotificationButton.setVisibility(View.VISIBLE);
+            updateEventButton.setEnabled(true);
+            deleteEventButton.setEnabled(true);
+        }
     }
 
     private void setupCalendar() {
@@ -416,11 +494,7 @@ public class UpdateEventFragment extends Fragment {
             ).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    deleteEventConfirmation.setEnabled(true);
-                    sendNotificationConfirmation.setEnabled(true);
-                    updateEventProgressBar.setVisibility(View.INVISIBLE);
-                    updateEventConfirmation.setVisibility(View.VISIBLE);
-                    allActionStatus(true);
+                    allActionStatus(true, "UPDATE_FINISH");
 
                     // Checking for the new things again
                     event.setDescription(newEvent.getDescription());
@@ -437,11 +511,7 @@ public class UpdateEventFragment extends Fragment {
             });
         } else {
             Toast.makeText(getContext(), "Nothing has changed", Toast.LENGTH_SHORT).show();
-            deleteEventConfirmation.setEnabled(true);
-            sendNotificationConfirmation.setEnabled(true);
-            updateEventProgressBar.setVisibility(View.INVISIBLE);
-            updateEventConfirmation.setVisibility(View.VISIBLE);
-            allActionStatus(true);
+            allActionStatus(true, "UPDATE_FINISH");
         }
     }
 
@@ -505,6 +575,7 @@ public class UpdateEventFragment extends Fragment {
     private void deleteEvent() {
         // TODO disable update and send notification and the rest of the text and image click
         // Perform delete donation on the database
+        allActionStatus(false, "DELETE_START");
         WriteBatch batch = db.batch();
         DocumentReference eventReference = db.collection("events").document(event.getEventID());
         batch.delete(eventReference); // TODO don't use batch, use single deletion
@@ -560,12 +631,6 @@ public class UpdateEventFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
-            // TODO try this later
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), ImageURI);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             CropImage.activity(ImageURI)
                     .setGuidelines(CropImageView.Guidelines.ON)
@@ -578,17 +643,26 @@ public class UpdateEventFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
                 // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
-                ImageDecoder.Source source = ImageDecoder.createSource(requireActivity().getContentResolver(), resultUri);
                 try {
-                    bitmap = ImageDecoder.decodeBitmap(source);
+                    bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), resultUri);
                     hasImageChanged = true;
                     mViewModel.setHasImageChanged(true);
                     eventPhoto.setImageBitmap(bitmap);
                     mViewModel.setImageBitmap(bitmap);
                 } catch (IOException e) {
-                    Log.e("UpdateEventFragment", e.getLocalizedMessage());
                     e.printStackTrace();
                 }
+//                ImageDecoder.Source source = ImageDecoder.createSource(requireActivity().getContentResolver(), resultUri);
+//                try {
+//                    bitmap = ImageDecoder.decodeBitmap(source);
+//                    hasImageChanged = true;
+//                    mViewModel.setHasImageChanged(true);
+//                    eventPhoto.setImageBitmap(bitmap);
+//                    mViewModel.setImageBitmap(bitmap);
+//                } catch (IOException e) {
+//                    Log.e("UpdateEventFragment", e.getLocalizedMessage());
+//                    e.printStackTrace();
+//                }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Log.e(TAG, String.valueOf(error));

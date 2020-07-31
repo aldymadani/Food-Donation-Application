@@ -156,7 +156,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/socialCommunityProfileTitle" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/socialCommunityProfilePencilIcon"
             android:layout_width="32dp"
             android:layout_height="32dp"

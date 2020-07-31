@@ -123,17 +123,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 donatorButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(LoginActivity.this, DonatorRegisterActivity.class);
+                        Intent i = new Intent(LoginActivity.this, IntroductionActivity.class);
+                        i.putExtra("registerAs", "donator");
                         startActivity(i);
-                        dialog.hide();
+                        dialog.dismiss();
                     }
                 });
                 socialCommunityButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(LoginActivity.this, SocialCommunityRegisterActivity.class);
+                        Intent i = new Intent(LoginActivity.this, IntroductionActivity.class);
+                        i.putExtra("registerAs", "social community");
                         startActivity(i);
-                        dialog.hide();
+                        dialog.dismiss();
                     }
                 });
                 break;
