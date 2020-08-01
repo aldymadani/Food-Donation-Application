@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -46,25 +47,35 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in, send to mainmenu
-                    String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    checkRole(uuid);
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out, send to register/login
+                if (restorePrefData()) {
+                    FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        // User is signed in, send to mainmenu
+                        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        checkRole(uuid);
+                        Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    } else {
+                        // User is signed out, send to register/login
 //                    startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
-                    Intent mainIntent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                    SplashScreenActivity.this.startActivity(mainIntent);
-                    SplashScreenActivity.this.finish();
+                        Intent mainIntent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                        SplashScreenActivity.this.startActivity(mainIntent);
+                        SplashScreenActivity.this.finish();
 //                    Intent intent = new Intent(activityA.this, activityB.class);
 //                    startActivity(intent);
 //                    finish(); // Destroy activity A and not exist in Back stack
+                    }
+                } else {
+                    Intent intent = new Intent(SplashScreenActivity.this, IntroductionActivity.class);
+                    startActivity(intent);
+                    finish(); // Destroy activity A and not exist in Back stack
                 }
-
             }
         }, SPLASH_DISPLAY_LENGTH);
+    }
+
+    private boolean restorePrefData() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("myPref", MODE_PRIVATE);
+        return pref.getBoolean("isIntroOpened", false);
     }
 
     protected void checkRole(String uuid) {
@@ -82,6 +93,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 ////                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 ////                            startActivity(intent);
                             Intent mainIntent = new Intent(SplashScreenActivity.this, MainDonatorActivity.class);
+                            mainIntent.putExtra("phone", document.getString("phone"));
+                            mainIntent.putExtra("totalDonation", document.getLong("totalDonation").intValue());
                             SplashScreenActivity.this.startActivity(mainIntent);
                             SplashScreenActivity.this.finish();
                         } else {
@@ -89,6 +102,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                            startActivity(intent);
                             Intent mainIntent = new Intent(SplashScreenActivity.this, MainSocialCommunityActivity.class);
+                            mainIntent.putExtra("phone", document.getString("phone"));
+                            mainIntent.putExtra("description", document.getString("description"));
+                            Toast.makeText(SplashScreenActivity.this, String.valueOf(document.getLong("totalEventCreated").intValue()), Toast.LENGTH_SHORT).show();
+                            mainIntent.putExtra("totalEvent", document.getLong("totalEventCreated").intValue());
                             SplashScreenActivity.this.startActivity(mainIntent);
                             SplashScreenActivity.this.finish();
                         }

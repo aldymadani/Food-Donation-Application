@@ -10,10 +10,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -65,8 +67,7 @@ public class EventHistoryFragment extends Fragment {
 
         final String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d(TAG, uuid);
-        Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
-        setUpRecyclerViewEventHistory(query);
+
 
         recyclerView.setVisibility(View.INVISIBLE);
         searchField.setVisibility(View.INVISIBLE);
@@ -76,24 +77,22 @@ public class EventHistoryFragment extends Fragment {
         emptyHistoryImage.setVisibility(View.INVISIBLE);
         emptyHistoryText.setVisibility(View.INVISIBLE);
 
-        db.collection("users").document(uuid).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            if (documentSnapshot.getLong("totalEventCreated") > 0) {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                searchField.setVisibility(View.VISIBLE);
-                                searchInputLayout.setVisibility(View.VISIBLE);
-                                searchButton.setVisibility(View.VISIBLE);
-                                swipeLayout.setVisibility(View.VISIBLE);
-                            } else {
-                                emptyHistoryImage.setVisibility(View.VISIBLE);
-                                emptyHistoryText.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-                });
+        Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
+        setUpRecyclerViewEventHistory(query);
+
+        // Retrieving data from activity
+        FragmentActivity fragmentActivity = requireActivity();
+        int totalEvent = fragmentActivity.getIntent().getIntExtra("totalEvent", 0);
+        if (totalEvent > 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            searchField.setVisibility(View.VISIBLE);
+            searchInputLayout.setVisibility(View.VISIBLE);
+            searchButton.setVisibility(View.VISIBLE);
+            swipeLayout.setVisibility(View.VISIBLE);
+        } else {
+            emptyHistoryImage.setVisibility(View.VISIBLE);
+            emptyHistoryText.setVisibility(View.VISIBLE);
+        }
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override

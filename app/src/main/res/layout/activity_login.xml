@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_email_black_24dp"
-                    android:drawablePadding="7dp"
+                    android:drawablePadding="@dimen/drawable_padding"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,7 +94,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="152dp"
                     android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                    android:drawablePadding="7dp"
+                    android:drawablePadding="@dimen/drawable_padding"
                     android:hint="@string/password_placeholder"
                     android:inputType="textPassword"
                     app:layout_constraintEnd_toEndOf="@+id/register_email_layout"

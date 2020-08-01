@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -180,16 +181,15 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
-                // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
-                ImageDecoder.Source source = ImageDecoder.createSource(SocialCommunityRegisterActivity.this.getContentResolver(), resultUri);
                 try {
-                    bitmap = ImageDecoder.decodeBitmap(source);
+                    bitmap = MediaStore.Images.Media.getBitmap(SocialCommunityRegisterActivity.this.getContentResolver(), resultUri);
                     hasImage = true;
                     Log.d(TAG, String.valueOf(bitmap));
                     socialCommunityPhoto.setImageBitmap(bitmap);
                     mViewModel.setImageBitmap(bitmap);
                     hasImage = true;
                 } catch (IOException e) {
+                    Log.e("UpdateEventFragment", e.getLocalizedMessage());
                     e.printStackTrace();
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -340,6 +340,9 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
                             Log.d(TAG, user.getDisplayName());
                             allActionStatus(true);
                             Intent intent = new Intent(SocialCommunityRegisterActivity.this, MainSocialCommunityActivity.class);
+                            intent.putExtra("phone", socialCommunityDescription.getText().toString());
+                            intent.putExtra("description", telephoneNumberId.getText().toString());
+                            intent.putExtra("totalEventCreated", 0);
                             Toast.makeText(SocialCommunityRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // TODO try to implement finish
                             startActivity(intent);

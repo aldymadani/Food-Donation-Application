@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toStartOf="@+id/eventSearchButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +48,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:paddingTop="8dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,35 +88,37 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:srcCompat="@drawable/ic_reset" />-->
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/eventEmptyPicture"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/event_empty"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/eventEmptyTextView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingStart="64dp"
-        android:paddingEnd="64dp"
-        android:gravity="center_horizontal"
-        android:lineSpacingMultiplier="1.15"
-        android:text="Currently, there are no available events"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/eventEmptyPicture"
-        app:layout_constraintStart_toStartOf="@+id/eventEmptyPicture"
-        app:layout_constraintTop_toBottomOf="@+id/eventEmptyPicture"
-        tools:visibility="gone"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/eventEmptyPicture"
+            android:layout_width="400dp"
+            android:layout_height="230dp"
+            android:src="@drawable/event_empty_edited"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/eventEmptyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:gravity="center_horizontal"
+            android:lineSpacingMultiplier="1.15"
+            android:text="Currently, there are no available events"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/eventEmptyPicture"
+            app:layout_constraintStart_toStartOf="@+id/eventEmptyPicture"
+            app:layout_constraintTop_toBottomOf="@+id/eventEmptyPicture" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

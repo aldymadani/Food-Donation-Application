@@ -63,35 +63,37 @@
             tools:listitem="@layout/item_event_history" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/eventHistoryEmptyPicture"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/empty_event_history"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/eventHistoryEmptyTextView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingStart="64dp"
-        android:paddingEnd="64dp"
-        android:gravity="center_horizontal"
-        android:lineSpacingMultiplier="1.15"
-        android:text="You haven't created any event yet"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/eventHistoryEmptyPicture"
-        app:layout_constraintStart_toStartOf="@+id/eventHistoryEmptyPicture"
-        app:layout_constraintTop_toBottomOf="@+id/eventHistoryEmptyPicture"
-        tools:visibility="gone"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/eventHistoryEmptyPicture"
+            android:layout_width="400dp"
+            android:layout_height="230dp"
+            android:src="@drawable/empty_event_history_edited"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/eventHistoryEmptyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:gravity="center_horizontal"
+            android:lineSpacingMultiplier="1.15"
+            android:text="You haven't created any event yet"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/eventHistoryEmptyPicture"
+            app:layout_constraintStart_toStartOf="@+id/eventHistoryEmptyPicture"
+            app:layout_constraintTop_toBottomOf="@+id/eventHistoryEmptyPicture" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

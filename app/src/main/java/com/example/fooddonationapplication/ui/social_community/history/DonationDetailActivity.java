@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donation;
+import com.example.fooddonationapplication.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,66 +41,50 @@ public class DonationDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DonatorDetailActivity";
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private TextView donatorNameTextView, donatorPhoneNumberTextView, donatorPickUpAddressTextView, donatorFoodItemsTextView, donatorPickUpDateTextView, donatorPickUpTimeTextView, donatorTotalDonationTextView, donatorDonationDateTextView, donatorDonationStatusEditText;
+    private TextView donatorNameTextView;
+    private EditText donationDate, deliveryDate, deliveryTime, pickUpAddress, foodItems, donationQuantity, donationStatus;
     private ProgressBar imageLoadingProgressBar, deleteProgressBar, updateDonationStatusProgressBar;
     private ImageView foodImagePhoto;
-    private Button deleteDonation, updateDonationStatus;
-    String donatorId;
+    private Button callDonator, deleteDonation, updateDonationStatus;
+    private String donationId, donatorId, eventId, imageURI;
+    private double donationQuantityData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation_detail);
 
-        donatorNameTextView = findViewById(R.id.donatorDetailName);
-        donatorPhoneNumberTextView = findViewById(R.id.donatorDetailPhoneNumber);
-        donatorPickUpAddressTextView = findViewById(R.id.donatorDetailPickUpAddress);
-        donatorFoodItemsTextView = findViewById(R.id.donatorDetailFoodItems);
-        donatorPickUpDateTextView = findViewById(R.id.donatorDetailDate);
-        donatorPickUpTimeTextView = findViewById(R.id.donatorDetailTime);
-        donatorTotalDonationTextView = findViewById(R.id.donatorDetailTotalDonation);
-        donatorDonationDateTextView = findViewById(R.id.donatorDetailDonationDate);
-        donatorDonationStatusEditText = findViewById(R.id.donatorDetailDonationStatus);
-        imageLoadingProgressBar = findViewById(R.id.donatorDetailImageProgressBar);
-        updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
-        foodImagePhoto = findViewById(R.id.donatorDetailFoodImage);
-        deleteProgressBar = findViewById(R.id.donatorDetailButtonProgressBar);
-        deleteDonation = findViewById(R.id.donatorDetailButton);
-        updateDonationStatus = findViewById(R.id.donatorDetailUpdateStatusButton);
+        donatorNameTextView = findViewById(R.id.donationDetailDonatorByText);
+        callDonator = findViewById(R.id.donationDetailCallDonatorButton);
 
-        deleteProgressBar.setVisibility(View.INVISIBLE);
-        updateDonationStatusProgressBar.setVisibility(View.INVISIBLE);
+        foodImagePhoto = findViewById(R.id.donationDetailFoodPhoto);
+        imageLoadingProgressBar = findViewById(R.id.donationDetailFoodPhotoProgressBar);
+
+        donationDate = findViewById(R.id.donationDetailDonationDate);
+        deliveryDate = findViewById(R.id.donationDetailDeliveryDate);
+        deliveryTime = findViewById(R.id.donationDetailDeliveryTime);
+        pickUpAddress = findViewById(R.id.donationDetailPickUpAddress);
+        foodItems = findViewById(R.id.donationDetailFoodItems);
+        donationQuantity = findViewById(R.id.donationDetailTotalDonation);
+        donationStatus = findViewById(R.id.donationDetailDonationStatus);
+
+        deleteDonation = findViewById(R.id.donationDetailDeleteDonationButton);
+        deleteProgressBar = findViewById(R.id.donatorDetailButtonProgressBar);
+
+        updateDonationStatus = findViewById(R.id.donationDetailUpdateStatusButton);
+        updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
 
         Intent intent = getIntent();
         final Donation donation = intent.getParcelableExtra("Donator");
-        String donatorName = donation.getName();
-        String donatorPhoneNumber = donation.getPhone();
-        String donatorPickUpAddress = donation.getPickUpAddress();
-        String foodItems = donation.getFoodItems();
-        String pickupDate = donation.getPickUpDate();
-        String pickUpTime = donation.getPickUpTime();
-        String donationDate = donation.getDonationDate();
-        String foodPhoto = donation.getImageURI();
-        final double totalDonation = donation.getTotalDonation();
-        String donationStatus = donation.getStatus();
-        donatorId = donation.getDonatorId();
+        donatorId = donation.getUuid();
+        donationId = donation.getDonatorId();
+        eventId = donation.getEventId();
+        imageURI = donation.getImageURI();
+        donationQuantityData = donation.getTotalDonation();
 
-        donatorNameTextView.setText(donatorName);
-        donatorPhoneNumberTextView.setText(donatorPhoneNumber);
-        donatorPickUpAddressTextView.setText(donatorPickUpAddress);
-        donatorFoodItemsTextView.setText(foodItems);
-        donatorPickUpDateTextView.setText(pickupDate);
-        donatorPickUpTimeTextView.setText(pickUpTime);
-        donatorTotalDonationTextView.setText(String.valueOf(totalDonation));
-        donatorDonationDateTextView.setText(donationDate);
-        donatorDonationStatusEditText.setText(donationStatus);
-        disableAllTextField();
+        donatorNameTextView.setText(donation.getName());
 
-        if (donationStatus.equalsIgnoreCase("Completed")) {
-            updateDonationStatus.setVisibility(View.GONE);
-        }
-
-        Glide.with(this).load(foodPhoto)
+        Glide.with(this).load(imageURI)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -114,77 +99,20 @@ public class DonationDetailActivity extends AppCompatActivity {
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(foodImagePhoto);
 
-        final MaterialDialog mDialog = new MaterialDialog.Builder(this)
-                .setAnimation(R.raw.delete_animation)
-                .setTitle("Delete Donation")
-                .setMessage("Are you sure want to delete this donation?")
-                .setCancelable(false)
-                .setPositiveButton("Delete", R.drawable.ic_delete_forever_black_24dp, new MaterialDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        // Hide the dialog again
-                        dialogInterface.dismiss();
+        donationDate.setText(donation.getDonationDate());
+        deliveryDate.setText(donation.getPickUpDate());
+        deliveryTime.setText(donation.getPickUpTime());
+        pickUpAddress.setText(donation.getPickUpAddress());
+        foodItems.setText(donation.getFoodItems());
+        donationQuantity.setText(String.valueOf(donation.getTotalDonation()));
+        donationStatus.setText(donation.getStatus());
 
-                        deleteDonation.setVisibility(View.INVISIBLE);
-                        deleteProgressBar.setVisibility(View.VISIBLE);
-                        updateDonationStatus.setEnabled(false);
+        disableAllTextField();
 
-                        // Delete Operation
-                        WriteBatch batch = db.batch();
-                        DocumentReference donatorReference = db.collection("donators").document(donation.getDonatorId());
-                        batch.delete(donatorReference);
+        if (donation.getStatus().equalsIgnoreCase("Completed")) {
+            updateDonationStatus.setVisibility(View.GONE);
+        }
 
-                        double decreaseTotalDonation = totalDonation * -1;
-                        Log.d(TAG, String.valueOf(decreaseTotalDonation));
-
-                        DocumentReference userReference = db.collection("users").document(donation.getUuid());
-                        batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
-//                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
-
-
-                        DocumentReference eventReference = db.collection("events").document(donation.getEventId());
-                        batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
-//                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
-
-                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(donation.getImageURI());
-                                storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // File deleted successfully
-                                        Log.d(TAG, "onSuccess: deleted file");
-                                        Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
-//                                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
-//                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                        startActivity(intent);
-                                        finish();
-                                        deleteDonation.setVisibility(View.VISIBLE);
-                                        deleteProgressBar.setVisibility(View.INVISIBLE);
-                                        updateDonationStatus.setEnabled(true);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Uh-oh, an error occurred!
-                                        Log.d(TAG, "onFailure: did not delete file");
-                                        deleteDonation.setVisibility(View.VISIBLE);
-                                        deleteProgressBar.setVisibility(View.INVISIBLE);
-                                        updateDonationStatus.setEnabled(true);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                })
-                .setNegativeButton("Cancel", R.drawable.ic_cancel_black_24dp, new MaterialDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        dialogInterface.dismiss();
-                    }
-                })
-                .build();
 
         deleteDonation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,7 +120,7 @@ public class DonationDetailActivity extends AppCompatActivity {
 
                 // Show Dialog
 //                LottieAnimationView animationView = mDialog.getAnimationView();
-                mDialog.show();
+                setUpDeleteDialog();
 
 //                final DocumentReference userDocumentReference = db.collection("users").document(donator.getUuid());
 //                final DocumentReference eventDocumentReference = db.collection("events").document(donator.getEventId());
@@ -238,26 +166,28 @@ public class DonationDetailActivity extends AppCompatActivity {
 //                                Log.w(TAG, "Transaction failure.", e);
 //                            }
 //                        });
+            }
+        });
 
-
-
+        callDonator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.openCallIntent(DonationDetailActivity.this, donation.getPhone());
             }
         });
 
         updateDonationStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO add animation later on
                 // TODO add disable all Edit Text
                 deleteDonation.setEnabled(false);
                 updateDonationStatus.setVisibility(View.INVISIBLE);
                 updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
-                DocumentReference donationReference = db.collection("donators").document(donatorId);
+                DocumentReference donationReference = db.collection("donators").document(donationId);
                 donationReference.update("status", "Completed")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        // TODO backtrack to the previous activity
                         Toast.makeText(DonationDetailActivity.this, "Status is updated to Completed", Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -273,41 +203,109 @@ public class DonationDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void setUpDeleteDialog() {
+        MaterialDialog mDialog = new MaterialDialog.Builder(this)
+                .setAnimation(R.raw.delete_animation)
+                .setTitle("Delete Donation")
+                .setMessage("Are you sure want to delete this donation?")
+                .setCancelable(false)
+                .setPositiveButton("Delete", R.drawable.ic_delete_forever_black_24dp, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        // Hide the dialog again
+                        dialogInterface.dismiss();
+
+                        deleteDonation.setVisibility(View.INVISIBLE);
+                        deleteProgressBar.setVisibility(View.VISIBLE);
+                        updateDonationStatus.setEnabled(false);
+
+                        // Delete Operation
+                        WriteBatch batch = db.batch();
+                        DocumentReference donatorReference = db.collection("donators").document(donationId);
+                        batch.delete(donatorReference);
+
+                        double decreaseTotalDonation = donationQuantityData * -1;
+                        Log.d(TAG, String.valueOf(decreaseTotalDonation));
+
+                        DocumentReference userReference = db.collection("users").document(donatorId);
+                        batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
+//                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
+
+
+                        DocumentReference eventReference = db.collection("events").document(eventId);
+                        batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
+//                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
+
+                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageURI);
+                                storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // File deleted successfully
+                                        Log.d(TAG, "onSuccess: deleted file");
+                                        Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
+//                                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
+//                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                        startActivity(intent);
+                                        finish();
+                                        deleteDonation.setVisibility(View.VISIBLE);
+                                        deleteProgressBar.setVisibility(View.INVISIBLE);
+                                        updateDonationStatus.setEnabled(true);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Uh-oh, an error occurred!
+                                        Log.d(TAG, "onFailure: did not delete file");
+                                        deleteDonation.setVisibility(View.VISIBLE);
+                                        deleteProgressBar.setVisibility(View.INVISIBLE);
+                                        updateDonationStatus.setEnabled(true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", R.drawable.ic_cancel_black_24dp, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .build();
+
+        mDialog.show();
+    }
+
     private void disableAllTextField() {
-        donatorNameTextView.setFocusable(false);
-        donatorNameTextView.setFocusableInTouchMode(false);
-        donatorNameTextView.setCursorVisible(false);
+        donationDate.setFocusable(false);
+        donationDate.setFocusableInTouchMode(false);
+        donationDate.setCursorVisible(false);
 
-        donatorPhoneNumberTextView.setFocusable(false);
-        donatorPhoneNumberTextView.setFocusableInTouchMode(false);
-        donatorPhoneNumberTextView.setCursorVisible(false);
+        deliveryDate.setFocusable(false);
+        deliveryDate.setFocusableInTouchMode(false);
+        deliveryDate.setCursorVisible(false);
 
-        donatorPickUpAddressTextView.setFocusable(false);
-        donatorPickUpAddressTextView.setFocusableInTouchMode(false);
-        donatorPickUpAddressTextView.setCursorVisible(false);
+        deliveryTime.setFocusable(false);
+        deliveryTime.setFocusableInTouchMode(false);
+        deliveryTime.setCursorVisible(false);
 
-        donatorFoodItemsTextView.setFocusable(false);
-        donatorFoodItemsTextView.setFocusableInTouchMode(false);
-        donatorFoodItemsTextView.setCursorVisible(false);
+        pickUpAddress.setFocusable(false);
+        pickUpAddress.setFocusableInTouchMode(false);
+        pickUpAddress.setCursorVisible(false);
 
-        donatorPickUpDateTextView.setFocusable(false);
-        donatorPickUpDateTextView.setFocusableInTouchMode(false);
-        donatorPickUpDateTextView.setCursorVisible(false);
+        foodItems.setFocusable(false);
+        foodItems.setFocusableInTouchMode(false);
+        foodItems.setCursorVisible(false);
 
-        donatorPickUpTimeTextView.setFocusable(false);
-        donatorPickUpTimeTextView.setFocusableInTouchMode(false);
-        donatorPickUpTimeTextView.setCursorVisible(false);
+        donationQuantity.setFocusable(false);
+        donationQuantity.setFocusableInTouchMode(false);
+        donationQuantity.setCursorVisible(false);
 
-        donatorTotalDonationTextView.setFocusable(false);
-        donatorTotalDonationTextView.setFocusableInTouchMode(false);
-        donatorTotalDonationTextView.setCursorVisible(false);
-
-        donatorDonationDateTextView.setFocusable(false);
-        donatorDonationDateTextView.setFocusableInTouchMode(false);
-        donatorDonationDateTextView.setCursorVisible(false);
-
-        donatorDonationStatusEditText.setFocusable(false);
-        donatorDonationStatusEditText.setFocusableInTouchMode(false);
-        donatorDonationStatusEditText.setCursorVisible(false);
+        donationStatus.setFocusable(false);
+        donationStatus.setFocusableInTouchMode(false);
+        donationStatus.setCursorVisible(false);
     }
 }

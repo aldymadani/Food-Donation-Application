@@ -210,9 +210,12 @@ public class DonatorRegisterActivity extends AppCompatActivity {
                             Log.d(TAG, user.getDisplayName());
                             allActionStatus(true);
                             Intent intent = new Intent(DonatorRegisterActivity.this, MainDonatorActivity.class);
-                            Toast.makeText(DonatorRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+                            intent.putExtra("name", fullNameId.getText().toString());
+                            intent.putExtra("phone", telephoneNumberId.getText().toString());
+                            intent.putExtra("totalDonation", 0);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
+                            Toast.makeText(DonatorRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

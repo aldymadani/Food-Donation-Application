@@ -89,7 +89,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Event Information:"
+            android:layout_marginEnd="16dp"
+            android:text="Event Information"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -116,8 +117,9 @@
                 android:id="@+id/eventDetailEventDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/event_title_icon"
-                android:drawablePadding="7dp"
+                android:paddingEnd="16dp"
+                android:drawableStart="@drawable/ic_description_black_24dp"
+                android:drawablePadding="@dimen/drawable_padding"
                 android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -138,8 +140,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/event_description_icon"
-                android:drawablePadding="7dp"
+                android:drawableStart="@drawable/ic_date_black_24dp"
+                android:drawablePadding="@dimen/drawable_padding"
                 android:ems="10"
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
@@ -166,7 +168,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
                 android:drawableStart="@drawable/time_icon"
-                android:drawablePadding="7dp"
+                android:drawablePadding="@dimen/drawable_padding"
                 android:ems="10"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -211,10 +213,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical|start"
                     app:civ_border_color="@android:color/black"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -250,8 +250,28 @@
                     app:layout_constraintStart_toEndOf="@+id/eventDetailSocialCommunityLogo"
                     tools:text="08114110111" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/eventDetailCallButton"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="Call Social Community"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/eventDetailSocialCommunityLogo" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/event_detail_donate_button"

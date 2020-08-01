@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -152,20 +153,16 @@ public class SocialCommunityProfileFragment extends Fragment {
             });
         }
 
-        db.collection("users").document(user.getUid()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            oldUserData.setDescription(documentSnapshot.getString("description"));
-                            oldUserData.setPhone(documentSnapshot.getString("phone")); // TODO try to pass from activity login
-                            oldUserData.setImageURI(documentSnapshot.getString("imageURI"));
-                            telephoneNumber.setText(oldUserData.getPhone());
-                            description.setText(oldUserData.getDescription());
-                            totalEventCreated.setText(String.valueOf(documentSnapshot.getLong("totalEventCreated")));
-                        }
-                    }
-                });
+        // Retrieving data from activity
+        FragmentActivity fragmentActivity = requireActivity();
+        oldUserData.setDescription(fragmentActivity.getIntent().getStringExtra("description"));
+        oldUserData.setPhone(fragmentActivity.getIntent().getStringExtra("phone"));
+        oldUserData.setImageURI(String.valueOf(user.getPhotoUrl()));
+
+        telephoneNumber.setText(oldUserData.getPhone());
+        description.setText(oldUserData.getDescription());
+        int totalEvent = fragmentActivity.getIntent().getIntExtra("totalEvent", 0);
+        totalEventCreated.setText(String.valueOf(totalEvent));
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -491,12 +488,7 @@ public class SocialCommunityProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
-            // TODO try this later
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), ImageURI);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+
 
             CropImage.activity(ImageURI)
                     .setGuidelines(CropImageView.Guidelines.ON)
@@ -507,10 +499,9 @@ public class SocialCommunityProfileFragment extends Fragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
-                // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
-                ImageDecoder.Source source = ImageDecoder.createSource(requireActivity().getContentResolver(), resultUri);
+
                 try {
-                    bitmap = ImageDecoder.decodeBitmap(source);
+                    bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), resultUri);
                     hasImageChanged = true;
                     mViewModel.setHasImageChanged(true);
                     socialCommunityPhoto.setImageBitmap(bitmap);
@@ -574,7 +565,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                         eventImageURI = uri.toString();
                         Log.d(TAG,eventImageURI);
                         newUserData.setImageURI(eventImageURI);
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder() // TODO add profile photo to authentication later on https://firebase.google.com/docs/auth/android/manage-users
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(Uri.parse(eventImageURI))
                                 .build();
                         user.updateProfile(profileUpdates)

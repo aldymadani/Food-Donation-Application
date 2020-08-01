@@ -74,44 +74,16 @@ public class DonationListFragment extends Fragment {
         donationListEmptyImage.setVisibility(View.INVISIBLE);
         donationListEmptyTextView.setVisibility(View.INVISIBLE);
 
-//        Intent intent = getIntent().;
-//        Event event = intent.getParcelableExtra("Event");
-//        String eventID = getArguments().getString("eventID");
-//        String totalDonation = getArguments().getString("totalDonation");
-
-//        Bundle bundle = this.getArguments();
-//        String eventID = bundle.getString("eventID");
-//        String totalDonation = bundle.getString("totalDonation");
-
-//        String eventID = getArguments().getString("eventID");
-//        String totalDonation = getArguments().getString("totalDonation");
-
-//        UpdateEventActivity updateEventActivity = (UpdateEventActivity) requireActivity();
-//        String eventID = updateEventActivity.getEventID();
-//        String totalDonation = updateEventActivity.getTotalDonation();
-
-//        FragmentActivity fragmentActivity = requireActivity();
-//        String eventID =  fragmentActivity.getIntent().getStringExtra("EventID");
-//        String totalDonation = fragmentActivity.getIntent().getStringExtra("totalDonation");
         eventID = "";
         totalDonation = "";
-//        Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
-//        if (eventData != null) {
-//            eventID = eventData.getEventID();
-//            totalDonation = String.valueOf(eventData.getTotalDonation());
-//        }
 
         FragmentActivity fragmentActivity = requireActivity();
         Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
         if (eventData != null) {
             eventID = eventData.getEventID();
-//            totalDonation = String.valueOf(eventData.getTotalDonation());
-        }
-
-//        titleTotalDonation.setText("People have donated " + totalDonation + " Kg of food");
-        if (eventID != null) {
             Log.d(TAG, eventID);
         }
+
         Query query = donatorRef.whereEqualTo("eventId", eventID);
         setUpRecyclerViewDonator(query);
 
@@ -168,13 +140,12 @@ public class DonationListFragment extends Fragment {
     }
 
     private void setUpRecyclerViewDonator(Query query) {
-//        Query query = donatorRef.whereEqualTo("eventId", eventID);
 
         FirestoreRecyclerOptions<Donation> options = new FirestoreRecyclerOptions.Builder<Donation>()
                 .setQuery(query, Donation.class)
                 .build();
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.donationListRecyclerView);
+        recyclerView = rootView.findViewById(R.id.donationListRecyclerView);
 
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
 

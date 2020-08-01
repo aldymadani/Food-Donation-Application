@@ -5,11 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.donator.history.DonationHistoryDetailActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/historyDetailTitle"
             style="@style/ShadowForText"
@@ -23,328 +21,372 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailEventNameLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/historyDetailEventDetailLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:hint="@string/event_name_placeholder"
-            app:helperTextEnabled="true"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/colorCardView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/historyDetailTitle">
 
-            <EditText
-                android:id="@+id/historyDetailEventName"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/event_title_icon"
-                android:drawablePadding="7dp"
-                android:enabled="false"
-                android:inputType="text"
-                android:textColor="#000000" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:paddingStart="24dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="16dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailSocialCommunityNameLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailEventNameLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailEventNameLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailEventNameLayout">
+                <ImageView
+                    android:id="@+id/historyDetailEventNameIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_below="@id/historyDetailEventNameTitle"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center_vertical|start"
+                    android:src="@drawable/ic_donate_black_24dp"
+                    android:tint="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="@+id/historyDetailEventNameText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/historyDetailEventNameTitle" />
 
-            <EditText
-                android:id="@+id/historyDetailSocialCommunityName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/social_community_name_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="@string/social_community_name_placeholder"
-                android:inputType="text"
-                android:enabled="false"
-                android:textColor="#000000"
-                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
-                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/historyDetailEventNameTitle"
+                    style="@style/eventInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Event Name"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/historyDetailEventNameIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailSocialCommunityTelephoneNumberLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailSocialCommunityNameLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityNameLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailSocialCommunityNameLayout">
+                <TextView
+                    android:id="@+id/historyDetailEventNameText"
+                    style="@style/eventInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-            <EditText
-                android:id="@+id/historyDetailSocialCommunityTelephoneNumber"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/social_community_name_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="Social Community Telephone Number"
-                android:inputType="phone"
-                android:enabled="false"
-                android:textColor="#000000"
-                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
-                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
-        </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginStart="12dp"
+                    app:layout_constraintStart_toEndOf="@+id/historyDetailEventNameIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/historyDetailEventNameTitle"
+                    tools:text="Berbagi Nasi ke Sesama" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailPickUpAddressLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailSocialCommunityTelephoneNumberLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityTelephoneNumberLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailSocialCommunityTelephoneNumberLayout">
+                <View
+                    android:id="@+id/historyDetailEventDetailLayoutLine"
+                    style="@style/line"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/colorWhite"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/historyDetailEventNameText" />
 
-            <EditText
-                android:id="@+id/historyDetailPickUpAddress"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/pick_up_address_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="@string/pick_up_address_placeholder"
-                android:inputType="text"
-                android:enabled="false"
-                android:textColor="#000000"
-                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
-                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <ImageView
+                    android:id="@+id/historyDetailOrganizedByIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_below="@id/historyDetailEventNameTitle"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center_vertical|start"
+                    android:src="@drawable/ic_group_black_24dp"
+                    android:tint="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="@+id/historyDetailOrganizedByText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/historyDetailOrganizedByTitle" />
 
-<!--        <com.google.android.material.textfield.TextInputLayout-->
-<!--            android:id="@+id/historyDetailPickUpAddressLayout"-->
-<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:focusable="false"-->
-<!--            android:focusableInTouchMode="false"-->
-<!--            android:hint="@string/pick_up_address_placeholder"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/historyDetailSocialCommunityNameLayout"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/historyDetailSocialCommunityNameLayout"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/historyDetailSocialCommunityNameLayout">-->
+                <TextView
+                    android:id="@+id/historyDetailOrganizedByTitle"
+                    style="@style/eventInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Organized by"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/historyDetailOrganizedByIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/historyDetailEventDetailLayoutLine" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/historyDetailPickUpAddress"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginTop="24dp"-->
-<!--                android:drawableStart="@drawable/pick_up_address_icon"-->
-<!--                android:drawablePadding="7dp"-->
-<!--                android:ems="10"-->
-<!--                android:enabled="false"-->
-<!--                android:inputType="textPostalAddress"-->
-<!--                android:textColor="#000000" />-->
-<!--        </com.google.android.material.textfield.TextInputLayout>-->
+                <TextView
+                    android:id="@+id/historyDetailOrganizedByText"
+                    style="@style/eventInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailFoodItemsLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:hint="@string/food_items_placeholder"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailPickUpAddressLayout"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailPickUpAddressLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailPickUpAddressLayout">
+                    android:layout_marginStart="12dp"
+                    app:layout_constraintStart_toEndOf="@+id/historyDetailOrganizedByIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/historyDetailOrganizedByTitle"
+                    tools:text="Berbagi Nasi Mks" />
 
-            <EditText
-                android:id="@+id/historyDetailFoodItems"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/food_items_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:enabled="false"
-                android:inputType="text"
-                android:textColor="#000000" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailDateLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/pick_up_date_placeholder"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailFoodItemsLayout"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailFoodItemsLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailFoodItemsLayout">
-
-            <EditText
-                android:id="@+id/historyDetailDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/pick_up_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="date"
-                android:enabled="false"
-                android:textColor="#000000" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailTimeLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/time_placeholder"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailDateLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailDateLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailDateLayout">
-
-            <EditText
-                android:id="@+id/historyDetailTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/time_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="numberDecimal"
-                android:enabled="false"
-                android:textColor="#000000" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailTotalDonationLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/donate_quantity_placeholder"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailTimeLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailTimeLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailTimeLayout">
-
-            <EditText
-                android:id="@+id/historyDetailTotalDonation"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/quantity_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="numberDecimal"
-                android:enabled="false"
-                android:textColor="#000000"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historyDetailDonationDateLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/donation_date_placeholder"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailTotalDonationLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailTotalDonationLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailTotalDonationLayout">
-
-            <EditText
-                android:id="@+id/historyDetailDonationDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/pick_up_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:enabled="false"
-                android:inputType="date"
-                android:textColor="#000000" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <ImageView
-            android:id="@+id/historyDetailFoodPhoto"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/insert_image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailDonationDateLayout"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailDonationDateLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donate_insert_image_text" />
-
-        <ProgressBar
-            android:id="@+id/historyDetailFoodImageProgressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintEnd_toEndOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintTop_toTopOf="@+id/historyDetailFoodPhoto"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/donate_insert_image_text"
-            style="@style/ShadowForText"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/eventDetailCallButton"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Call Social Community"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorCardView"
+                    app:backgroundTint="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/historyDetailEventDetailLayoutLine"
+                    app:layout_constraintStart_toStartOf="@+id/historyDetailOrganizedByIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/historyDetailOrganizedByText" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/donationHistoryDetailFoodPhotoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/food_image_text"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/historyDetailDonationDateLayout"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailDonationDateLayout" />
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/historyDetailEventDetailLayout">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/donationDetailFoodPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="9:16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <ProgressBar
+                    android:id="@+id/donationDetailFoodPhotoProgressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintTop_toTopOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintVertical_bias="0.0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/historyDetailDonationDetailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/donationHistoryDetailFoodPhotoLayout">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/donationDetailDonationDetailTitle"
+                    style="@style/ShadowForText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="Donation Information"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailDonationDateLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/donation_date_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDonationDetailTitle"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDonationDetailTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDonationDetailTitle">
+
+                    <EditText
+                        android:id="@+id/historyDetailDonationDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/pick_up_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="date"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailDeliveryDateLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/pick_up_date_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDonationDateLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDonationDateLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDonationDateLayout">
+
+                    <EditText
+                        android:id="@+id/historyDetailDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/ic_delivery"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="date"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailDeliveryTimeLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/pick_up_time_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDeliveryDateLayout"
+                    app:layout_constraintHorizontal_bias="0.452"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDeliveryDateLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDeliveryDateLayout">
+
+                    <EditText
+                        android:id="@+id/historyDetailTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/time_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="numberDecimal"
+                        android:textColor="#000000" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailPickUpAddressLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDeliveryTimeLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDeliveryTimeLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDeliveryTimeLayout">
+
+                    <EditText
+                        android:id="@+id/historyDetailPickUpAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="152dp"
+                        android:drawableStart="@drawable/pick_up_address_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:hint="@string/pick_up_address_placeholder"
+                        android:inputType="text"
+                        android:textColor="#000000"
+                        app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="@+id/register_email_layout"
+                        app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailFoodItemsLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/food_items_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailPickUpAddressLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailPickUpAddressLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailPickUpAddressLayout">
+
+                    <EditText
+                        android:id="@+id/historyDetailFoodItems"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/food_items_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="text"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailTotalDonationLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/donate_quantity_placeholder"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailFoodItemsLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailFoodItemsLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailFoodItemsLayout">
+
+                    <EditText
+                        android:id="@+id/historyDetailTotalDonation"
+                        android:layout_width="match_parent"
+                        android:layout_height="62dp"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/quantity_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="numberDecimal"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>

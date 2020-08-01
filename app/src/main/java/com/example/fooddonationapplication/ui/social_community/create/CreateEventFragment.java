@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.ui.general.SocialCommunityRegisterActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.viewmodel.CreateEventViewModel;
@@ -147,7 +149,7 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
                 } else {
                     Intent galleryIntent = new Intent();
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -171,7 +173,7 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                eventEndDate.setText(chosenDate);
+                eventEndDate.setText(Util.convertToFullDate(chosenDate));
                 chosenDate += " 23:59:59";
                 try {
                     chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
@@ -220,7 +222,7 @@ public class CreateEventFragment extends Fragment {
 
             CropImage.activity(ImageURI)
                     .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(16,9)
+                    .setAspectRatio(16, 9)
                     .start(getContext(), this);
         }
 
@@ -228,15 +230,14 @@ public class CreateEventFragment extends Fragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
-                // TODO: https://www.google.com/search?hl=en&q=createSource%20api%2028%20problem
-                ImageDecoder.Source source = ImageDecoder.createSource(requireActivity().getContentResolver(), resultUri);
                 try {
-                    bitmap = ImageDecoder.decodeBitmap(source);
+                    bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), resultUri);
                     hasImage = true;
                     Log.d(TAG, String.valueOf(bitmap));
                     eventPhoto.setImageBitmap(bitmap);
                     mViewModel.setImageBitmap(bitmap);
                 } catch (IOException e) {
+                    Log.e("UpdateEventFragment", e.getLocalizedMessage());
                     e.printStackTrace();
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -250,10 +251,7 @@ public class CreateEventFragment extends Fragment {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.v(TAG, date);
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(eventId + ".jpeg"); // TODO gunakan event ID biar bisa di ganti nanti
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(eventId + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -277,7 +275,7 @@ public class CreateEventFragment extends Fragment {
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
                         eventImageURI = uri.toString();
-                        Log.d(TAG,eventImageURI);
+                        Log.d(TAG, eventImageURI);
                         InitializeEvent();
                     }
                 });
@@ -325,7 +323,6 @@ public class CreateEventFragment extends Fragment {
 
     private void InitializeEvent() {
         final String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String socialCommunityName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         Log.d(TAG, eventId);
 
@@ -336,49 +333,38 @@ public class CreateEventFragment extends Fragment {
         event.setTitleForSearch(eventNameData.toLowerCase());
         event.setDescription(eventDescriptionData);
         event.setSocialCommunityID(socialCommunityID);
-//        event.setSocialCommunityName(socialCommunityName);
         event.setEndDate(endDateData);
         event.setEndDateInMillis(chosenDateInMillis);
         event.setTargetQuantity(Double.parseDouble(targetQuantityData));
         event.setTotalDonation(0);
 
         db.collection("users").document(socialCommunityID)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .update("totalEventCreated", FieldValue.increment(1))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-//                            event.setSocialCommunityTelephoneNumber(documentSnapshot.getString("phone"));
-                            db.collection("users").document(socialCommunityID)
-                                    .update("totalEventCreated", FieldValue.increment(1))
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    db.collection("events").document(eventId)
-                                            .set(event)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(getContext(), "Event is successfully created", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(getContext(), MainSocialCommunityActivity.class);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                    startActivity(intent);
-                                                    Log.d(TAG, "Event successfully written!");
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    createEventConfirmation.setVisibility(View.VISIBLE);
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.e(TAG, "Error writing document", e);
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    createEventConfirmation.setVisibility(View.VISIBLE);
-                                                }
-                                            });
-                                }
-                            });
-                        }
+                    public void onSuccess(Void aVoid) {
+                        db.collection("events").document(eventId)
+                                .set(event)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getContext(), "Event is successfully created", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getContext(), MainSocialCommunityActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        Log.d(TAG, "Event successfully written!");
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        createEventConfirmation.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e(TAG, "Error writing document", e);
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        createEventConfirmation.setVisibility(View.VISIBLE);
+                                    }
+                                });
                     }
                 });
     }

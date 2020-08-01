@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,34 +57,29 @@ public class DonationHistoryListFragment extends Fragment {
         emptyDonationImage.setVisibility(View.INVISIBLE);
         totalDonationTextView.setVisibility(View.INVISIBLE);
         emptyDonationTextView.setVisibility(View.INVISIBLE);
+
         setUpRecyclerViewDonationHistory();
 
-        db.collection("users").document(user.getUid()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            String formattedTotalDonation;
-                            DecimalFormat df = new DecimalFormat("#.###");
-                            if (documentSnapshot.getDouble("totalDonation") > 0) {
-                                formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
-                                totalDonationTextView.setText("You have donated " + formattedTotalDonation + " kg of food");
-                                recyclerView.setVisibility(View.VISIBLE);
-                                totalDonationTextView.setVisibility(View.VISIBLE);
-                            } else {
-                                emptyDonationTextView.setVisibility(View.VISIBLE);
-                                emptyDonationImage.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-                });
+        // Retrieving data from activity
+        FragmentActivity fragmentActivity = requireActivity();
+        int totalDonation = fragmentActivity.getIntent().getIntExtra("totalDonation", 0);
+        if (totalDonation > 0) {
+            DecimalFormat df = new DecimalFormat("#.###");
+            String formattedTotalDonation = df.format(totalDonation);
+            totalDonationTextView.setText("You have donated " + formattedTotalDonation + " kg of food");
+            recyclerView.setVisibility(View.VISIBLE);
+            totalDonationTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyDonationTextView.setVisibility(View.VISIBLE);
+            emptyDonationImage.setVisibility(View.VISIBLE);
+        }
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        donationHistoryAdapter.startListening();;
+        donationHistoryAdapter.startListening();
     }
 
     @Override

@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,13 +31,17 @@ public class IntroductionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Make full screen
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introduction);
         slideViewPager = findViewById(R.id.introductionViewPager);
         backButton = findViewById(R.id.slideBackButton);
         nextButton = findViewById(R.id.slideNextButton);
         dotsLayout = findViewById(R.id.slideDots);
-        final String registerAs = getIntent().getStringExtra("registerAs");
 
         sliderAdapter = new SliderAdapter(this);
         slideViewPager.setAdapter(sliderAdapter);
@@ -47,14 +54,9 @@ public class IntroductionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (slideViewPager.getCurrentItem() == 2) {
-                    if (registerAs.equalsIgnoreCase("donator")) {
-                        Intent i = new Intent(IntroductionActivity.this, DonatorRegisterActivity.class);
-                        startActivity(i);
-                    } else {
-                        Intent i = new Intent(IntroductionActivity.this, SocialCommunityRegisterActivity.class);
-                        startActivity(i);
-                    }
-                    Toast.makeText(IntroductionActivity.this, "GO TO REGISTER " + registerAs + " ACTIVITY", Toast.LENGTH_SHORT).show();
+                    savePrefsData();
+                    Intent intent = new Intent(IntroductionActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
                 slideViewPager.setCurrentItem(currentPage + 1);
             }
@@ -66,6 +68,13 @@ public class IntroductionActivity extends AppCompatActivity {
                 slideViewPager.setCurrentItem(currentPage - 1);
             }
         });
+    }
+
+    private void savePrefsData() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("myPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("isIntroOpened", true);
+        editor.commit();
     }
 
     public void addDotsIndicator(int position) {

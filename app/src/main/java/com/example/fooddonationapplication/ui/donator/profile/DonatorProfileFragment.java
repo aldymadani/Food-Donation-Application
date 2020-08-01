@@ -84,16 +84,15 @@ public class DonatorProfileFragment extends Fragment {
 
         hasChanged = false;
 
-        db.collection("users").document(user.getUid()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            oldUserData.setPhone(documentSnapshot.getString("phone"));
-                            telephoneNumberEditText.setText(oldUserData.getPhone()); // TODO later pass from login to reduce read
-                        }
-                    }
-                });
+        // Retrieving data from activity
+        FragmentActivity fragmentActivity = requireActivity();
+        oldUserData.setPhone(fragmentActivity.getIntent().getStringExtra("phone"));
+        telephoneNumberEditText.setText(oldUserData.getPhone());
+        if (user == null) {
+            Toast.makeText(getContext(), "NULL DATA", Toast.LENGTH_SHORT).show();
+            // TODO: Alert when data is null
+            fragmentActivity.finish();
+        }
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,7 +161,7 @@ public class DonatorProfileFragment extends Fragment {
                             }
                         });
             } else {
-                getDonatorDocumentList();
+                updateUserDatabase();
             }
         }
     }
@@ -178,13 +177,13 @@ public class DonatorProfileFragment extends Fragment {
                                 list.add(document.getId());
                             }
                             Log.d(TAG, list.toString());
-                            updateDatabase((ArrayList) list);
+                            updateDonatorDatabase((ArrayList) list);
                         }
                     }
                 });
     }
 
-    private void updateDatabase(ArrayList list) {
+    private void updateDonatorDatabase(ArrayList list) {
         WriteBatch batch = db.batch();
         for (int i = 0; i < list.size(); i++) {
             DocumentReference donatorReference = db.collection("donators").document((String) list.get(i));
@@ -192,6 +191,20 @@ public class DonatorProfileFragment extends Fragment {
             batch.update(donatorReference, "phone", newUserData.getPhone());
         }
 
+        DocumentReference userReference = db.collection("users").document(user.getUid());
+        batch.update(userReference, "name", newUserData.getName());
+        batch.update(userReference, "phone", newUserData.getPhone());
+
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                updateUserDatabase();
+            }
+        });
+    }
+
+    private void updateUserDatabase() {
+        WriteBatch batch = db.batch();
         DocumentReference userReference = db.collection("users").document(user.getUid());
         batch.update(userReference, "name", newUserData.getName());
         batch.update(userReference, "phone", newUserData.getPhone());

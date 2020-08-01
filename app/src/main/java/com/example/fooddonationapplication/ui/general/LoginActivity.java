@@ -56,8 +56,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         isReauth = getIntent().getBooleanExtra(IntentNameExtra.IS_REAUTH, false);
         userEmail = getIntent().getStringExtra(IntentNameExtra.USER_EMAIL);
 
-        // TODO implement double click back to exit application (currently only single click)
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailField = findViewById(R.id.login_email);
         passwordField = findViewById(R.id.login_password);
@@ -123,8 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 donatorButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(LoginActivity.this, IntroductionActivity.class);
-                        i.putExtra("registerAs", "donator");
+                        Intent i = new Intent(LoginActivity.this, DonatorRegisterActivity.class);
                         startActivity(i);
                         dialog.dismiss();
                     }
@@ -132,8 +129,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 socialCommunityButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(LoginActivity.this, IntroductionActivity.class);
-                        i.putExtra("registerAs", "social community");
+                        Intent i = new Intent(LoginActivity.this, SocialCommunityRegisterActivity.class);
                         startActivity(i);
                         dialog.dismiss();
                     }
@@ -142,11 +138,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.loginSubmitButton:
                 btnRegister.setEnabled(false);
                 Util.hideKeyboard(LoginActivity.this);
+                emailField.clearFocus();
+                passwordField.clearFocus();
                 String email = emailField.getText().toString();
-                String password = passwordField.getText().toString(); // TODO needs trim?
+                String password = passwordField.getText().toString();
                 if (inputValidation(email, password)) {
-                    passwordField.clearFocus();
-                    emailField.clearFocus();
                     authenticateUser(email, password);
                 }
                 break;
@@ -258,6 +254,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         if (document.getData().containsValue("donator")) {
                             Intent intent = new Intent(LoginActivity.this, MainDonatorActivity.class);
+                            intent.putExtra("phone", document.getString("phone"));
+                            intent.putExtra("totalDonation", document.getDouble("totalDonation").intValue());
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             btnSubmit.setVisibility(View.VISIBLE);
@@ -265,6 +263,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             btnRegister.setEnabled(true);
                         } else {
                             Intent intent = new Intent(LoginActivity.this, MainSocialCommunityActivity.class);
+                            intent.putExtra("phone", document.getString("phone"));
+                            intent.putExtra("description", document.getString("description"));
+                            intent.putExtra("totalEvent", document.getDouble("totalEventCreated").intValue());
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             btnSubmit.setVisibility(View.VISIBLE);

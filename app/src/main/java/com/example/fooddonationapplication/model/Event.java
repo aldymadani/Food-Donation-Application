@@ -10,7 +10,6 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 public class Event implements Parcelable {
-    // TODO add Social Community Description
     private String imageURI, eventID, title, description, socialCommunityID, endDate, titleForSearch;
     private double targetQuantity, totalDonation;
     private long endDateInMillis;
@@ -124,7 +123,6 @@ public class Event implements Parcelable {
     }
 
     public boolean isSame(Event event) {
-        // TODO: Compare function
         boolean isSame = true;
         if (!description.equalsIgnoreCase(event.getDescription())) {
             isSame=  false;

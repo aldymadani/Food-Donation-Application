@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -69,11 +70,9 @@ public class CreateDonationActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private String pickUpAddressData;
     private String foodItemsData;
-    private String pickUpData;
     private String timeData;
     private String totalDonationData;
     private String chosenDate;
-    private Long chosenDateInMillis;
     private boolean hasImage;
     private String foodImageURI;
     private String userID;
@@ -128,13 +127,7 @@ public class CreateDonationActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                    etDate.setText(chosenDate);
-                    chosenDate += " 23:59:59";
-                    try {
-                        chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    etDate.setText(Util.convertToFullDate(chosenDate));
                     /*
                     Log.d(TAG, "Chosen Date" + chosenDate);
                     Log.d(TAG, String.valueOf(chosenDateInMillis));
@@ -213,7 +206,6 @@ public class CreateDonationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 pickUpAddressData = etAddress.getText().toString();
                 foodItemsData = etFoodItems.getText().toString();
-                pickUpData = etDate.getText().toString();
                 timeData = etTime.getText().toString();
                 totalDonationData = etQuantity.getText().toString();
                 checkingAllFields();
@@ -232,9 +224,11 @@ public class CreateDonationActivity extends AppCompatActivity {
             textInputFoodItems.setErrorEnabled(false);
         }
 
-        if (pickUpData.isEmpty()) {
+        boolean pickupDateValidation = false;
+        if (etDate.getText().toString().isEmpty()) {
             textInputDate.setError("Please chose the pick up / delivery date");
         } else {
+            pickupDateValidation = true;
             textInputDate.setErrorEnabled(false);
         }
 
@@ -258,9 +252,9 @@ public class CreateDonationActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please insert the food image", Toast.LENGTH_SHORT).show();
         }
 
-        if (foodItemsData.isEmpty() && pickUpData.isEmpty() && timeData.isEmpty() && totalDonationData.isEmpty() && !hasImage && !validQuantity) {
+        if (foodItemsData.isEmpty() && !pickupDateValidation && timeData.isEmpty() && totalDonationData.isEmpty() && !hasImage && !validQuantity) {
             Toast.makeText(getApplicationContext(), "Please complete in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!foodItemsData.isEmpty() && !pickUpData.isEmpty() && !timeData.isEmpty() && !totalDonationData.isEmpty() && hasImage && validQuantity) {
+        } else if (!foodItemsData.isEmpty() && pickupDateValidation && !timeData.isEmpty() && !totalDonationData.isEmpty() && hasImage && validQuantity) {
             progressBar.setVisibility(View.VISIBLE);
             btnConfirm.setVisibility(View.INVISIBLE);
             handleUpload(bitmap);
@@ -272,7 +266,7 @@ public class CreateDonationActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == TAKE_IMAGE_CODE) { // TODO add request permission later on
+        if (requestCode == TAKE_IMAGE_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
@@ -354,7 +348,7 @@ public class CreateDonationActivity extends AppCompatActivity {
         donation.setName(donatorName);
         donation.setPickUpAddress(pickUpAddressData);
         donation.setFoodItems(foodItemsData);
-        donation.setPickUpDate(pickUpData);
+        donation.setPickUpDate(chosenDate);
         donation.setPickUpTime(timeData);
         donation.setDonationDate(currentDate);
         donation.setImageURI(foodImageURI);

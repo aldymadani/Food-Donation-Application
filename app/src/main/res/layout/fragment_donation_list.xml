@@ -72,7 +72,7 @@
             android:id="@+id/donationListEmptyImage"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:src="@drawable/event_empty"
+            android:src="@drawable/event_empty_edited"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

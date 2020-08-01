@@ -127,7 +127,6 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                        eventProgressBar.setVisibility(View.GONE); // TODO add the loading with progressbar if have enough time
                             return false;
                         }
                     }).error(R.drawable.ic_error_black_24dp).into(eventImage);

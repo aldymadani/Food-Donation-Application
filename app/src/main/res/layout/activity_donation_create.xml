@@ -25,53 +25,25 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donate_food_item_layout"
+            android:id="@+id/donate_date_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/pick_up_date_placeholder"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_title">
-
-            <EditText
-                android:id="@+id/donate_food_item"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/food_items_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="@string/food_items_placeholder"
-                android:inputType="text"
-                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
-                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donate_date_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/pick_up_date_placeholder"
-            app:layout_constraintEnd_toEndOf="@+id/donate_food_item_layout"
-            app:layout_constraintStart_toStartOf="@+id/donate_food_item_layout"
-            app:layout_constraintTop_toBottomOf="@+id/donate_food_item_layout">
 
             <EditText
                 android:id="@+id/donate_date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/pick_up_icon"
-                android:drawablePadding="7dp"
+                android:drawableStart="@drawable/ic_delivery"
+                android:drawablePadding="@dimen/drawable_padding"
                 android:ems="10"
                 android:inputType="date" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -82,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="@string/time_placeholder"
+            android:hint="@string/pick_up_time_placeholder"
             app:layout_constraintEnd_toEndOf="@+id/donate_date_layout"
             app:layout_constraintStart_toStartOf="@+id/donate_date_layout"
             app:layout_constraintTop_toBottomOf="@+id/donate_date_layout">
@@ -93,9 +65,36 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
                 android:drawableStart="@drawable/time_icon"
-                android:drawablePadding="7dp"
+                android:drawablePadding="@dimen/drawable_padding"
                 android:ems="10"
                 android:inputType="date" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/donate_food_item_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/donate_time_layout"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/donate_time_layout"
+            app:layout_constraintTop_toBottomOf="@+id/donate_time_layout">
+
+            <EditText
+                android:id="@+id/donate_food_item"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="152dp"
+                android:drawableStart="@drawable/food_items_icon"
+                android:drawablePadding="@dimen/drawable_padding"
+                android:ems="10"
+                android:hint="@string/food_items_placeholder"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
+                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -105,10 +104,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/donate_quantity_placeholder"
-            app:layout_constraintEnd_toEndOf="@+id/donate_time_layout"
+            app:layout_constraintEnd_toEndOf="@+id/donate_food_item_layout"
             app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/donate_time_layout"
-            app:layout_constraintTop_toBottomOf="@+id/donate_time_layout">
+            app:layout_constraintStart_toStartOf="@+id/donate_food_item_layout"
+            app:layout_constraintTop_toBottomOf="@+id/donate_food_item_layout">
 
             <EditText
                 android:id="@+id/donate_quantity"
@@ -116,7 +115,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
                 android:drawableStart="@drawable/quantity_icon"
-                android:drawablePadding="7dp"
+                android:drawablePadding="@dimen/drawable_padding"
                 android:ems="10"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -126,7 +125,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:helperText="*Optional"
             app:layout_constraintEnd_toEndOf="@+id/donate_quantity_layout"
             app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="@+id/donate_quantity_layout"
@@ -140,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/pick_up_address_icon"
-                android:drawablePadding="7dp"
+                android:drawablePadding="@dimen/drawable_padding"
                 android:inputType="textPostalAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 

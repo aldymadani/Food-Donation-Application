@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/donatorDetailTitle"
+            android:id="@+id/donationDetailTitle"
             style="@style/ShadowForText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -23,279 +23,371 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailNameLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/donationDetailDonatorLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:hint="@string/donator_name_placeholder"
-            app:helperTextEnabled="true"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/colorCardView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailTitle">
-
-            <EditText
-                android:id="@+id/donatorDetailName"
+            app:layout_constraintTop_toBottomOf="@+id/donationDetailTitle">
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="7dp"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:paddingStart="24dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="16dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailPhoneNumberLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailNameLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailNameLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailNameLayout">
+                <ImageView
+                    android:id="@+id/donationDetailDonatorIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_below="@id/donationDetailDonatorTitle"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center_vertical|start"
+                    android:src="@drawable/ic_person_black_24dp"
+                    android:tint="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="@+id/donationDetailDonatorByText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/donationDetailDonatorTitle" />
 
-            <EditText
-                android:id="@+id/donatorDetailPhoneNumber"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="152dp"
-                android:drawableStart="@drawable/ic_phone_black_24dp"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:hint="@string/donator_phone_number_placeholder"
-                android:inputType="phone"
-                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
-                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/donationDetailDonatorTitle"
+                    style="@style/eventInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Donator Name"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/donationDetailDonatorIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailPickUpAddressLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/pick_up_address_placeholder"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailPhoneNumberLayout"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailPhoneNumberLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailPhoneNumberLayout">
+                <TextView
+                    android:id="@+id/donationDetailDonatorByText"
+                    style="@style/eventInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-            <EditText
-                android:id="@+id/donatorDetailPickUpAddress"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/pick_up_address_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="date" />
-        </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginStart="12dp"
+                    app:layout_constraintStart_toEndOf="@+id/donationDetailDonatorIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDonatorTitle"
+                    tools:text="Aldy Madani" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailFoodItemsLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/food_items_placeholder"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailPickUpAddressLayout"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailPickUpAddressLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailPickUpAddressLayout">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/donationDetailCallDonatorButton"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Call Donator"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:textColor="@color/colorCardView"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDonatorByText" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
-            <EditText
-                android:id="@+id/donatorDetailFoodItems"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/food_items_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="date" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailDateLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/pick_up_date_placeholder"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailFoodItemsLayout"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailFoodItemsLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodItemsLayout">
-
-            <EditText
-                android:id="@+id/donatorDetailDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/pick_up_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="date" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailTimeLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/time_placeholder"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailDateLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailDateLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailDateLayout">
-
-            <EditText
-                android:id="@+id/donatorDetailTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/time_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailTotalDonationLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/donate_quantity_placeholder"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailTimeLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailTimeLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailTimeLayout">
-
-            <EditText
-                android:id="@+id/donatorDetailTotalDonation"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/quantity_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailDonationDateLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/donation_date_placeholder"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailTotalDonationLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailTotalDonationLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailTotalDonationLayout">
-
-            <EditText
-                android:id="@+id/donatorDetailDonationDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/pick_up_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="date" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/donatorDetailDonationStatusLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Donation Status"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailDonationDateLayout"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailDonationDateLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailDonationDateLayout">
-
-            <EditText
-                android:id="@+id/donatorDetailDonationStatus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:drawableStart="@drawable/pick_up_icon"
-                android:drawablePadding="7dp"
-                android:ems="10"
-                android:inputType="date" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <ImageView
-            android:id="@+id/donatorDetailFoodImage"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/insert_image"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailDonationStatusLayout"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailDonationStatusLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodImageText" />
-
-        <TextView
-            android:id="@+id/donatorDetailFoodImageText"
-            style="@style/ShadowForText"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/donationHistoryDetailFoodPhotoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/food_image_text"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailDonationStatusLayout"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailDonationStatusLayout" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/donationDetailDonatorLayout">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/donationDetailFoodPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="9:16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <ProgressBar
+                    android:id="@+id/donationDetailFoodPhotoProgressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintTop_toTopOf="@+id/donationDetailFoodPhoto"
+                    app:layout_constraintVertical_bias="0.0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/historyDetailDonationDetailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/donationHistoryDetailFoodPhotoLayout">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/donationDetailDonationDetailTitle"
+                    style="@style/ShadowForText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="Donation Information"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailDonationDateLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/donation_date_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDonationDetailTitle"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDonationDetailTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDonationDetailTitle">
+
+                    <EditText
+                        android:id="@+id/donationDetailDonationDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/pick_up_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="date"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailDeliveryDateLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/pick_up_date_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDonationDateLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDonationDateLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDonationDateLayout">
+
+                    <EditText
+                        android:id="@+id/donationDetailDeliveryDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/ic_delivery"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="date"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailDeliveryTimeLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/pick_up_time_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDeliveryDateLayout"
+                    app:layout_constraintHorizontal_bias="0.452"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDeliveryDateLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDeliveryDateLayout">
+
+                    <EditText
+                        android:id="@+id/donationDetailDeliveryTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/time_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="numberDecimal"
+                        android:textColor="#000000" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailPickUpAddressLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailDeliveryTimeLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailDeliveryTimeLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailDeliveryTimeLayout">
+
+                    <EditText
+                        android:id="@+id/donationDetailPickUpAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="152dp"
+                        android:drawableStart="@drawable/pick_up_address_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:hint="@string/pick_up_address_placeholder"
+                        android:inputType="text"
+                        android:textColor="#000000"
+                        app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="@+id/register_email_layout"
+                        app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailFoodItemsLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/food_items_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailPickUpAddressLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailPickUpAddressLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailPickUpAddressLayout">
+
+                    <EditText
+                        android:id="@+id/donationDetailFoodItems"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/food_items_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="text"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailTotalDonationLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/donate_quantity_placeholder"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailFoodItemsLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailFoodItemsLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailFoodItemsLayout">
+
+                    <EditText
+                        android:id="@+id/donationDetailTotalDonation"
+                        android:layout_width="match_parent"
+                        android:layout_height="62dp"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/quantity_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="numberDecimal"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/donationDetailDonationStatusLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Donation Status"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/donationDetailTotalDonationLayout"
+                    app:layout_constraintStart_toStartOf="@+id/donationDetailTotalDonationLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/donationDetailTotalDonationLayout">
+
+                    <EditText
+                        android:id="@+id/donationDetailDonationStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="62dp"
+                        android:layout_marginTop="24dp"
+                        android:drawableStart="@drawable/quantity_icon"
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="numberDecimal"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/donatorDetailUpdateStatusButton"
+            android:id="@+id/donationDetailUpdateStatusButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="24dp"
             android:text="Mark as Complete"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="12sp"
-            app:backgroundTint="@color/colorPrimary"
+            app:backgroundTint="@color/colorAffirmative"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/donatorDetailButton"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodImage"
+            app:layout_constraintStart_toEndOf="@+id/donationDetailDeleteDonationButton"
+            app:layout_constraintTop_toBottomOf="@+id/historyDetailDonationDetailLayout"
             app:layout_constraintVertical_bias="0.0" />
 
         <ProgressBar
@@ -303,30 +395,31 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/donatorDetailUpdateStatusButton"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailUpdateStatusButton"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailUpdateStatusButton"
-            app:layout_constraintTop_toTopOf="@+id/donatorDetailUpdateStatusButton" />
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/donationDetailUpdateStatusButton"
+            app:layout_constraintEnd_toEndOf="@+id/donationDetailUpdateStatusButton"
+            app:layout_constraintStart_toStartOf="@+id/donationDetailUpdateStatusButton"
+            app:layout_constraintTop_toTopOf="@+id/donationDetailUpdateStatusButton" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/donatorDetailButton"
+            android:id="@+id/donationDetailDeleteDonationButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/delete_donation_button"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="12sp"
             app:backgroundTint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/donatorDetailUpdateStatusButton"
+            app:layout_constraintEnd_toStartOf="@+id/donationDetailUpdateStatusButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodImage"
+            app:layout_constraintTop_toBottomOf="@+id/historyDetailDonationDetailLayout"
             app:layout_constraintVertical_bias="0.0"
             app:layout_goneMarginEnd="32dp" />
 
@@ -335,23 +428,365 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/donatorDetailButton"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailButton"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailButton"
-            app:layout_constraintTop_toTopOf="@+id/donatorDetailButton" />
-
-        <ProgressBar
-            android:id="@+id/donatorDetailImageProgressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/donatorDetailFoodImage"
-            app:layout_constraintEnd_toEndOf="@+id/donatorDetailFoodImage"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/donatorDetailFoodImage"
-            app:layout_constraintTop_toTopOf="@+id/donatorDetailFoodImage"
-            app:layout_constraintVertical_bias="0.0" />
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/donationDetailDeleteDonationButton"
+            app:layout_constraintEnd_toEndOf="@+id/donationDetailDeleteDonationButton"
+            app:layout_constraintStart_toStartOf="@+id/donationDetailDeleteDonationButton"
+            app:layout_constraintTop_toTopOf="@+id/donationDetailDeleteDonationButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingStart="24dp"-->
+<!--        android:paddingTop="12dp"-->
+<!--        android:paddingEnd="24dp"-->
+<!--        android:paddingBottom="16dp">-->
+<!--        -->
+
+<!--        <TextView-->
+<!--            android:id="@+id/donatorDetailTitle"-->
+<!--            style="@style/ShadowForText"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:fontFamily="sans-serif"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/donation_details_title"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailNameLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="32dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginEnd="32dp"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            android:hint="@string/donator_name_placeholder"-->
+<!--            app:helperTextEnabled="true"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.452"-->
+<!--            app:layout_constraintStart_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailTitle">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailName"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:drawableStart="@drawable/ic_person_outline_black_24dp"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:inputType="text" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailPhoneNumberLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailNameLayout"-->
+<!--            app:layout_constraintHorizontal_bias="0.452"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailNameLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailNameLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailPhoneNumber"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="152dp"-->
+<!--                android:drawableStart="@drawable/ic_phone_black_24dp"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:hint="@string/donator_phone_number_placeholder"-->
+<!--                android:inputType="phone"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"-->
+<!--                app:layout_constraintHorizontal_bias="1.0"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/register_email_layout"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailPickUpAddressLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:hint="@string/pick_up_address_placeholder"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailPhoneNumberLayout"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailPhoneNumberLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailPhoneNumberLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailPickUpAddress"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/pick_up_address_icon"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:inputType="date" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailFoodItemsLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:hint="@string/food_items_placeholder"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailPickUpAddressLayout"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailPickUpAddressLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailPickUpAddressLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailFoodItems"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/food_items_icon"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:inputType="date" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailDateLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:hint="@string/pick_up_date_placeholder"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailFoodItemsLayout"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailFoodItemsLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodItemsLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailDate"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/pick_up_icon"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:inputType="date" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailTimeLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:hint="@string/time_placeholder"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailDateLayout"-->
+<!--            app:layout_constraintHorizontal_bias="0.452"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailDateLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailDateLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailTime"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/time_icon"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:inputType="numberDecimal" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailTotalDonationLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:hint="@string/donate_quantity_placeholder"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailTimeLayout"-->
+<!--            app:layout_constraintHorizontal_bias="0.452"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailTimeLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailTimeLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailTotalDonation"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/quantity_icon"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:inputType="numberDecimal" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailDonationDateLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:hint="@string/donation_date_placeholder"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailTotalDonationLayout"-->
+<!--            app:layout_constraintHorizontal_bias="0.452"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailTotalDonationLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailTotalDonationLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailDonationDate"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/pick_up_icon"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:inputType="date" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/donatorDetailDonationStatusLayout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:hint="Donation Status"-->
+<!--            android:focusable="false"-->
+<!--            android:focusableInTouchMode="false"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailDonationDateLayout"-->
+<!--            app:layout_constraintHorizontal_bias="0.452"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailDonationDateLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailDonationDateLayout">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/donatorDetailDonationStatus"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:drawableStart="@drawable/pick_up_icon"-->
+<!--                android:drawablePadding="@dimen/drawable_padding"-->
+<!--                android:ems="10"-->
+<!--                android:inputType="date" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/donatorDetailFoodImage"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="200dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:src="@drawable/insert_image"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailDonationStatusLayout"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailDonationStatusLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodImageText" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/donatorDetailFoodImageText"-->
+<!--            style="@style/ShadowForText"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:fontFamily="sans-serif"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/food_image_text"-->
+<!--            android:textSize="17sp"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailDonationStatusLayout"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailDonationStatusLayout" />-->
+
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/donatorDetailUpdateStatusButton"-->
+<!--            style="@style/Widget.MaterialComponents.Button.Icon"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginTop="24dp"-->
+<!--            android:layout_marginEnd="32dp"-->
+<!--            android:layout_marginBottom="32dp"-->
+<!--            android:text="Mark as Complete"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"-->
+<!--            android:textSize="12sp"-->
+<!--            app:backgroundTint="@color/colorPrimary"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/donatorDetailButton"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodImage"-->
+<!--            app:layout_constraintVertical_bias="0.0" />-->
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/donatorDetailUpdateStatusButtonProgressBar"-->
+<!--            style="?android:attr/progressBarStyle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/donatorDetailUpdateStatusButton"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailUpdateStatusButton"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailUpdateStatusButton"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/donatorDetailUpdateStatusButton" />-->
+
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/donatorDetailButton"-->
+<!--            style="@style/Widget.MaterialComponents.Button.Icon"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="32dp"-->
+<!--            android:layout_marginTop="24dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_marginBottom="32dp"-->
+<!--            android:text="@string/delete_donation_button"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"-->
+<!--            android:textSize="12sp"-->
+<!--            app:backgroundTint="@color/colorPrimary"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/donatorDetailUpdateStatusButton"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/donatorDetailFoodImage"-->
+<!--            app:layout_constraintVertical_bias="0.0"-->
+<!--            app:layout_goneMarginEnd="32dp" />-->
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/donatorDetailButtonProgressBar"-->
+<!--            style="?android:attr/progressBarStyle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/donatorDetailButton"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailButton"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailButton"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/donatorDetailButton" />-->
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/donatorDetailImageProgressBar"-->
+<!--            style="?android:attr/progressBarStyle"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/donatorDetailFoodImage"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/donatorDetailFoodImage"-->
+<!--            app:layout_constraintHorizontal_bias="0.0"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/donatorDetailFoodImage"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/donatorDetailFoodImage"-->
+<!--            app:layout_constraintVertical_bias="0.0" />-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </ScrollView>

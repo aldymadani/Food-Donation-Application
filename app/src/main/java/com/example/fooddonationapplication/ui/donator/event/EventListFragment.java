@@ -67,7 +67,7 @@ public class EventListFragment extends Fragment {
         emptyEventImage.setVisibility(View.INVISIBLE);
         emptyEventTextView.setVisibility(View.INVISIBLE);
 
-        Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
+        final Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
         setUpRecyclerView(query);
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
