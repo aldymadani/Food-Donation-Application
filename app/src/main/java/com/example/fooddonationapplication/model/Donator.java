@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Donator implements Parcelable {
-    private String name, phone, uuid;
-    private int totalDonation;
+    private String name, telephoneNumber, uuid;
+    private double totalDonation;
 
     public String getName() {
         return name;
@@ -15,12 +15,12 @@ public class Donator implements Parcelable {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTelephoneNumber() {
+        return telephoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
     public String getUuid() {
@@ -31,7 +31,7 @@ public class Donator implements Parcelable {
         this.uuid = uuid;
     }
 
-    public int getTotalDonation() {
+    public double getTotalDonation() {
         return totalDonation;
     }
 
@@ -39,15 +39,12 @@ public class Donator implements Parcelable {
         this.totalDonation = totalDonation;
     }
 
-    protected Donator(Parcel in) {
-    }
-
     public boolean isSameDonator(User user) {
         boolean isSame = true;
         if (!name.equalsIgnoreCase(user.getName())) {
             isSame = false;
         }
-        if (!phone.equalsIgnoreCase(user.getPhone())) {
+        if (!telephoneNumber.equalsIgnoreCase(user.getPhone())) {
             isSame = false;
         }
         return isSame;
@@ -70,7 +67,18 @@ public class Donator implements Parcelable {
         return 0;
     }
 
+    protected Donator(Parcel in) {
+        name = in.readString();
+        telephoneNumber = in.readString();
+        uuid = in.readString();
+        totalDonation = in.readDouble();
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(telephoneNumber);
+        dest.writeString(uuid);
+        dest.writeDouble(totalDonation);
     }
 }
