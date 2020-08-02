@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fooddonationapplication.adapter.DonationHistoryAdapter;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donation;
+import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,10 +64,10 @@ public class DonationHistoryListFragment extends Fragment {
 
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
-        int totalDonation = fragmentActivity.getIntent().getIntExtra("totalDonation", 0);
-        if (totalDonation > 0) {
+        Donator donator = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.DONATOR_MODEL);
+        if (donator.getTotalDonation() > 0) {
             DecimalFormat df = new DecimalFormat("#.###");
-            String formattedTotalDonation = df.format(totalDonation);
+            String formattedTotalDonation = df.format(donator.getTotalDonation());
             totalDonationTextView.setText("You have donated " + formattedTotalDonation + " kg of food");
             recyclerView.setVisibility(View.VISIBLE);
             totalDonationTextView.setVisibility(View.VISIBLE);

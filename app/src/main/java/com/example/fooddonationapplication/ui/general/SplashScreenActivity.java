@@ -12,8 +12,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,13 +59,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                         Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     } else {
                         // User is signed out, send to register/login
-//                    startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
                         Intent mainIntent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                        SplashScreenActivity.this.startActivity(mainIntent);
-                        SplashScreenActivity.this.finish();
-//                    Intent intent = new Intent(activityA.this, activityB.class);
-//                    startActivity(intent);
-//                    finish(); // Destroy activity A and not exist in Back stack
+                        startActivity(mainIntent);
+                        finish();
                     }
                 } else {
                     Intent intent = new Intent(SplashScreenActivity.this, IntroductionActivity.class);
@@ -89,25 +88,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         if (document.getData().containsValue("donator")) {
-//                            Intent intent = new Intent(SplashScreenActivity.this, MainDonatorActivity.class);
-////                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-////                            startActivity(intent);
                             Intent mainIntent = new Intent(SplashScreenActivity.this, MainDonatorActivity.class);
-                            mainIntent.putExtra("phone", document.getString("phone"));
-                            mainIntent.putExtra("totalDonation", document.getLong("totalDonation").intValue());
-                            SplashScreenActivity.this.startActivity(mainIntent);
-                            SplashScreenActivity.this.finish();
+                            mainIntent.putExtra(IntentNameExtra.DONATOR_MODEL, document.toObject(Donator.class));
+                            startActivity(mainIntent);
+                            finish();
                         } else {
-//                            Intent intent = new Intent(SplashScreenActivity.this, MainSocialCommunityActivity.class);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                            startActivity(intent);
                             Intent mainIntent = new Intent(SplashScreenActivity.this, MainSocialCommunityActivity.class);
-                            mainIntent.putExtra("phone", document.getString("phone"));
-                            mainIntent.putExtra("description", document.getString("description"));
-                            Toast.makeText(SplashScreenActivity.this, String.valueOf(document.getLong("totalEventCreated").intValue()), Toast.LENGTH_SHORT).show();
-                            mainIntent.putExtra("totalEvent", document.getLong("totalEventCreated").intValue());
-                            SplashScreenActivity.this.startActivity(mainIntent);
-                            SplashScreenActivity.this.finish();
+                            mainIntent.putExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL, document.toObject(SocialCommunity.class));
+                            startActivity(mainIntent);
+                            finish();
                         }
                         Toast.makeText(SplashScreenActivity.this, "You are logged in!", Toast.LENGTH_SHORT).show();
                     } else {

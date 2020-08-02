@@ -3,25 +3,13 @@ package com.example.fooddonationapplication.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SocialCommunity implements Parcelable {
-    private String name, telephoneNumber, description, imageURI, uuid;
+public class SocialCommunity extends User implements Parcelable {
+    private String description, imageURI;
     private int totalEventCreated;
     private long notificationAvailabilityInMillis;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTelephoneNumber() {
-        return telephoneNumber;
-    }
-
-    public void setTelephoneNumber(String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
+    public SocialCommunity() {
+        // Empty constructor
     }
 
     public String getDescription() {
@@ -40,14 +28,6 @@ public class SocialCommunity implements Parcelable {
         this.imageURI = imageURI;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
     public int getTotalEventCreated() {
         return totalEventCreated;
     }
@@ -64,11 +44,8 @@ public class SocialCommunity implements Parcelable {
         this.notificationAvailabilityInMillis = notificationAvailabilityInMillis;
     }
 
-    public boolean isSameSocialCommunity(User user) {
-        boolean isSame = true;
-        if (!telephoneNumber.equalsIgnoreCase(user.getPhone())) {
-            isSame = false;
-        }
+    public boolean isSame(SocialCommunity user) {
+        boolean isSame = super.isSame(user);
         if (!description.equalsIgnoreCase(user.getDescription())) {
             isSame = false;
         }
@@ -93,22 +70,22 @@ public class SocialCommunity implements Parcelable {
     }
 
     protected SocialCommunity(Parcel in) {
-        name = in.readString();
-        telephoneNumber = in.readString();
+        super.setName(in.readString());
+        super.setPhone(in.readString());
+        super.setUuid(in.readString());
         description = in.readString();
         imageURI = in.readString();
-        uuid = in.readString();
         totalEventCreated = in.readInt();
         notificationAvailabilityInMillis = in.readLong();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(telephoneNumber);
+        dest.writeString(super.getName());
+        dest.writeString(super.getPhone());
+        dest.writeString(super.getUuid());
         dest.writeString(description);
         dest.writeString(imageURI);
-        dest.writeString(uuid);
         dest.writeInt(totalEventCreated);
         dest.writeLong(notificationAvailabilityInMillis);
     }

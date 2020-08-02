@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -29,7 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fooddonationapplication.model.User;
+import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.util.Util;
@@ -45,8 +44,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -79,13 +76,14 @@ public class SocialCommunityProfileFragment extends Fragment {
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    private User oldUserData = new User();
-    private User newUserData = new User();
+    private SocialCommunity oldUserData;
+    private SocialCommunity newUserData = new SocialCommunity();
 
     // View Model
     private SocialCommunityProfileViewModel mViewModel;
 
     private boolean hasChanged;
+    private boolean hasTelephoneNumberChanged;
 
     // For photo
     private static final int GalleryPick = 1;
@@ -127,6 +125,7 @@ public class SocialCommunityProfileFragment extends Fragment {
         totalEventCreated.setCursorVisible(false);
 
         hasChanged = false;
+        hasTelephoneNumberChanged = false;
 
         if (user != null) {
             fullName.setText(user.getDisplayName());
@@ -155,14 +154,15 @@ public class SocialCommunityProfileFragment extends Fragment {
 
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
-        oldUserData.setDescription(fragmentActivity.getIntent().getStringExtra("description"));
-        oldUserData.setPhone(fragmentActivity.getIntent().getStringExtra("phone"));
-        oldUserData.setImageURI(String.valueOf(user.getPhotoUrl()));
+        oldUserData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
+        if (oldUserData == null) {
+            Toast.makeText(fragmentActivity, "Data isn't loaded", Toast.LENGTH_SHORT).show();
+            Util.backToLogin(fragmentActivity);
+        }
 
         telephoneNumber.setText(oldUserData.getPhone());
         description.setText(oldUserData.getDescription());
-        int totalEvent = fragmentActivity.getIntent().getIntExtra("totalEvent", 0);
-        totalEventCreated.setText(String.valueOf(totalEvent));
+        totalEventCreated.setText(String.valueOf(oldUserData.getTotalEventCreated()));
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,10 +225,19 @@ public class SocialCommunityProfileFragment extends Fragment {
     }
 
     private void checkingChanges() {
+        newUserData.setName(fullName.getText().toString());
         newUserData.setPhone(telephoneNumber.getText().toString());
         newUserData.setDescription(description.getText().toString());
 
-        hasChanged = !oldUserData.isSameSocialCommunity(newUserData);
+        hasChanged = !oldUserData.isSame(newUserData);
+        Log.d(TAG, "hasChanged = " + hasChanged);
+        Log.d(TAG, "oldUserData" + oldUserData.getDescription());
+        Log.d(TAG, "newUserData" + newUserData.getDescription());
+
+        if (!newUserData.getPhone().equalsIgnoreCase(oldUserData.getPhone())) {
+            hasTelephoneNumberChanged = true;
+            hasChanged = true;
+        }
 
         if (hasImageChanged) {
             hasChanged = true;
@@ -241,16 +250,21 @@ public class SocialCommunityProfileFragment extends Fragment {
 
     private void updateUserData() {
         if (hasChanged) {
-            getData();
+            if (hasTelephoneNumberChanged) {
+                getDonatorDocumentData();
+            } else {
+                updateUserDatabase();
+            }
         } else {
             Toast.makeText(getContext(), "Nothing has changed", Toast.LENGTH_SHORT).show();
             updateCredentialButton.setEnabled(true);
             updateProgressBar.setVisibility(View.INVISIBLE);
             updateProfileButton.setVisibility(View.VISIBLE);
+            allActionStatus(true);
         }
     }
 
-    private void getData() {
+    private void getDonatorDocumentData() {
         db.collection("donators").whereEqualTo("socialCommunityId", user.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -261,27 +275,29 @@ public class SocialCommunityProfileFragment extends Fragment {
                                 list.add(document.getId());
                             }
                             Log.d(TAG, list.toString());
-                            updateData((ArrayList) list);
+                            updateDonatorDatabase((ArrayList) list);
                         }
                     }
                 });
     }
 
-    private void updateData(ArrayList list) {
+    private void updateDonatorDatabase(ArrayList list) {
         WriteBatch batch = db.batch();
         for (int i = 0; i < list.size(); i++) {
             DocumentReference eventReference = db.collection("donators").document((String) list.get(i));
             batch.update(eventReference, "socialCommunityPhoneNumber", newUserData.getPhone());
-//            if (!newPhoneNumber.equals(oldPhoneNumber)) {
-//                DocumentReference ref = db.collection("donators").document((String) list.get(i));
-//                batch.update(ref, "name", user.getDisplayName());
-//                batch.update(ref, "phone", newPhoneNumber);
-//            } else {
-//                DocumentReference ref = db.collection("donators").document((String) list.get(i));
-//                batch.update(ref, "name", user.getDisplayName());
-//            }
         }
 
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                updateUserDatabase();
+            }
+        });
+    }
+
+    private void updateUserDatabase() {
+        WriteBatch batch = db.batch();
         DocumentReference userReference = db.collection("users").document(user.getUid());
         batch.update(userReference, "description", newUserData.getDescription());
         batch.update(userReference, "phone", newUserData.getPhone());
@@ -290,7 +306,6 @@ public class SocialCommunityProfileFragment extends Fragment {
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(getContext(), "Profile is successfully updated", Toast.LENGTH_SHORT).show();
                 updateCredentialButton.setEnabled(true);
                 updateProgressBar.setVisibility(View.INVISIBLE);
                 updateProfileButton.setVisibility(View.VISIBLE);
@@ -302,6 +317,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                 oldUserData.setImageURI(newUserData.getImageURI());
                 hasImageChanged = false;
                 hasChanged = false;
+                hasTelephoneNumberChanged = false;
                 mViewModel.setHasImageChanged(false);
                 Toast.makeText(getContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show();
             }

@@ -13,7 +13,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.app.ActivityCompat;
 
+import com.example.fooddonationapplication.ui.donator.event.CreateDonationActivity;
 import com.example.fooddonationapplication.ui.donator.event.EventDetailActivity;
+import com.example.fooddonationapplication.ui.general.LoginActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,12 @@ public class Util {
         if (window != null) {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
+    }
+
+    public static void backToLogin(Activity activity) {
+        Intent loginIntent = new Intent(activity, LoginActivity.class);
+        activity.startActivity(loginIntent);
+        activity.finish();
     }
 
     public static void openCallIntent(Activity activity, String number) {

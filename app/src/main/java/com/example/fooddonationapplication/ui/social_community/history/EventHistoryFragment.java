@@ -25,7 +25,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,7 +70,6 @@ public class EventHistoryFragment extends Fragment {
         final String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d(TAG, uuid);
 
-
         recyclerView.setVisibility(View.INVISIBLE);
         searchField.setVisibility(View.INVISIBLE);
         searchInputLayout.setVisibility(View.INVISIBLE);
@@ -82,7 +83,14 @@ public class EventHistoryFragment extends Fragment {
 
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
-        int totalEvent = fragmentActivity.getIntent().getIntExtra("totalEvent", 0);
+        SocialCommunity socialCommunity = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
+
+        if (socialCommunity == null) {
+            Toast.makeText(fragmentActivity, "Data is NULL", Toast.LENGTH_SHORT).show();
+            Util.backToLogin(fragmentActivity);
+        }
+
+        int totalEvent = socialCommunity.getTotalEventCreated();
         if (totalEvent > 0) {
             recyclerView.setVisibility(View.VISIBLE);
             searchField.setVisibility(View.VISIBLE);

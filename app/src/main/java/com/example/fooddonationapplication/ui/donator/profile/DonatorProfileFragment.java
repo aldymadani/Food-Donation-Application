@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.model.User;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
@@ -55,8 +56,8 @@ public class DonatorProfileFragment extends Fragment {
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private boolean hasChanged;
 
-    private User oldUserData = new User();
-    private User newUserData = new User();
+    private Donator oldUserData;
+    private Donator newUserData = new Donator();
     View rootView;
 
     @Nullable
@@ -80,18 +81,16 @@ public class DonatorProfileFragment extends Fragment {
         updateCredentialProgressBar.setVisibility(View.INVISIBLE);
 
         fullNameEditText.setText(user.getDisplayName());
-        oldUserData.setName(user.getDisplayName());
 
         hasChanged = false;
 
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
-        oldUserData.setPhone(fragmentActivity.getIntent().getStringExtra("phone"));
+        oldUserData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.DONATOR_MODEL);
         telephoneNumberEditText.setText(oldUserData.getPhone());
-        if (user == null) {
-            Toast.makeText(getContext(), "NULL DATA", Toast.LENGTH_SHORT).show();
-            // TODO: Alert when data is null
-            fragmentActivity.finish();
+        if (oldUserData== null) {
+            Toast.makeText(getContext(), "Data isn't loaded", Toast.LENGTH_SHORT).show();
+            Util.backToLogin(fragmentActivity);
         }
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +136,7 @@ public class DonatorProfileFragment extends Fragment {
         newUserData.setName(fullNameEditText.getText().toString());
         newUserData.setPhone(telephoneNumberEditText.getText().toString());
 
-        hasChanged = !oldUserData.isSameDonator(newUserData);
+        hasChanged = !oldUserData.isSame(newUserData);
         if (!hasChanged) {
             logOutButton.setEnabled(true);
             updateCredentialButton.setEnabled(true);

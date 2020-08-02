@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.util.Util;
@@ -254,8 +256,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         if (document.getData().containsValue("donator")) {
                             Intent intent = new Intent(LoginActivity.this, MainDonatorActivity.class);
-                            intent.putExtra("phone", document.getString("phone"));
-                            intent.putExtra("totalDonation", document.getDouble("totalDonation").intValue());
+                            intent.putExtra(IntentNameExtra.DONATOR_MODEL, document.toObject(Donator.class));
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             btnSubmit.setVisibility(View.VISIBLE);
@@ -263,9 +264,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             btnRegister.setEnabled(true);
                         } else {
                             Intent intent = new Intent(LoginActivity.this, MainSocialCommunityActivity.class);
-                            intent.putExtra("phone", document.getString("phone"));
-                            intent.putExtra("description", document.getString("description"));
-                            intent.putExtra("totalEvent", document.getDouble("totalEventCreated").intValue());
+                            intent.putExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL, document.toObject(SocialCommunity.class));
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             btnSubmit.setVisibility(View.VISIBLE);

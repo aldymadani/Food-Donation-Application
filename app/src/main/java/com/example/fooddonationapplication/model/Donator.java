@@ -3,51 +3,25 @@ package com.example.fooddonationapplication.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Donator implements Parcelable {
-    private String name, telephoneNumber, uuid;
+public class Donator extends User implements Parcelable {
     private double totalDonation;
 
-    public String getName() {
-        return name;
+    public Donator() {
+        // Empty constructor
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTelephoneNumber() {
-        return telephoneNumber;
-    }
-
-    public void setTelephoneNumber(String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public double getTotalDonation() {
-        return totalDonation;
+    public boolean isSame(Donator user) {
+        boolean isSame = super.isSame(user);
+        // Check any same data
+        return isSame;
     }
 
     public void setTotalDonation(int totalDonation) {
         this.totalDonation = totalDonation;
     }
 
-    public boolean isSameDonator(User user) {
-        boolean isSame = true;
-        if (!name.equalsIgnoreCase(user.getName())) {
-            isSame = false;
-        }
-        if (!telephoneNumber.equalsIgnoreCase(user.getPhone())) {
-            isSame = false;
-        }
-        return isSame;
+    public double getTotalDonation() {
+        return totalDonation;
     }
 
     public static final Creator<Donator> CREATOR = new Creator<Donator>() {
@@ -68,17 +42,17 @@ public class Donator implements Parcelable {
     }
 
     protected Donator(Parcel in) {
-        name = in.readString();
-        telephoneNumber = in.readString();
-        uuid = in.readString();
+        super.setName(in.readString());
+        super.setPhone(in.readString());
+        super.setUuid(in.readString());
         totalDonation = in.readDouble();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(telephoneNumber);
-        dest.writeString(uuid);
+        dest.writeString(super.getName());
+        dest.writeString(super.getPhone());
+        dest.writeString(super.getUuid());
         dest.writeDouble(totalDonation);
     }
 }

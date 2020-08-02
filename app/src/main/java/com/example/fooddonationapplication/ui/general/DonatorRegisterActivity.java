@@ -13,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
+import com.example.fooddonationapplication.util.constant.Constant;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +41,7 @@ public class DonatorRegisterActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private TextInputLayout textInputEmail, textInputPassword, textInputFullName, textInputTelephoneNumber;
     private ProgressBar progressBar;
+    private Donator donator = new Donator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,14 +169,14 @@ public class DonatorRegisterActivity extends AppCompatActivity {
 //                    user.setUuid(uuid);
 //                    user.setRole("donator");
 //                    user.setTotalDonation(0);
-                    Map<String, Object> user = new HashMap<>();
-                    user.put("name", fullName);
-                    user.put("phone", telephoneNumber);
-                    user.put("uuid", uuid);
-                    user.put("role", "donator");
-                    user.put("totalDonation", 0);
+//                    Map<String, Object> user = new HashMap<>();
+                    donator.setName(fullName);
+                    donator.setPhone(telephoneNumber);
+                    donator.setUuid(uuid);
+                    donator.setRole(Constant.DONATOR_ROLE);
+                    donator.setTotalDonation(0);
                     db.collection("users").document(uuid)
-                            .set(user)
+                            .set(donator)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -210,9 +214,7 @@ public class DonatorRegisterActivity extends AppCompatActivity {
                             Log.d(TAG, user.getDisplayName());
                             allActionStatus(true);
                             Intent intent = new Intent(DonatorRegisterActivity.this, MainDonatorActivity.class);
-                            intent.putExtra("name", fullNameId.getText().toString());
-                            intent.putExtra("phone", telephoneNumberId.getText().toString());
-                            intent.putExtra("totalDonation", 0);
+                            intent.putExtra(IntentNameExtra.DONATOR_MODEL, donator);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             Toast.makeText(DonatorRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();

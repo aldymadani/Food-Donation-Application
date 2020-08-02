@@ -24,7 +24,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.constant.Constant;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.example.fooddonationapplication.viewmodel.SocialCommunityRegisterViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -61,6 +64,8 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     private ImageView socialCommunityPhoto;
     private Bitmap bitmap;
     private boolean hasImage;
+
+    private SocialCommunity socialCommunity = new SocialCommunity();
 
     SocialCommunityRegisterViewModel mViewModel;
 
@@ -340,9 +345,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
                             Log.d(TAG, user.getDisplayName());
                             allActionStatus(true);
                             Intent intent = new Intent(SocialCommunityRegisterActivity.this, MainSocialCommunityActivity.class);
-                            intent.putExtra("phone", socialCommunityDescription.getText().toString());
-                            intent.putExtra("description", telephoneNumberId.getText().toString());
-                            intent.putExtra("totalEventCreated", 0);
+                            intent.putExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL, socialCommunity);
                             Toast.makeText(SocialCommunityRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // TODO try to implement finish
                             startActivity(intent);
@@ -356,15 +359,14 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //        User user = new User(socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData, uuid, "social community", socialCommunityImageURI);
 //        User user = new User();
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", socialCommunityNameData);
-        user.put("phone", telephoneNumberData);
-        user.put("description", socialCommunityDescriptionData);
-        user.put("uuid", uuid);
-        user.put("role", "social community");
-        user.put("imageURI", socialCommunityImageURI);
-        user.put("totalEventCreated", 0);
-        user.put("notificationAvailabilityInMillis", System.currentTimeMillis());
+        socialCommunity.setName(socialCommunityNameData);
+        socialCommunity.setPhone(telephoneNumberData);
+        socialCommunity.setUuid(uuid);
+        socialCommunity.setRole(Constant.SOCIAL_COMMUNITY_ROLE);
+        socialCommunity.setDescription(socialCommunityDescriptionData);
+        socialCommunity.setImageURI(socialCommunityImageURI);
+        socialCommunity.setTotalEventCreated(0);
+        socialCommunity.setNotificationAvailabilityInMillis(System.currentTimeMillis());
 //        user.setName(socialCommunityNameData);
 //        user.setPhone(telephoneNumberData);
 //        user.setDescription(socialCommunityDescriptionData);
@@ -372,7 +374,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
 //        user.setRole("social community");
 //        user.setImageURI(socialCommunityImageURI);
         db.collection("users").document(uuid)
-                .set(user)
+                .set(socialCommunity)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
