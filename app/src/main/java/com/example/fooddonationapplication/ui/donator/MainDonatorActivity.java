@@ -8,14 +8,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.ui.donator.profile.DonatorProfileFragment;
 import com.example.fooddonationapplication.ui.donator.event.EventListFragment;
 import com.example.fooddonationapplication.ui.donator.history.DonationHistoryListFragment;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.example.fooddonationapplication.viewmodel.MainDonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -79,11 +83,11 @@ public class MainDonatorActivity extends AppCompatActivity {
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        System.out.println(formatter.format(calendar.getTime()));
-        Log.d("CEK", formatter.format(calendar.getTime()));
-        Toast.makeText(this, formatter.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        System.out.println(formatter.format(calendar.getTime()));
+//        Log.d("CEK", formatter.format(calendar.getTime()));
+//        Toast.makeText(this, formatter.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

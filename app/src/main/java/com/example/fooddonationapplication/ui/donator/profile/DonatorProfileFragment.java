@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.model.User;
+import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.util.Util;
@@ -80,18 +81,37 @@ public class DonatorProfileFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
         updateCredentialProgressBar.setVisibility(View.INVISIBLE);
 
-        fullNameEditText.setText(user.getDisplayName());
-
         hasChanged = false;
 
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
         oldUserData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.DONATOR_MODEL);
-        telephoneNumberEditText.setText(oldUserData.getPhone());
-        if (oldUserData== null) {
+        if (oldUserData == null) {
             Toast.makeText(getContext(), "Data isn't loaded", Toast.LENGTH_SHORT).show();
-            Util.backToLogin(fragmentActivity);
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference docRef = db.collection("users").document(user.getUid());
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            oldUserData = document.toObject(Donator.class);
+                            initializeTextData();
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+//            Util.backToLogin(fragmentActivity);
+        } else {
+            initializeTextData();
         }
+
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +150,11 @@ public class DonatorProfileFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void initializeTextData() {
+        telephoneNumberEditText.setText(oldUserData.getPhone());
+        fullNameEditText.setText(user.getDisplayName());
     }
 
     private void checkingChanges() {

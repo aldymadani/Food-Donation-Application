@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
@@ -44,6 +45,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -127,10 +129,6 @@ public class SocialCommunityProfileFragment extends Fragment {
         hasChanged = false;
         hasTelephoneNumberChanged = false;
 
-        if (user != null) {
-            fullName.setText(user.getDisplayName());
-        }
-
         mViewModel = new ViewModelProvider(this).get(SocialCommunityProfileViewModel.class);
         if (mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
@@ -157,12 +155,28 @@ public class SocialCommunityProfileFragment extends Fragment {
         oldUserData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
         if (oldUserData == null) {
             Toast.makeText(fragmentActivity, "Data isn't loaded", Toast.LENGTH_SHORT).show();
-            Util.backToLogin(fragmentActivity);
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference docRef = db.collection("users").document(user.getUid());
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            oldUserData = document.toObject(SocialCommunity.class);
+                            initializeTextData();
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+        } else {
+            initializeTextData();
         }
-
-        telephoneNumber.setText(oldUserData.getPhone());
-        description.setText(oldUserData.getDescription());
-        totalEventCreated.setText(String.valueOf(oldUserData.getTotalEventCreated()));
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,6 +226,15 @@ public class SocialCommunityProfileFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void initializeTextData() {
+        if (user != null) {
+            fullName.setText(user.getDisplayName());
+        }
+        telephoneNumber.setText(oldUserData.getPhone());
+        description.setText(oldUserData.getDescription());
+        totalEventCreated.setText(String.valueOf(oldUserData.getTotalEventCreated()));
     }
 
     private void allActionStatus(boolean status) {

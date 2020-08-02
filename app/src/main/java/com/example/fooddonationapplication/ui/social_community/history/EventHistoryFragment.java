@@ -30,10 +30,14 @@ import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -53,6 +57,7 @@ public class EventHistoryFragment extends Fragment {
     private ImageView searchButton, emptyHistoryImage;
     private SwipeRefreshLayout swipeLayout;
     private RecyclerView recyclerView;
+    private SocialCommunity socialCommunity;
 
     @Nullable
     @Override
@@ -83,23 +88,30 @@ public class EventHistoryFragment extends Fragment {
 
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
-        SocialCommunity socialCommunity = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
+        socialCommunity = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
 
         if (socialCommunity == null) {
-            Toast.makeText(fragmentActivity, "Data is NULL", Toast.LENGTH_SHORT).show();
-            Util.backToLogin(fragmentActivity);
-        }
-
-        int totalEvent = socialCommunity.getTotalEventCreated();
-        if (totalEvent > 0) {
-            recyclerView.setVisibility(View.VISIBLE);
-            searchField.setVisibility(View.VISIBLE);
-            searchInputLayout.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
-            swipeLayout.setVisibility(View.VISIBLE);
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference docRef = db.collection("users").document(user.getUid());
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            socialCommunity = document.toObject(SocialCommunity.class);
+                            initializeTextData();
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
         } else {
-            emptyHistoryImage.setVisibility(View.VISIBLE);
-            emptyHistoryText.setVisibility(View.VISIBLE);
+            initializeTextData();
         }
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +146,20 @@ public class EventHistoryFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void initializeTextData() {
+        int totalEvent = socialCommunity.getTotalEventCreated();
+        if (totalEvent > 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            searchField.setVisibility(View.VISIBLE);
+            searchInputLayout.setVisibility(View.VISIBLE);
+            searchButton.setVisibility(View.VISIBLE);
+            swipeLayout.setVisibility(View.VISIBLE);
+        } else {
+            emptyHistoryImage.setVisibility(View.VISIBLE);
+            emptyHistoryText.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setUpRecyclerViewEventHistory(Query query) {
