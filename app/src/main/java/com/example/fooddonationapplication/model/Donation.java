@@ -4,6 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
 
 @IgnoreExtraProperties
 public class Donation implements Parcelable {
@@ -24,6 +27,7 @@ public class Donation implements Parcelable {
     private String donatorId;
     private String status;
     private double totalDonation;
+    private @ServerTimestamp Date timestamp;
 
     public String getSocialCommunityPhoneNumber() {
         return socialCommunityPhoneNumber;
@@ -105,6 +109,10 @@ public class Donation implements Parcelable {
         this.donatorId = donatorId;
     }
 
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public String getName() {
         return name;
     }
@@ -159,6 +167,10 @@ public class Donation implements Parcelable {
 
     public String getDonatorId() {
         return donatorId;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 
     protected Donation(Parcel in) {

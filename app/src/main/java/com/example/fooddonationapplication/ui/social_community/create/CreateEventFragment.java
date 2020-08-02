@@ -137,6 +137,11 @@ public class CreateEventFragment extends Fragment {
         createEventConfirmation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                eventName.clearFocus();
+                eventDescription.clearFocus();
+                eventEndDate.clearFocus();
+                targetQuantity.clearFocus();
+                Util.hideKeyboard(requireActivity());
                 eventNameData = eventName.getText().toString();
                 eventDescriptionData = eventDescription.getText().toString();
                 endDateData = eventEndDate.getText().toString();
@@ -180,9 +185,6 @@ public class CreateEventFragment extends Fragment {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Log.d(TAG, "Chosen Date" + chosenDate);
-                Log.d(TAG, String.valueOf(chosenDateInMillis));
-                Log.d(TAG, String.valueOf(System.currentTimeMillis()));
             }
         }, year, month, day);
         long now = System.currentTimeMillis() - 1000;
@@ -323,20 +325,19 @@ public class CreateEventFragment extends Fragment {
 
     private void InitializeEvent() {
         final String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         Log.d(TAG, eventId);
 
         final Event event = new Event();
-        event.setImageURI(eventImageURI);
-        event.setEventID(eventId);
         event.setTitle(eventNameData);
-        event.setTitleForSearch(eventNameData.toLowerCase());
         event.setDescription(eventDescriptionData);
-        event.setSocialCommunityID(socialCommunityID);
+        event.setEventID(eventId);
         event.setEndDate(endDateData);
         event.setEndDateInMillis(chosenDateInMillis);
         event.setTargetQuantity(Double.parseDouble(targetQuantityData));
         event.setTotalDonation(0);
+        event.setTitleForSearch(eventNameData.toLowerCase());
+        event.setImageURI(eventImageURI);
+        event.setSocialCommunityID(socialCommunityID);
 
         db.collection("users").document(socialCommunityID)
                 .update("totalEventCreated", FieldValue.increment(1))

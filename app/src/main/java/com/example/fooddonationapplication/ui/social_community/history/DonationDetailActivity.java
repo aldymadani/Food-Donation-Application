@@ -117,55 +117,8 @@ public class DonationDetailActivity extends AppCompatActivity {
         deleteDonation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // Show Dialog
-//                LottieAnimationView animationView = mDialog.getAnimationView();
                 setUpDeleteDialog();
-
-//                final DocumentReference userDocumentReference = db.collection("users").document(donator.getUuid());
-//                final DocumentReference eventDocumentReference = db.collection("events").document(donator.getEventId());
-//                final DocumentReference donatorReference = db.collection("donators").document(donator.getDonatorId());
-
-//                db.runTransaction(new Transaction.Function<Void>() {
-//                    @Override
-//                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-//                        Log.d(TAG, String.valueOf(totalDonation));
-//
-//                        DocumentSnapshot snapshotUser = transaction.get(userDocumentReference);
-//
-//                        // Note: this could be done without a transaction
-//                        //       by updating the population using FieldValue.increment()
-//                        double newUserTotalDonation = snapshotUser.getDouble("totalDonation") - totalDonation;
-//                        transaction.update(userDocumentReference, "totalDonation", newUserTotalDonation);
-//                        Log.d(TAG, "newUserTotalDonation : " + newUserTotalDonation);
-//
-//                        DocumentSnapshot snapshotEvent = transaction.get(eventDocumentReference);
-//                        double newEventTotalDonation = snapshotEvent.getDouble("totalDonation") - totalDonation;
-//                        transaction.update(eventDocumentReference, "totalDonation", newEventTotalDonation);
-//                        Log.d(TAG, "newEventTotalDonation : " + newEventTotalDonation);
-//
-//                        transaction.delete(donatorReference);
-//                        // Success
-//                        return null;
-//                    }
-//                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "Transaction success!");
-//                        Toast.makeText(DonatorDetail.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        startActivity(intent);
-//                        deleteDonation.setVisibility(View.VISIBLE);
-//                        buttonProgressBar.setVisibility(View.INVISIBLE);
-//                    }
-//                })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Log.w(TAG, "Transaction failure.", e);
-//                            }
-//                        });
             }
         });
 

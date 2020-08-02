@@ -111,9 +111,10 @@ public class EventListAdapter extends FirestorePagingAdapter<Event, EventListAda
         void bind(final Event event) {
             DecimalFormat df = new DecimalFormat("#.###");
             String formattedTotalDonation = df.format(event.getTotalDonation());
+            String formattedTargetQuantity = df.format(event.getTargetQuantity());
 
             textViewTitle.setText(event.getTitle());
-            textViewTotalDonation.setText(formattedTotalDonation + " / " + event.getTargetQuantity() + " kg");
+            textViewTotalDonation.setText(formattedTotalDonation + " / " + formattedTargetQuantity + " kg");
             textViewEndDate.setText(Util.convertToFullDate(event.getEndDate()));
             Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
                     .listener(new RequestListener<Drawable>() {

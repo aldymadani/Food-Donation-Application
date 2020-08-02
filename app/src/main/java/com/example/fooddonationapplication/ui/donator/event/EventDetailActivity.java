@@ -106,7 +106,10 @@ public class EventDetailActivity extends AppCompatActivity {
         // Initialize Event Information Data on the Edit Text
         eventDescription.setText(eventDescriptionData);
         eventEndDate.setText(Util.convertToFullDate(eventEndDateData));
-        eventTotalDonation.setText(eventTotalDonationDataData + " / " + eventTargetDonationData + " kg");
+        DecimalFormat df = new DecimalFormat("#.###");
+        String formattedTotalDonation = df.format(eventTotalDonationDataData);
+        String formattedTargetDonation = df.format(eventTargetDonationData);
+        eventTotalDonation.setText(formattedTotalDonation + " / " + formattedTargetDonation + " kg");
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference socialCommunityRef = db.collection("users").document(eventSocialCommunityIdData);
@@ -142,9 +145,6 @@ public class EventDetailActivity extends AppCompatActivity {
                     }
                 });
 
-        DecimalFormat df = new DecimalFormat("#.###");
-        String formattedTotalDonation = df.format(eventTotalDonationDataData);
-
         if (event.getEndDateInMillis() <= System.currentTimeMillis()) {
             eventDonateButton.setVisibility(View.GONE);
         }
@@ -174,6 +174,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 intent.putExtra("eventName", eventTitleData);
                 intent.putExtra("socialCommunityId", eventSocialCommunityIdData);
                 intent.putExtra("socialCommunityName", socialCommunityNameData);
+                intent.putExtra("socialCommunityPhoneNumber", socialCommunityTelephoneNumberData);
                 intent.putExtra("endDateInMillis", endDateInMillis);
                 startActivity(intent);
             }
