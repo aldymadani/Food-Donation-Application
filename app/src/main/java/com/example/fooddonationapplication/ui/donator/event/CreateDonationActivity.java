@@ -18,11 +18,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -31,6 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +52,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,10 +66,13 @@ public class CreateDonationActivity extends AppCompatActivity {
     private EditText etAddress, etFoodItems, etDate, etTime, etQuantity;
     private ProgressBar progressBar;
     private ImageView foodImage;
-    private int TAKE_IMAGE_CODE = 10001;
     private Bitmap bitmap;
     private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userID, eventID;
     private boolean hasImage;
+
+    // For Photo
+    private static final int GalleryPick = 1;
+    private static final int TAKE_IMAGE_CODE = 10001;
 
     // Firestore Database Access
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -127,14 +134,48 @@ public class CreateDonationActivity extends AppCompatActivity {
         foodImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(CreateDonationActivity.this, new String[] {Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
-                } else {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, TAKE_IMAGE_CODE);
+                Util.hideKeyboard(CreateDonationActivity.this);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(CreateDonationActivity.this);
+                View takeImageOptionDialog = getLayoutInflater().inflate(R.layout.dialog_option, null);
+                mBuilder.setView(takeImageOptionDialog);
+                final AlertDialog dialog = mBuilder.create();
+                dialog.show();
+                TextView dialogTitle = takeImageOptionDialog.findViewById(R.id.registerDialogTitle);
+                Button cameraButton = takeImageOptionDialog.findViewById(R.id.registerDialogDonatorButton);
+                Button galleryButton = takeImageOptionDialog.findViewById(R.id.registerDialogSocialCommunityButton);
+                dialogTitle.setText("Take Photo Options:");
+                cameraButton.setText("Camera");
+                galleryButton.setText("Gallery");
+
+                cameraButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(CreateDonationActivity.this, new String[] {Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
+                        } else {
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            if (intent.resolveActivity(getPackageManager()) != null) {
+                                startActivityForResult(intent, TAKE_IMAGE_CODE);
+                            }
+                        }
                     }
-                }
+                });
+
+                galleryButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                        } else {
+                            Intent galleryIntent = new Intent();
+                            galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                            galleryIntent.setType("image/*");
+                            startActivityForResult(galleryIntent, GalleryPick);
+                        }
+                    }
+                });
             }
         });
 
@@ -217,6 +258,15 @@ public class CreateDonationActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == GalleryPick) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, GalleryPick);
+            } else {
+                Toast.makeText(this, "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -230,6 +280,22 @@ public class CreateDonationActivity extends AppCompatActivity {
                     foodImage.setImageBitmap(bitmap);
                     mViewModel.setImageBitmap(bitmap);
                     hasImage = true;
+            }
+        }
+
+        if (requestCode == GalleryPick) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    Uri ImageURI = data.getData();
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(CreateDonationActivity.this.getContentResolver(), ImageURI);
+                        foodImage.setImageBitmap(bitmap);
+                        mViewModel.setImageBitmap(bitmap);
+                        hasImage = true;
+                    } catch (IOException e) {
+                        Log.e("UpdateEventFragment", e.getLocalizedMessage());
+                        e.printStackTrace();
+                    }
             }
         }
     }

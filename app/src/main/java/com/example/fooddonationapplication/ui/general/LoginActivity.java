@@ -79,14 +79,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Util.showKeyboard(this);
         }
 
-        textInputEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        emailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 textInputEmail.setErrorEnabled(false);
             }
         });
 
-        textInputPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        passwordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 textInputPassword.setErrorEnabled(false);
