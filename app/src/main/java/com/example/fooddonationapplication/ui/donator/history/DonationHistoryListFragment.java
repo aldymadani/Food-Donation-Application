@@ -44,7 +44,7 @@ public class DonationHistoryListFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference donatorRef = db.collection("donators");
+    private CollectionReference donatorRef = db.collection("donations");
     private DonationHistoryAdapter donationHistoryAdapter;
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Donator donator;

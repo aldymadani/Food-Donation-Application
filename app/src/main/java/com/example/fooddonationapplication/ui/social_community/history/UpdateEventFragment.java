@@ -471,7 +471,7 @@ public class UpdateEventFragment extends Fragment {
     }
 
     private void getDonatorDocumentList() {
-        db.collection("donators").whereEqualTo("eventId", eventId).get()
+        db.collection("donations").whereEqualTo("eventId", eventId).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -490,7 +490,7 @@ public class UpdateEventFragment extends Fragment {
     private void updateDonatorDatabase(ArrayList list) {
         WriteBatch batch = db.batch();
         for (int i = 0; i < list.size(); i++) {
-            DocumentReference donatorReference = db.collection("donators").document((String) list.get(i));
+            DocumentReference donatorReference = db.collection("donations").document((String) list.get(i));
             batch.update(donatorReference, "eventName", newEvent.getTitle());
         }
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {

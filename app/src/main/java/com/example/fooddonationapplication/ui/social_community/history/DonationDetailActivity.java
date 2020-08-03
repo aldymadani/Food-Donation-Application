@@ -151,7 +151,7 @@ public class DonationDetailActivity extends AppCompatActivity {
                 deleteDonation.setEnabled(false);
                 updateDonationStatus.setVisibility(View.INVISIBLE);
                 updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
-                DocumentReference donationReference = db.collection("donators").document(donationId);
+                DocumentReference donationReference = db.collection("donations").document(donationId);
                 donationReference.update("status", "Completed")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -189,7 +189,7 @@ public class DonationDetailActivity extends AppCompatActivity {
 
                         // Delete Operation
                         WriteBatch batch = db.batch();
-                        DocumentReference donatorReference = db.collection("donators").document(donationId);
+                        DocumentReference donatorReference = db.collection("donations").document(donationId);
                         batch.delete(donatorReference);
 
                         double decreaseTotalDonation = donationQuantityData * -1;

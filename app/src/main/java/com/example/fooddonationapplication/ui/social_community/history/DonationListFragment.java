@@ -40,7 +40,7 @@ public class DonationListFragment extends Fragment {
     private static final String TAG = "DonationListFragment";
     private TextView titleTotalDonation, donationListEmptyTextView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference donatorRef = db.collection("donators");
+    private CollectionReference donatorRef = db.collection("donations");
     private ImageView donationListEmptyImage;
     private RecyclerView recyclerView;
 

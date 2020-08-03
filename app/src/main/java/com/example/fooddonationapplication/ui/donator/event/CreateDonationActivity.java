@@ -76,7 +76,7 @@ public class CreateDonationActivity extends AppCompatActivity {
 
     // Firestore Database Access
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    final String donatorDocumentID = db.collection("donators").document().getId();
+    final String donatorDocumentID = db.collection("donations").document().getId();
 
     // View Model
     DonatorViewModel mViewModel;
@@ -371,7 +371,7 @@ public class CreateDonationActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             donation.setPhone(documentSnapshot.getString("phone"));
-                            db.collection("donators").document(donatorDocumentID)
+                            db.collection("donations").document(donatorDocumentID)
                                     .set(donation)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override

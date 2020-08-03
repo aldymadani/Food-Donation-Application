@@ -272,7 +272,7 @@ public class SocialCommunityProfileFragment extends Fragment {
     }
 
     private void getDonatorDocumentData() {
-        db.collection("donators").whereEqualTo("socialCommunityId", user.getUid()).get()
+        db.collection("donations").whereEqualTo("socialCommunityId", user.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -291,7 +291,7 @@ public class SocialCommunityProfileFragment extends Fragment {
     private void updateDonatorDatabase(ArrayList list) {
         WriteBatch batch = db.batch();
         for (int i = 0; i < list.size(); i++) {
-            DocumentReference eventReference = db.collection("donators").document((String) list.get(i));
+            DocumentReference eventReference = db.collection("donations").document((String) list.get(i));
             batch.update(eventReference, "socialCommunityPhoneNumber", newUserData.getPhone());
         }
 
