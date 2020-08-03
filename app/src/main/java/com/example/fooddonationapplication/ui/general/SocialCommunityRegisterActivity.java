@@ -54,12 +54,12 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "SocialRegisterActivity";
     private static final int GalleryPick = 1;
-    private String socialCommunityImageURI, emailData, passwordData, socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData;
+    private String socialCommunityImageURI, emailData, passwordData, confirmPasswordData, socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData;
 
-    private EditText emailId, passwordId, socialCommunityNameId, telephoneNumberId, socialCommunityDescription;
+    private EditText emailId, passwordId, confirmPasswordId, socialCommunityNameId, telephoneNumberId, socialCommunityDescription;
     private Button btnSignUp;
     private FirebaseAuth mFirebaseAuth;
-    private TextInputLayout textInputEmail, textInputPassword, textInputSocialCommunityName, textInputTelephoneNumber, textInputSocialCommunityDescription;
+    private TextInputLayout textInputEmail, textInputPassword, textInputConfirmPassword, textInputSocialCommunityName, textInputTelephoneNumber, textInputSocialCommunityDescription;
     private ProgressBar progressBar;
     private ImageView socialCommunityPhoto;
     private Bitmap bitmap;
@@ -73,28 +73,12 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_social_community);
-
-        hasImage = false;
-
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        emailId = findViewById(R.id.socialCommunityRegisterEmail);
-        passwordId = findViewById(R.id.socialCommunityRegisterPassword);
-        socialCommunityNameId = findViewById(R.id.socialCommunityRegisterSocialCommunityName);
-        telephoneNumberId = findViewById(R.id.socialCommunityRegisterTelephoneNumber);
-        socialCommunityDescription = findViewById(R.id.socialCommunityRegisterDescription);
-
-        textInputEmail = findViewById(R.id.socialCommunityRegisterEmailLayout);
-        textInputPassword = findViewById(R.id.socialCommunityRegisterPasswordLayout);
-        textInputSocialCommunityName = findViewById(R.id.socialCommunityRegisterSocialCommunityNameLayout);
-        textInputTelephoneNumber = findViewById(R.id.socialCommunityRegisterTelephoneNumberLayout);
-        textInputSocialCommunityDescription = findViewById(R.id.socialCommunityRegisterDescriptionLayout);
-
-        socialCommunityPhoto = findViewById(R.id.socialCommunityRegisterImage);
-
-        btnSignUp = findViewById(R.id.socialCommunityRegisterConfirm);
-        progressBar = findViewById(R.id.socialCommunityRegisterProgressBar);
+        initializeComponents();
         progressBar.setVisibility(View.INVISIBLE);
 
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
+        hasImage = false;
         mViewModel = new ViewModelProvider(this).get(SocialCommunityRegisterViewModel.class);
         if(mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
@@ -107,6 +91,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 emailData = emailId.getText().toString();
                 passwordData = passwordId.getText().toString();
+                confirmPasswordData = confirmPasswordId.getText().toString();
                 socialCommunityNameData = socialCommunityNameId.getText().toString();
                 telephoneNumberData = telephoneNumberId.getText().toString();
                 socialCommunityDescriptionData = socialCommunityDescription.getText().toString();
@@ -171,7 +156,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { // TODO mungkin batasi gunakan crop
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
@@ -208,23 +193,44 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         // Email checking
+        boolean emailValidation = false;
         if (emailData.isEmpty()) {
             textInputEmail.setError("Please input your email");
         } else if (!emailData.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
         } else {
+            emailValidation = true;
             textInputEmail.setErrorEnabled(false);
         }
 
         // Password checking
         boolean passwordValidation = false;
-        if (passwordData.isEmpty()) {
+        if (passwordData.isEmpty() && confirmPasswordData.isEmpty()) {
             textInputPassword.setError("Please enter your password");
-        } else if (passwordData.length() <= 5) {
-            textInputPassword.setError("Password must be at least 6 characters");
+            textInputConfirmPassword.setError("Please enter your password");
         } else {
-            passwordValidation = true;
-            textInputPassword.setErrorEnabled(false);
+            if (passwordData.isEmpty()) {
+                textInputPassword.setError("Please enter your password");
+            } else if (passwordData.length() <= 5) {
+                textInputPassword.setError("Password minimum is 6 digit");
+            } else {
+                textInputPassword.setErrorEnabled(false);
+            }
+
+            if (confirmPasswordData.isEmpty()) {
+                textInputConfirmPassword.setError("Please enter your password");
+            } else if (confirmPasswordData.length() <= 5) {
+                textInputConfirmPassword.setError("Password minimum is 6 digit");
+            } else {
+                textInputConfirmPassword.setErrorEnabled(false);
+            }
+
+            if (!passwordData.equals(confirmPasswordData)) {
+                textInputConfirmPassword.setError("The password is not matching");
+            } else {
+                textInputConfirmPassword.setErrorEnabled(false);
+                passwordValidation = true;
+            }
         }
 
         // Full name checking
@@ -258,10 +264,9 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
         }
 
         // Register user
-        if (emailData.isEmpty() && passwordData.isEmpty() && socialCommunityNameData.isEmpty() && !telephoneNumberValidation && socialCommunityDescriptionData.isEmpty()) { // TODO tambahin description sama gambar
+        if (!emailValidation && !passwordValidation && socialCommunityNameData.isEmpty() && !telephoneNumberValidation && socialCommunityDescriptionData.isEmpty()) {
             Toast.makeText(SocialCommunityRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!emailData.isEmpty() && passwordValidation && !socialCommunityNameData.isEmpty() && telephoneNumberValidation && !socialCommunityDescriptionData.isEmpty() && hasImage) {
-//            handleUpload(bitmap);
+        } else if (emailValidation && passwordValidation && !socialCommunityNameData.isEmpty() && telephoneNumberValidation && !socialCommunityDescriptionData.isEmpty() && hasImage) {
             registerUser();
         } else {
             Toast.makeText(SocialCommunityRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
@@ -291,10 +296,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     private void handleUpload(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//        handleUpload(bitmap);
-//        String currentDateDetail = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        Log.v(TAG, currentDateDetail);
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("social-community").child(uuid + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
@@ -347,7 +349,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
                             Intent intent = new Intent(SocialCommunityRegisterActivity.this, MainSocialCommunityActivity.class);
                             intent.putExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL, socialCommunity);
                             Toast.makeText(SocialCommunityRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // TODO try to implement finish
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
                     }
@@ -357,22 +359,14 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
     private void registerToDatabase() {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        User user = new User(socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData, uuid, "social community", socialCommunityImageURI);
-//        User user = new User();
         socialCommunity.setName(socialCommunityNameData);
         socialCommunity.setPhone(telephoneNumberData);
-        socialCommunity.setUuid(uuid);
         socialCommunity.setRole(Constant.SOCIAL_COMMUNITY_ROLE);
         socialCommunity.setDescription(socialCommunityDescriptionData);
         socialCommunity.setImageURI(socialCommunityImageURI);
         socialCommunity.setTotalEventCreated(0);
         socialCommunity.setNotificationAvailabilityInMillis(System.currentTimeMillis());
-//        user.setName(socialCommunityNameData);
-//        user.setPhone(telephoneNumberData);
-//        user.setDescription(socialCommunityDescriptionData);
-//        user.setUuid(uuid);
-//        user.setRole("social community");
-//        user.setImageURI(socialCommunityImageURI);
+        socialCommunity.setUuid(uuid);
         db.collection("users").document(uuid)
                 .set(socialCommunity)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -388,5 +382,26 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
                         Log.d(TAG, "Error writing document", e);
                     }
                 });
+    }
+
+    private void initializeComponents() {
+        emailId = findViewById(R.id.socialCommunityRegisterEmail);
+        passwordId = findViewById(R.id.socialCommunityRegisterPassword);
+        confirmPasswordId = findViewById(R.id.socialCommunityRegisterConfirmPassword);
+        socialCommunityNameId = findViewById(R.id.socialCommunityRegisterSocialCommunityName);
+        telephoneNumberId = findViewById(R.id.socialCommunityRegisterTelephoneNumber);
+        socialCommunityDescription = findViewById(R.id.socialCommunityRegisterDescription);
+
+        textInputEmail = findViewById(R.id.socialCommunityRegisterEmailLayout);
+        textInputPassword = findViewById(R.id.socialCommunityRegisterPasswordLayout);
+        textInputConfirmPassword = findViewById(R.id.socialCommunityRegisterConfirmPasswordLayout);
+        textInputSocialCommunityName = findViewById(R.id.socialCommunityRegisterSocialCommunityNameLayout);
+        textInputTelephoneNumber = findViewById(R.id.socialCommunityRegisterTelephoneNumberLayout);
+        textInputSocialCommunityDescription = findViewById(R.id.socialCommunityRegisterDescriptionLayout);
+
+        socialCommunityPhoto = findViewById(R.id.socialCommunityRegisterImage);
+
+        btnSignUp = findViewById(R.id.socialCommunityRegisterConfirm);
+        progressBar = findViewById(R.id.socialCommunityRegisterProgressBar);
     }
 }

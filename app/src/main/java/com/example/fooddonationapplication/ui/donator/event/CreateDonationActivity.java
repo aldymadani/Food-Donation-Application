@@ -56,30 +56,27 @@ import java.util.Calendar;
 public class CreateDonationActivity extends AppCompatActivity {
 
     private static final String TAG = "DonateActivity";
-    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     private Button btnConfirm;
     private TextInputLayout textInputFoodItems, textInputDate, textInputTime, textInputQuantity;
+    private EditText etAddress, etFoodItems, etDate, etTime, etQuantity;
     private ProgressBar progressBar;
     private ImageView foodImage;
-    private EditText etAddress, etFoodItems, etDate, etTime, etQuantity;
-    private Calendar calendar;
-    private DatePickerDialog datePickerDialog;
-    private TimePickerDialog timePickerDialog;
-    private String PROFILE_IMAGE_URL = null;
     private int TAKE_IMAGE_CODE = 10001;
     private Bitmap bitmap;
-    private String pickUpAddressData;
-    private String foodItemsData;
-    private String timeData;
-    private String totalDonationData;
-    private String chosenDate;
+    private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userID, eventID;
     private boolean hasImage;
-    private String foodImageURI;
-    private String userID;
-    private String eventID;
+
+    // Firestore Database Access
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
     final String donatorDocumentID = db.collection("donators").document().getId();
 
+    // View Model
     DonatorViewModel mViewModel;
+
+    // DatePicker and TimePicker
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,73 +153,6 @@ public class CreateDonationActivity extends AppCompatActivity {
                 checkingAllFields();
             }
         });
-    }
-
-    private void initializeComponents() {
-        textInputFoodItems = findViewById(R.id.donate_food_item_layout);
-        textInputDate = findViewById(R.id.donate_date_layout);
-        textInputQuantity = findViewById(R.id.donate_quantity_layout);
-        textInputTime = findViewById(R.id.donate_time_layout);
-        btnConfirm = findViewById(R.id.donate_confirm);
-        progressBar = findViewById(R.id.donate_progressBar);
-        foodImage = findViewById(R.id.donate_food_photo);
-
-        etAddress = findViewById(R.id.donate_address);
-        etFoodItems = findViewById(R.id.donate_food_item);
-        etDate = findViewById(R.id.donate_date);
-        etTime = findViewById(R.id.donate_time);
-        etQuantity = findViewById(R.id.donate_quantity);
-    }
-
-    private void setupClock() {
-        timePickerDialog = new TimePickerDialog(CreateDonationActivity.this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                String amPm;
-                if (hourOfDay >= 12) {
-                    amPm = " PM";
-                } else {
-                    amPm = " AM";
-                }
-                etTime.setText(String.format("%02d:%02d", hourOfDay, minutes) + amPm);
-            }
-        }, 0, 0, false);
-        timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                etTime.clearFocus();
-            }
-        });
-        timePickerDialog.show();
-    }
-
-    private void setupCalendar() {
-        calendar = Calendar.getInstance();
-
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-
-        datePickerDialog = new DatePickerDialog(CreateDonationActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                etDate.setText(Util.convertToFullDate(chosenDate));
-            }
-        }, year, month, day);
-        long now = System.currentTimeMillis() - 1000;
-        datePickerDialog.getDatePicker().setMinDate(now);
-        calendar.add(Calendar.YEAR, 0);
-        long eventEndDate = getIntent().getExtras().getLong("endDateInMillis");
-        Log.d(TAG, String.valueOf(eventEndDate));
-        datePickerDialog.getDatePicker().setMaxDate(eventEndDate);
-        datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                etDate.clearFocus();
-            }
-        });
-        datePickerDialog.show();
     }
 
     private void checkingAllFields() {
@@ -303,7 +233,6 @@ public class CreateDonationActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private void handleUpload(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -418,5 +347,72 @@ public class CreateDonationActivity extends AppCompatActivity {
                 btnConfirm.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void setupClock() {
+        timePickerDialog = new TimePickerDialog(CreateDonationActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                String amPm;
+                if (hourOfDay >= 12) {
+                    amPm = " PM";
+                } else {
+                    amPm = " AM";
+                }
+                etTime.setText(String.format("%02d:%02d", hourOfDay, minutes) + amPm);
+            }
+        }, 0, 0, false);
+        timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                etTime.clearFocus();
+            }
+        });
+        timePickerDialog.show();
+    }
+
+    private void setupCalendar() {
+        Calendar calendar = Calendar.getInstance();
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        datePickerDialog = new DatePickerDialog(CreateDonationActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                etDate.setText(Util.convertToFullDate(chosenDate));
+            }
+        }, year, month, day);
+        long now = System.currentTimeMillis() - 1000;
+        datePickerDialog.getDatePicker().setMinDate(now);
+        calendar.add(Calendar.YEAR, 0);
+        long eventEndDate = getIntent().getExtras().getLong("endDateInMillis");
+        Log.d(TAG, String.valueOf(eventEndDate));
+        datePickerDialog.getDatePicker().setMaxDate(eventEndDate);
+        datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                etDate.clearFocus();
+            }
+        });
+        datePickerDialog.show();
+    }
+
+    private void initializeComponents() {
+        textInputFoodItems = findViewById(R.id.donate_food_item_layout);
+        textInputDate = findViewById(R.id.donate_date_layout);
+        textInputQuantity = findViewById(R.id.donate_quantity_layout);
+        textInputTime = findViewById(R.id.donate_time_layout);
+        btnConfirm = findViewById(R.id.donate_confirm);
+        progressBar = findViewById(R.id.donate_progressBar);
+        foodImage = findViewById(R.id.donate_food_photo);
+
+        etAddress = findViewById(R.id.donate_address);
+        etFoodItems = findViewById(R.id.donate_food_item);
+        etDate = findViewById(R.id.donate_date);
+        etTime = findViewById(R.id.donate_time);
+        etQuantity = findViewById(R.id.donate_quantity);
     }
 }

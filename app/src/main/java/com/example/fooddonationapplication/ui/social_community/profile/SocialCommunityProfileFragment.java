@@ -65,24 +65,22 @@ import java.util.Calendar;
 import java.util.List;
 
 public class SocialCommunityProfileFragment extends Fragment {
-
     private static final String TAG = "SocialProfileFragment";
 
     private FragmentActivity activity;
 
-    private EditText fullName, telephoneNumber, description, totalEventCreated;
     private TextInputLayout telephoneNumberLayout, descriptionLayout;
+    private EditText fullName, telephoneNumber, description, totalEventCreated;
     private Button updateCredentialButton, updateProfileButton, logOutButton;
     private ProgressBar updateProgressBar, socialCommunityProfilePhotoProgressBar, updateCredentialProgressBar;
     private ImageView socialCommunityPhoto;
+
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+    // For storing and comparing the user data for update
     private SocialCommunity oldUserData;
     private SocialCommunity newUserData = new SocialCommunity();
-
-    // View Model
-    private SocialCommunityProfileViewModel mViewModel;
 
     private boolean hasChanged;
     private boolean hasTelephoneNumberChanged;
@@ -93,30 +91,16 @@ public class SocialCommunityProfileFragment extends Fragment {
     private String eventImageURI;
     private boolean hasImageChanged;
 
+    // View Model
+    private SocialCommunityProfileViewModel mViewModel;
+
     private View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile_social_community, container, false);
         activity = requireActivity();
-
-        fullName = rootView.findViewById(R.id.socialCommunityProfileFullName);
-        telephoneNumber = rootView.findViewById(R.id.socialCommunityProfileTelephoneNumber);
-        description = rootView.findViewById(R.id.socialCommunityProfileDescription);
-        totalEventCreated = rootView.findViewById(R.id.socialCommunityProfileTotalEventCreated);
-
-        telephoneNumberLayout = rootView.findViewById(R.id.socialCommunityProfileTelephoneNumberLayout);
-        descriptionLayout = rootView.findViewById(R.id.socialCommunityProfileDescriptionLayout);
-
-        updateCredentialButton = rootView.findViewById(R.id.socialCommunityProfileUpdateCredentialButton);
-        updateProfileButton = rootView.findViewById(R.id.socialCommunityProfileUpdateButton);
-        logOutButton = rootView.findViewById(R.id.socialCommunityProfileLogOutButton);
-
-        updateCredentialProgressBar = rootView.findViewById(R.id.socialCommunityProfileUpdateCredentialProgressBar);
-        updateProgressBar = rootView.findViewById(R.id.socialCommunityProfileProgressBar);
-        socialCommunityProfilePhotoProgressBar = rootView.findViewById(R.id.socialCommunityProfilePhotoProgressBar);
-
-        socialCommunityPhoto = rootView.findViewById(R.id.socialCommunityProfilePhoto);
+        initializeComponents();
 
         updateProgressBar.setVisibility(View.INVISIBLE);
         updateCredentialProgressBar.setVisibility(View.INVISIBLE);
@@ -136,7 +120,7 @@ public class SocialCommunityProfileFragment extends Fragment {
             socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE);
             hasImageChanged = mViewModel.isHasImageChanged();
         } else {
-            Picasso.get().load(user.getPhotoUrl()).error(R.drawable.ic_error_black_24dp).into(socialCommunityPhoto, new com.squareup.picasso.Callback() { // TODO pass the URL from login / register activity, got a little bug if user.getPhotoUrl() don't have value
+            Picasso.get().load(user.getPhotoUrl()).error(R.drawable.ic_error_black_24dp).into(socialCommunityPhoto, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE);
@@ -479,6 +463,7 @@ public class SocialCommunityProfileFragment extends Fragment {
                             if (!passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
                                 confirmPasswordInputLayout.setError("The password is not matching");
                             } else {
+                                confirmPasswordInputLayout.setErrorEnabled(false);
                                 passwordDialog.dismiss();
                                 Util.hideKeyboard(requireActivity());
                                 updateProfileButton.setEnabled(false);
@@ -619,5 +604,25 @@ public class SocialCommunityProfileFragment extends Fragment {
                                 });
                     }
                 });
+    }
+
+    private void initializeComponents() {
+        fullName = rootView.findViewById(R.id.socialCommunityProfileFullName);
+        telephoneNumber = rootView.findViewById(R.id.socialCommunityProfileTelephoneNumber);
+        description = rootView.findViewById(R.id.socialCommunityProfileDescription);
+        totalEventCreated = rootView.findViewById(R.id.socialCommunityProfileTotalEventCreated);
+
+        telephoneNumberLayout = rootView.findViewById(R.id.socialCommunityProfileTelephoneNumberLayout);
+        descriptionLayout = rootView.findViewById(R.id.socialCommunityProfileDescriptionLayout);
+
+        updateCredentialButton = rootView.findViewById(R.id.socialCommunityProfileUpdateCredentialButton);
+        updateProfileButton = rootView.findViewById(R.id.socialCommunityProfileUpdateButton);
+        logOutButton = rootView.findViewById(R.id.socialCommunityProfileLogOutButton);
+
+        updateCredentialProgressBar = rootView.findViewById(R.id.socialCommunityProfileUpdateCredentialProgressBar);
+        updateProgressBar = rootView.findViewById(R.id.socialCommunityProfileProgressBar);
+        socialCommunityProfilePhotoProgressBar = rootView.findViewById(R.id.socialCommunityProfilePhotoProgressBar);
+
+        socialCommunityPhoto = rootView.findViewById(R.id.socialCommunityProfilePhoto);
     }
 }

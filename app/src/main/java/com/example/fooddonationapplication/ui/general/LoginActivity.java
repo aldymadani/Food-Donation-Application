@@ -160,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             textInputEmail.setError("Please enter your email");
         } else if (!email.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
-        } else { // TODO elsenya nanti dihapus
+        } else {
             textInputEmail.setErrorEnabled(false);
         }
 
@@ -200,8 +200,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             textInputEmail.setError("The account is not registered yet");
                         } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                             textInputPassword.setError("The password doesn't match the email address");
-                            // TODO toast not needed if setError is used
-                            Toast.makeText(LoginActivity.this, "The password doesn't match the email address", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(LoginActivity.this, "Login error, please try again", Toast.LENGTH_SHORT).show();
                         }

@@ -130,28 +130,7 @@ public class UpdateEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_event_update, container, false);
-
-        eventTitle = rootView.findViewById(R.id.updateEventEventTitle);
-        eventDescription = rootView.findViewById(R.id.updateEventDescription);
-        eventEndDate = rootView.findViewById(R.id.updateEventEndDate);
-        eventTargetQuantity = rootView.findViewById(R.id.updateEventTargetQuantity);
-        eventTotalDonation = rootView.findViewById(R.id.updateEventTotalDonation);
-
-        eventTitleLayout = rootView.findViewById(R.id.updateEventEventTitleLayout);
-        eventDescriptionLayout = rootView.findViewById(R.id.updateEventDescriptionLayout);
-        eventEndDateLayout = rootView.findViewById(R.id.updateEventEndDateLayout);
-        eventTargetQuantityLayout = rootView.findViewById(R.id.updateEventTargetQuantityLayout);
-
-        eventPhoto = rootView.findViewById(R.id.updateEventImage);
-
-        updateEventButton = rootView.findViewById(R.id.updateEventConfirmButton);
-        deleteEventButton = rootView.findViewById(R.id.updateEventDeleteButton);
-        sendNotificationButton = rootView.findViewById(R.id.updateEventSendNotificationButton);
-
-        updateEventProgressBar = rootView.findViewById(R.id.updateEventConfirmProgressBar);
-        deleteEventProgressBar = rootView.findViewById(R.id.updateEventDeleteProgressBar);
-        sendNotificationProgressBar = rootView.findViewById(R.id.updateEventSendNotificationButtonProgressBar);
-        imageEventPhotoProgressBar = rootView.findViewById(R.id.updateEventImageProgressBar);
+        initializeComponents();
 
         updateEventProgressBar.setVisibility(View.INVISIBLE);
         deleteEventProgressBar.setVisibility(View.INVISIBLE);
@@ -329,18 +308,19 @@ public class UpdateEventFragment extends Fragment {
         String TOPIC = "/topics/FoodDonation"; //topic must match with what the receiver subscribed to
         String NOTIFICATION_TITLE = event.getTitle();
         String NOTIFICATION_MESSAGE = event.getDescription();
+        String NOTIFICATION_EVENT_ID = event.getEventID();
 
         JSONObject notification = new JSONObject();
         JSONObject notifcationBody = new JSONObject();
         try {
             notifcationBody.put("title", NOTIFICATION_TITLE);
             notifcationBody.put("message", NOTIFICATION_MESSAGE);
+            notifcationBody.put("eventId", NOTIFICATION_EVENT_ID);
             notification.put("to", TOPIC);
             notification.put("data", notifcationBody);
         } catch (JSONException e) {
             Log.e(TAG, "onCreate: " + e.getMessage() );
         }
-//                Toast.makeText(getContext(), "JSON " + notification, Toast.LENGTH_SHORT).show();
         sendNotification(notification);
     }
 
@@ -349,14 +329,12 @@ public class UpdateEventFragment extends Fragment {
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-//                        Toast.makeText(getContext(), "onResponse" + response.toString(), Toast.LENGTH_LONG).show();
                         Log.i(TAG, "onResponse: " + response.toString());
                     }
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(getContext(), "Request error", Toast.LENGTH_LONG).show();
                         Log.i(TAG, "onErrorResponse: Didn't work");
                     }
                 }){
@@ -449,20 +427,13 @@ public class UpdateEventFragment extends Fragment {
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                 eventEndDate.setText(Util.convertToFullDate(chosenDate));
-//                            chosenDate += " 23:59:59";
-//                            try {
-//                                chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
                 Log.d(TAG, "Chosen Date" + chosenDate);
-//                            Log.d(TAG, String.valueOf(chosenDateInMillis));
                 Log.d(TAG, String.valueOf(System.currentTimeMillis()));
             }
         }, year, month, day);
         long now = System.currentTimeMillis() - 1000;
         datePickerDialog.getDatePicker().setMinDate(now + (1000 * 60 * 60 * 24 * 7));
-        calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
+        calendar.add(Calendar.YEAR, 0);
         datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -518,12 +489,10 @@ public class UpdateEventFragment extends Fragment {
 
     private void updateDonatorDatabase(ArrayList list) {
         WriteBatch batch = db.batch();
-
         for (int i = 0; i < list.size(); i++) {
             DocumentReference donatorReference = db.collection("donators").document((String) list.get(i));
             batch.update(donatorReference, "eventName", newEvent.getTitle());
         }
-
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -541,7 +510,7 @@ public class UpdateEventFragment extends Fragment {
                 "description", newEvent.getDescription(),
                 "endDate", newEvent.getEndDate(),
                 "endDateInMillis", newEvent.getEndDateInMillis(),
-                "imageURI", newEvent.getImageURI(), // TODO add image URI later
+                "imageURI", newEvent.getImageURI(),
                 "targetQuantity", newEvent.getTargetQuantity()
         );
 
@@ -549,15 +518,15 @@ public class UpdateEventFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 allActionStatus(true, "UPDATE_FINISH");
-                // TODO update donator first
+
                 // Checking for the new things again
                 event.setTitle(newEvent.getTitle());
                 event.setDescription(newEvent.getDescription());
                 event.setEndDate(newEvent.getEndDate());
                 event.setEndDateInMillis(newEvent.getEndDateInMillis());
                 event.setImageURI(newEvent.getImageURI());
-                event.setTargetQuantity(newEvent.getTargetQuantity()); // TODO try to shadow copy
-                // event = newEvent
+                event.setTargetQuantity(newEvent.getTargetQuantity());
+
                 hasChangedTitle = false;
                 hasChanged = false;
                 hasImageChanged = false;
@@ -603,12 +572,10 @@ public class UpdateEventFragment extends Fragment {
     }
 
     private void checkingChanges() {
-        // TODO: add checking if there is empty field
-
-//        newEvent = event;
         newEvent.setTitle(eventTitle.getText().toString());
         newEvent.setDescription(eventDescription.getText().toString());
         newEvent.setEndDate(chosenDate);
+
         // Convert the date to Millis
         try {
             chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate + " 23:59:59").getTime();
@@ -637,7 +604,6 @@ public class UpdateEventFragment extends Fragment {
     }
 
     private void deleteEvent() {
-        // TODO disable update and send notification and the rest of the text and image click
         // Perform delete donation on the database
         allActionStatus(false, "DELETE_START");
         WriteBatch batch = db.batch();
@@ -652,7 +618,6 @@ public class UpdateEventFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // Perform deletion of the image on the firebase storage
-//                String storageUrl = "event-image/" + eventID + ".jpeg";
                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(event.getImageURI());
                 storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -759,5 +724,29 @@ public class UpdateEventFragment extends Fragment {
                         updateEvent();
                     }
                 });
+    }
+
+    private void initializeComponents() {
+        eventTitle = rootView.findViewById(R.id.updateEventEventTitle);
+        eventDescription = rootView.findViewById(R.id.updateEventDescription);
+        eventEndDate = rootView.findViewById(R.id.updateEventEndDate);
+        eventTargetQuantity = rootView.findViewById(R.id.updateEventTargetQuantity);
+        eventTotalDonation = rootView.findViewById(R.id.updateEventTotalDonation);
+
+        eventTitleLayout = rootView.findViewById(R.id.updateEventEventTitleLayout);
+        eventDescriptionLayout = rootView.findViewById(R.id.updateEventDescriptionLayout);
+        eventEndDateLayout = rootView.findViewById(R.id.updateEventEndDateLayout);
+        eventTargetQuantityLayout = rootView.findViewById(R.id.updateEventTargetQuantityLayout);
+
+        eventPhoto = rootView.findViewById(R.id.updateEventImage);
+
+        updateEventButton = rootView.findViewById(R.id.updateEventConfirmButton);
+        deleteEventButton = rootView.findViewById(R.id.updateEventDeleteButton);
+        sendNotificationButton = rootView.findViewById(R.id.updateEventSendNotificationButton);
+
+        updateEventProgressBar = rootView.findViewById(R.id.updateEventConfirmProgressBar);
+        deleteEventProgressBar = rootView.findViewById(R.id.updateEventDeleteProgressBar);
+        sendNotificationProgressBar = rootView.findViewById(R.id.updateEventSendNotificationButtonProgressBar);
+        imageEventPhotoProgressBar = rootView.findViewById(R.id.updateEventImageProgressBar);
     }
 }

@@ -37,7 +37,8 @@
         <activity
             android:name=".ui.donator.MainDonatorActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".ui.general.LoginActivity" />
+        <activity android:name=".ui.general.LoginActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".ui.general.SocialCommunityRegisterActivity" />
         <activity android:name=".ui.general.DonatorRegisterActivity" />
         <activity

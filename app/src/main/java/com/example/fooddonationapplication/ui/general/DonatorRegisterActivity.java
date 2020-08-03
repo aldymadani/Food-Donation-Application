@@ -33,13 +33,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DonatorRegisterActivity extends AppCompatActivity {
-
     private static final String TAG = "DonatorRegisterActivity";
 
-    private EditText emailId, passwordId, fullNameId, telephoneNumberId;
+    private TextInputLayout textInputEmail, textInputPassword, textInputConfirmPassword, textInputFullName, textInputTelephoneNumber;
+    private EditText emailId, passwordId, confirmPasswordId, fullNameId, telephoneNumberId;
     private Button btnSignUp;
     private FirebaseAuth mFirebaseAuth;
-    private TextInputLayout textInputEmail, textInputPassword, textInputFullName, textInputTelephoneNumber;
     private ProgressBar progressBar;
     private Donator donator = new Donator();
 
@@ -47,18 +46,9 @@ public class DonatorRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_donator);
+        initializeComponents();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        emailId = findViewById(R.id.register_email);
-        passwordId = findViewById(R.id.register_password);
-        btnSignUp = findViewById(R.id.register_confirm);
-        fullNameId = findViewById(R.id.register_full_name);
-        telephoneNumberId = findViewById(R.id.register_telephone_number);
-        textInputEmail = findViewById(R.id.register_email_layout);
-        textInputPassword = findViewById(R.id.register_password_layout);
-        textInputFullName = findViewById(R.id.register_full_name_layout);
-        textInputTelephoneNumber = findViewById(R.id.register_telephone_number_layout);
-        progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -66,56 +56,56 @@ public class DonatorRegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = emailId.getText().toString();
                 String password = passwordId.getText().toString();
+                String confirmPassword = confirmPasswordId.getText().toString();
                 String fullName = fullNameId.getText().toString();
                 String telephoneNumber = telephoneNumberId.getText().toString();
-                allFieldValidation(email, password, fullName, telephoneNumber);
+                allFieldValidation(email, password, confirmPassword, fullName, telephoneNumber);
             }
         });
     }
 
-    private void allActionStatus(boolean status) {
-        emailId.setFocusable(status);
-        emailId.setFocusableInTouchMode(status);
-        emailId.setCursorVisible(status);
-        passwordId.setFocusable(status);
-        passwordId.setFocusableInTouchMode(status);
-        passwordId.setCursorVisible(status);
-        fullNameId.setFocusable(status);
-        fullNameId.setFocusableInTouchMode(status);
-        fullNameId.setCursorVisible(status);
-        telephoneNumberId.setFocusable(status);
-        telephoneNumberId.setFocusableInTouchMode(status);
-        telephoneNumberId.setCursorVisible(status);
-        if (status) {
-            btnSignUp.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        } else {
-            btnSignUp.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-        }
-    }
-
-    protected void allFieldValidation(String email, String password, String fullName, String telephoneNumber) {
+    protected void allFieldValidation(String email, String password, String confirmPassword, String fullName, String telephoneNumber) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         // Email checking
+        boolean emailValidation = false;
         if (email.isEmpty()) {
             textInputEmail.setError("Please input your email");
         } else if (!email.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
         } else {
+            emailValidation = true;
             textInputEmail.setErrorEnabled(false);
         }
 
         // Password checking
         boolean passwordValidation = false;
-        if (password.isEmpty()) {
+        if (password.isEmpty() && confirmPassword.isEmpty()) {
             textInputPassword.setError("Please enter your password");
-        } else if (password.length() <= 5) {
-            textInputPassword.setError("Password must be at least 6 characters");
+            textInputConfirmPassword.setError("Please enter your password");
         } else {
-            passwordValidation = true;
-            textInputPassword.setErrorEnabled(false);
+            if (password.isEmpty()) {
+                textInputPassword.setError("Please enter your password");
+            } else if (password.length() <= 5) {
+                textInputPassword.setError("Password minimum is 6 digit");
+            } else {
+                textInputPassword.setErrorEnabled(false);
+            }
+
+            if (confirmPassword.isEmpty()) {
+                textInputConfirmPassword.setError("Please enter your password");
+            } else if (confirmPassword.length() <= 5) {
+                textInputConfirmPassword.setError("Password minimum is 6 digit");
+            } else {
+                textInputConfirmPassword.setErrorEnabled(false);
+            }
+
+            if (!password.equals(confirmPassword)) {
+                textInputConfirmPassword.setError("The password is not matching");
+            } else {
+                textInputConfirmPassword.setErrorEnabled(false);
+                passwordValidation = true;
+            }
         }
 
         // Full name checking
@@ -137,9 +127,9 @@ public class DonatorRegisterActivity extends AppCompatActivity {
         }
 
         // Register user
-        if (email.isEmpty() && password.isEmpty() && fullName.isEmpty() && telephoneNumber.isEmpty()) {
+        if (!emailValidation && !passwordValidation && fullName.isEmpty() && telephoneNumberValidation) {
             Toast.makeText(DonatorRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!email.isEmpty() && !password.isEmpty() && passwordValidation && !fullName.isEmpty() && !telephoneNumber.isEmpty() && telephoneNumberValidation) {
+        } else if (!emailValidation && passwordValidation && !fullName.isEmpty() && telephoneNumberValidation) {
             registerUser(email, password, fullName, telephoneNumber);
         } else {
             Toast.makeText(DonatorRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
@@ -162,14 +152,6 @@ public class DonatorRegisterActivity extends AppCompatActivity {
                     }
                 } else {
                     String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//                    User user = new User(fullName, telephoneNumber, uuid, "donator", 0);
-//                    User user = new User();
-//                    user.setName(fullName);
-//                    user.setPhone(telephoneNumber);
-//                    user.setUuid(uuid);
-//                    user.setRole("donator");
-//                    user.setTotalDonation(0);
-//                    Map<String, Object> user = new HashMap<>();
                     donator.setName(fullName);
                     donator.setPhone(telephoneNumber);
                     donator.setUuid(uuid);
@@ -221,5 +203,42 @@ public class DonatorRegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void allActionStatus(boolean status) {
+        emailId.setFocusable(status);
+        emailId.setFocusableInTouchMode(status);
+        emailId.setCursorVisible(status);
+        passwordId.setFocusable(status);
+        passwordId.setFocusableInTouchMode(status);
+        passwordId.setCursorVisible(status);
+        fullNameId.setFocusable(status);
+        fullNameId.setFocusableInTouchMode(status);
+        fullNameId.setCursorVisible(status);
+        telephoneNumberId.setFocusable(status);
+        telephoneNumberId.setFocusableInTouchMode(status);
+        telephoneNumberId.setCursorVisible(status);
+        if (status) {
+            btnSignUp.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            btnSignUp.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initializeComponents() {
+        emailId = findViewById(R.id.register_email);
+        passwordId = findViewById(R.id.register_password);
+        confirmPasswordId = findViewById(R.id.register_confirm_password);
+        btnSignUp = findViewById(R.id.register_confirm);
+        fullNameId = findViewById(R.id.register_full_name);
+        telephoneNumberId = findViewById(R.id.register_telephone_number);
+        textInputEmail = findViewById(R.id.register_email_layout);
+        textInputPassword = findViewById(R.id.register_password_layout);
+        textInputConfirmPassword = findViewById(R.id.register_confirm_password_layout);
+        textInputFullName = findViewById(R.id.register_full_name_layout);
+        textInputTelephoneNumber = findViewById(R.id.register_telephone_number_layout);
+        progressBar = findViewById(R.id.progressBar);
     }
 }

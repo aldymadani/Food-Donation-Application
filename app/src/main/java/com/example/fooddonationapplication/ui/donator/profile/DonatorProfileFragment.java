@@ -41,6 +41,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +117,7 @@ public class DonatorProfileFragment extends Fragment {
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                unsubscribeNotification();
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -150,6 +152,35 @@ public class DonatorProfileFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void unsubscribeNotification() {
+        FirebaseMessaging.getInstance().subscribeToTopic("FoodDonation")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "SubscribeToTopic To Topic FoodDonation";
+                        if (!task.isSuccessful()) {
+                            msg = "Failed: SubscribeToTopic To Topic FoodDonation";
+                        }
+                        Log.d(TAG, msg);
+//                        Toast.makeText(MainSocialCommunityActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        final String userUuid = user.getUid();
+        FirebaseMessaging.getInstance().subscribeToTopic(userUuid)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "SubscribeToTopic To " + userUuid;
+                        if (!task.isSuccessful()) {
+                            msg = "Failed: SubscribeToTopic To Topic FoodDonation";
+                        }
+                        Log.d(TAG, msg);
+//                        Toast.makeText(MainSocialCommunityActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void initializeTextData() {

@@ -9,4 +9,7 @@ public class IntentNameExtra {
     // Model stuffs
     public static final String SOCIAL_COMMUNITY_MODEL = "socialCommunityModel";
     public static final String DONATOR_MODEL = "donatorModel";
+
+    // Notification stuff
+    public static final String NOTIFICATION_EVENT_ID = "notificationEventId";
 }

@@ -73,7 +73,6 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
                             msg = "Failed: UnsubscribeFromTopic To Topic FoodDonation";
                         }
                         Log.d(TAG, msg);
-//                        Toast.makeText(MainSocialCommunityActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

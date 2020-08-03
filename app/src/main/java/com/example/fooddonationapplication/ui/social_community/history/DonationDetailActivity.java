@@ -16,6 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -23,6 +26,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donation;
+import com.example.fooddonationapplication.services.MySingleton;
 import com.example.fooddonationapplication.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,6 +41,12 @@ import com.google.firebase.storage.StorageReference;
 import com.shreyaspatil.MaterialDialog.MaterialDialog;
 import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class DonationDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DonatorDetailActivity";
@@ -48,6 +58,12 @@ public class DonationDetailActivity extends AppCompatActivity {
     private Button callDonator, deleteDonation, updateDonationStatus;
     private String donationId, donatorId, eventId, imageURI;
     private double donationQuantityData;
+    private Donation donation;
+
+    // Send Notification
+    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    final private String serverKey = "key=" + "AAAA_kQBhCI:APA91bFc0c2ZXDUJdQRzTIESv_qs2SLJocXUPqPII0WSjaeTEZgshflKKBOk74lJAWkoFBCcz7THIBlXEmDoCaHzfaMOwv4ZEh-5ZiQP1GBAREorM8mypdYwvvbxx87aY3ZuVLzib_tJ";
+    final private String contentType = "application/json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +91,7 @@ public class DonationDetailActivity extends AppCompatActivity {
         updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
 
         Intent intent = getIntent();
-        final Donation donation = intent.getParcelableExtra("Donator");
+        donation = intent.getParcelableExtra("Donator");
         donatorId = donation.getUuid();
         donationId = donation.getDonatorId();
         eventId = donation.getEventId();
@@ -132,7 +148,6 @@ public class DonationDetailActivity extends AppCompatActivity {
         updateDonationStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO add disable all Edit Text
                 deleteDonation.setEnabled(false);
                 updateDonationStatus.setVisibility(View.INVISIBLE);
                 updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
@@ -197,15 +212,9 @@ public class DonationDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         // File deleted successfully
+                                        setUpNotificationData();
                                         Log.d(TAG, "onSuccess: deleted file");
                                         Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
-//                                        Intent intent = new Intent(getApplicationContext(), MainSocialCommunityActivity.class);
-//                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                        startActivity(intent);
-                                        finish();
-                                        deleteDonation.setVisibility(View.VISIBLE);
-                                        deleteProgressBar.setVisibility(View.INVISIBLE);
-                                        updateDonationStatus.setEnabled(true);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -230,6 +239,53 @@ public class DonationDetailActivity extends AppCompatActivity {
                 .build();
 
         mDialog.show();
+    }
+
+    private void setUpNotificationData() {
+        String TOPIC = "/topics/" + donation.getUuid(); //topic must match with what the receiver subscribed to
+        String NOTIFICATION_TITLE = "Your donation on " + donation.getEventName() + " has been rejected";
+        String NOTIFICATION_MESSAGE = "Your " + donationDate.getText().toString() +  " donation has been rejected. Your donation date is on " + donationDate.getText().toString() + ".";
+
+        JSONObject notification = new JSONObject();
+        JSONObject notifcationBody = new JSONObject();
+        try {
+            notifcationBody.put("title", NOTIFICATION_TITLE);
+            notifcationBody.put("message", NOTIFICATION_MESSAGE);
+            notification.put("to", TOPIC);
+            notification.put("data", notifcationBody);
+        } catch (JSONException e) {
+            Log.e(TAG, "onCreate: " + e.getMessage() );
+        }
+        sendNotification(notification);
+    }
+
+    private void sendNotification(JSONObject notification) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, "onResponse: " + response.toString());
+                    }
+                },
+                new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i(TAG, "onErrorResponse: Didn't work");
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", serverKey);
+                params.put("Content-Type", contentType);
+                return params;
+            }
+        };
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+        finish();
+        deleteDonation.setVisibility(View.VISIBLE);
+        deleteProgressBar.setVisibility(View.INVISIBLE);
+        updateDonationStatus.setEnabled(true);
     }
 
     private void disableAllTextField() {

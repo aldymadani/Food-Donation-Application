@@ -126,6 +126,34 @@
                 app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/register_confirm_password_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/register_password_layout"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@+id/register_password_layout"
+            app:layout_constraintTop_toBottomOf="@+id/register_password_layout"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/register_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="152dp"
+                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                android:drawablePadding="@dimen/drawable_padding"
+                android:ems="10"
+                android:hint="@string/confirm_password_placeholder"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="@+id/register_email_layout"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/register_email_layout"
+                app:layout_constraintTop_toBottomOf="@+id/register_email_layout" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_confirm"
             style="@style/Widget.MaterialComponents.Button.Icon"
@@ -137,9 +165,9 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textSize="14sp"
             app:backgroundTint="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="@+id/register_password_layout"
-            app:layout_constraintStart_toStartOf="@+id/register_password_layout"
-            app:layout_constraintTop_toBottomOf="@+id/register_password_layout" />
+            app:layout_constraintEnd_toEndOf="@+id/register_confirm_password_layout"
+            app:layout_constraintStart_toStartOf="@+id/register_confirm_password_layout"
+            app:layout_constraintTop_toBottomOf="@+id/register_confirm_password_layout" />
 
         <ProgressBar
             android:id="@+id/progressBar"

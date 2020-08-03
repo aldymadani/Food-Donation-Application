@@ -22,6 +22,7 @@ import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.ui.general.SplashScreenActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.ui.social_community.history.UpdateEventActivity;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -57,6 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Intent intent = new Intent(this, SplashScreenActivity.class); // the activity you want the notification to open
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(IntentNameExtra.NOTIFICATION_EVENT_ID, remoteMessage.getData().get("eventId"));
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
@@ -84,7 +86,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotificationChannel(NotificationManager notificationManager) {
         final CharSequence CHANNEL_NAME = "New notification";
-        final String CHANNEL_DESCRIPTION = "Notifications for app xyz";
+        final String CHANNEL_DESCRIPTION = "Notifications for Food Donation Application";
 
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
         channel.setDescription(CHANNEL_DESCRIPTION);

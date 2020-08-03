@@ -37,28 +37,18 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         mFirebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
-//        if (user != null) {
-//            // User is signed in, send to mainmenu
-//            String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//            checkRole(uuid);
-//            Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-//        } else {
-//            // User is signed out, send to register/login
-//            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
-//        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (restorePrefData()) {
                     FirebaseUser user = mFirebaseAuth.getCurrentUser();
                     if (user != null) {
-                        // User is signed in, send to mainmenu
+                        // User is signed in, send to main menu
                         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         checkRole(uuid);
                         Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     } else {
-                        // User is signed out, send to register/login
+                        // User is signed out, send to login page
                         Intent mainIntent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                         startActivity(mainIntent);
                         finish();
@@ -66,13 +56,14 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(SplashScreenActivity.this, IntroductionActivity.class);
                     startActivity(intent);
-                    finish(); // Destroy activity A and not exist in Back stack
+                    finish();
                 }
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
 
     private boolean restorePrefData() {
+        // Checking first time or not
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPref", MODE_PRIVATE);
         return pref.getBoolean("isIntroOpened", false);
     }
@@ -88,7 +79,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         if (document.getData().containsValue("donator")) {
+                            String eventId = getIntent().getStringExtra(IntentNameExtra.NOTIFICATION_EVENT_ID);
                             Intent mainIntent = new Intent(SplashScreenActivity.this, MainDonatorActivity.class);
+                            mainIntent.putExtra(IntentNameExtra.NOTIFICATION_EVENT_ID, eventId);
                             mainIntent.putExtra(IntentNameExtra.DONATOR_MODEL, document.toObject(Donator.class));
                             startActivity(mainIntent);
                             finish();

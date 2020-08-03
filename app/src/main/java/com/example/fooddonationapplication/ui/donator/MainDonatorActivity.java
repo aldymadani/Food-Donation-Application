@@ -24,6 +24,8 @@ import com.example.fooddonationapplication.viewmodel.MainDonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.text.DateFormat;
@@ -73,6 +75,20 @@ public class MainDonatorActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         String msg = "SubscribeToTopic To Topic FoodDonation";
+                        if (!task.isSuccessful()) {
+                            msg = "Failed: SubscribeToTopic To Topic FoodDonation";
+                        }
+                        Log.d(TAG, msg);
+//                        Toast.makeText(MainSocialCommunityActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        final String userUuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseMessaging.getInstance().subscribeToTopic(userUuid)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "SubscribeToTopic To " + userUuid;
                         if (!task.isSuccessful()) {
                             msg = "Failed: SubscribeToTopic To Topic FoodDonation";
                         }

@@ -189,7 +189,7 @@ public class CreateEventFragment extends Fragment {
         }, year, month, day);
         long now = System.currentTimeMillis() - 1000;
         datePickerDialog.getDatePicker().setMinDate(now + (1000 * 60 * 60 * 24 * 7));
-        calendar.add(Calendar.YEAR, 0); // TODO CHECK LATER WHY NEEDED
+        calendar.add(Calendar.YEAR, 0);
         datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {

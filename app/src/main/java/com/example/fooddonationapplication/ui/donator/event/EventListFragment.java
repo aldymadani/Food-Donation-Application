@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.EventListAdapter;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,7 +69,15 @@ public class EventListFragment extends Fragment {
         emptyEventImage.setVisibility(View.INVISIBLE);
         emptyEventTextView.setVisibility(View.INVISIBLE);
 
-        final Query query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
+        final Query query;
+        // Retrieving data from activity
+        FragmentActivity fragmentActivity = requireActivity();
+        String eventIdFromNotification = fragmentActivity.getIntent().getStringExtra(IntentNameExtra.NOTIFICATION_EVENT_ID);
+        if (eventIdFromNotification != null) {
+            query = eventRef.whereEqualTo("eventID", eventIdFromNotification);
+        } else {
+            query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
+        }
         setUpRecyclerView(query);
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

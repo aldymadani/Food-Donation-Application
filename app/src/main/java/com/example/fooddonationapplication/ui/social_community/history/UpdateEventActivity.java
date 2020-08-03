@@ -5,6 +5,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.ViewPagerAdapter;
@@ -17,18 +18,11 @@ public class UpdateEventActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
-    String eventID = "";
-    String totalDonation = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_update);
-
-//        Intent intent = getIntent();
-//        Event event = intent.getParcelableExtra("Event");
-
-        Log.d(TAG,eventID + "Total Donation : " +totalDonation);
 
         tabLayout = findViewById(R.id.updateEventTabLayout);
         viewPager = findViewById(R.id.updateEventViewPager);
@@ -64,31 +58,5 @@ public class UpdateEventActivity extends AppCompatActivity {
         // Remove shadow from the action bar
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setElevation(0);
-
-//        eventID = getIntent().getStringExtra("eventID");
-//        totalDonation = getIntent().getStringExtra("totalDonation");
-//        if (Double.parseDouble(totalDonation) <= 0) {
-//            totalDonation = "0";
-//        }
-
-//        Bundle bundle = new Bundle();
-//        bundle.putString("eventID", eventID);
-//        bundle.putString("totalDonation", totalDonation);
-//        // set donationListFragment Arguments
-//        DonationListFragment donationListFragment = new DonationListFragment();
-//        donationListFragment.setArguments(bundle);
-    }
-
-    public String getEventID() {
-        eventID = getIntent().getStringExtra("eventID");
-        return eventID;
-    }
-
-    public String getTotalDonation() {
-        totalDonation = getIntent().getStringExtra("totalDonation");
-        if (Double.parseDouble(totalDonation) <= 0) {
-            totalDonation = "0";
-        }
-        return totalDonation;
     }
 }
