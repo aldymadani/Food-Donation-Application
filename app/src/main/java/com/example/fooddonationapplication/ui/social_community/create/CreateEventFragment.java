@@ -154,6 +154,7 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
                 chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                 eventEndDate.setText(Util.convertToFullDate(chosenDate));
                 chosenDate += " 23:59:59";
+                eventEndDate.clearFocus();
                 try {
                     chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
                 } catch (ParseException e) {
@@ -360,6 +361,11 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
         progressBar = rootView.findViewById(R.id.create_event_progressBar);
 
         progressBar.setVisibility(View.INVISIBLE);
+
+        eventName.setOnFocusChangeListener(this);
+        eventDescription.setOnFocusChangeListener(this);
+        eventEndDate.setOnFocusChangeListener(this);
+        targetQuantity.setOnFocusChangeListener(this);
     }
 
     @Override

@@ -150,8 +150,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp"
+            app:layout_constraintBottom_toTopOf="@+id/donationDetailUpdateStatusButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/donationHistoryDetailFoodPhotoLayout">
@@ -375,7 +377,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="24dp"
             android:text="Mark as Complete"
@@ -386,9 +387,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/donationDetailDeleteDonationButton"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailDonationDetailLayout"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintStart_toEndOf="@+id/donationDetailDeleteDonationButton" />
 
         <ProgressBar
             android:id="@+id/donatorDetailUpdateStatusButtonProgressBar"
@@ -407,7 +406,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="24dp"
             android:text="@string/delete_donation_button"
@@ -419,8 +417,7 @@
             app:layout_constraintEnd_toStartOf="@+id/donationDetailUpdateStatusButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/historyDetailDonationDetailLayout"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintTop_toTopOf="@+id/donationDetailUpdateStatusButton"
             app:layout_goneMarginEnd="32dp" />
 
         <ProgressBar

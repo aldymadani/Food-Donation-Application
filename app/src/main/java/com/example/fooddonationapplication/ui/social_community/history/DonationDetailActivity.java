@@ -69,26 +69,7 @@ public class DonationDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation_detail);
-
-        donatorNameTextView = findViewById(R.id.donationDetailDonatorByText);
-        callDonator = findViewById(R.id.donationDetailCallDonatorButton);
-
-        foodImagePhoto = findViewById(R.id.donationDetailFoodPhoto);
-        imageLoadingProgressBar = findViewById(R.id.donationDetailFoodPhotoProgressBar);
-
-        donationDate = findViewById(R.id.donationDetailDonationDate);
-        deliveryDate = findViewById(R.id.donationDetailDeliveryDate);
-        deliveryTime = findViewById(R.id.donationDetailDeliveryTime);
-        pickUpAddress = findViewById(R.id.donationDetailPickUpAddress);
-        foodItems = findViewById(R.id.donationDetailFoodItems);
-        donationQuantity = findViewById(R.id.donationDetailTotalDonation);
-        donationStatus = findViewById(R.id.donationDetailDonationStatus);
-
-        deleteDonation = findViewById(R.id.donationDetailDeleteDonationButton);
-        deleteProgressBar = findViewById(R.id.donatorDetailButtonProgressBar);
-
-        updateDonationStatus = findViewById(R.id.donationDetailUpdateStatusButton);
-        updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
+        initializeComponents();
 
         Intent intent = getIntent();
         donation = intent.getParcelableExtra("Donator");
@@ -127,6 +108,7 @@ public class DonationDetailActivity extends AppCompatActivity {
 
         if (donation.getStatus().equalsIgnoreCase("Completed")) {
             updateDonationStatus.setVisibility(View.GONE);
+            deleteDonation.setVisibility(View.GONE);
         }
 
 
@@ -316,5 +298,27 @@ public class DonationDetailActivity extends AppCompatActivity {
         donationStatus.setFocusable(false);
         donationStatus.setFocusableInTouchMode(false);
         donationStatus.setCursorVisible(false);
+    }
+
+    private void initializeComponents() {
+        donatorNameTextView = findViewById(R.id.donationDetailDonatorByText);
+        callDonator = findViewById(R.id.donationDetailCallDonatorButton);
+
+        foodImagePhoto = findViewById(R.id.donationDetailFoodPhoto);
+        imageLoadingProgressBar = findViewById(R.id.donationDetailFoodPhotoProgressBar);
+
+        donationDate = findViewById(R.id.donationDetailDonationDate);
+        deliveryDate = findViewById(R.id.donationDetailDeliveryDate);
+        deliveryTime = findViewById(R.id.donationDetailDeliveryTime);
+        pickUpAddress = findViewById(R.id.donationDetailPickUpAddress);
+        foodItems = findViewById(R.id.donationDetailFoodItems);
+        donationQuantity = findViewById(R.id.donationDetailTotalDonation);
+        donationStatus = findViewById(R.id.donationDetailDonationStatus);
+
+        deleteDonation = findViewById(R.id.donationDetailDeleteDonationButton);
+        deleteProgressBar = findViewById(R.id.donatorDetailButtonProgressBar);
+
+        updateDonationStatus = findViewById(R.id.donationDetailUpdateStatusButton);
+        updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
     }
 }

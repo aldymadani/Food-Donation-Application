@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.Constant;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.example.fooddonationapplication.viewmodel.SocialCommunityRegisterViewModel;
@@ -102,6 +103,13 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
                 socialCommunityNameData = socialCommunityNameId.getText().toString();
                 telephoneNumberData = telephoneNumberId.getText().toString();
                 socialCommunityDescriptionData = socialCommunityDescription.getText().toString();
+                emailId.clearFocus();
+                passwordId.clearFocus();
+                confirmPasswordId.clearFocus();
+                socialCommunityNameId.clearFocus();
+                telephoneNumberId.clearFocus();
+                socialCommunityDescription.clearFocus();
+                Util.hideKeyboard(SocialCommunityRegisterActivity.this);
                 checkingAllFields();
             }
         });

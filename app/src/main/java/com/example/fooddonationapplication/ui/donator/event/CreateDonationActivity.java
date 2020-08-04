@@ -404,6 +404,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
                 } else {
                     amPm = " AM";
                 }
+                etTime.clearFocus();
                 etTime.setText(String.format("%02d:%02d", hourOfDay, minutes) + amPm);
             }
         }, 0, 0, false);
@@ -428,6 +429,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                 etDate.setText(Util.convertToFullDate(chosenDate));
+                etDate.clearFocus();
             }
         }, year, month, day);
         long now = System.currentTimeMillis() - 1000;

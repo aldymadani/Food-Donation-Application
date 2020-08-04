@@ -120,12 +120,12 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
             Picasso.get().load(user.getPhotoUrl()).error(R.drawable.ic_error_black_24dp).into(socialCommunityPhoto, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
-                    socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE);
+                    socialCommunityProfilePhotoProgressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    socialCommunityProfilePhotoProgressBar.setVisibility(View.INVISIBLE);
+                    socialCommunityProfilePhotoProgressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Error in loading the image", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -624,6 +624,9 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
 
         updateProgressBar.setVisibility(View.INVISIBLE);
         updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+
+        telephoneNumber.setOnFocusChangeListener(this);
+        description.setOnFocusChangeListener(this);
     }
 
     @Override

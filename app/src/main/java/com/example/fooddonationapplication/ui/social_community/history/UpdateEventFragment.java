@@ -409,6 +409,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                 eventEndDate.setText(Util.convertToFullDate(chosenDate));
+                eventEndDate.clearFocus();
                 Log.d(TAG, "Chosen Date" + chosenDate);
                 Log.d(TAG, String.valueOf(System.currentTimeMillis()));
             }
@@ -561,10 +562,10 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         // Convert the date to Millis
         try {
             chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate + " 23:59:59").getTime();
+            newEvent.setEndDateInMillis(chosenDateInMillis);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        newEvent.setEndDateInMillis(chosenDateInMillis);
         newEvent.setTargetQuantity(Double.parseDouble(eventTargetQuantity.getText().toString()));
 
         hasChanged = !event.isSame(newEvent);
@@ -734,6 +735,11 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         updateEventProgressBar.setVisibility(View.INVISIBLE);
         deleteEventProgressBar.setVisibility(View.INVISIBLE);
         sendNotificationProgressBar.setVisibility(View.INVISIBLE);
+
+        eventTitle.setOnFocusChangeListener(this);
+        eventDescription.setOnFocusChangeListener(this);
+        eventEndDate.setOnFocusChangeListener(this);
+        eventTargetQuantity.setOnFocusChangeListener(this);
     }
 
     @Override

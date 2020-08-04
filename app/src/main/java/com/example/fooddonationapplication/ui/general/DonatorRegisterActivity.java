@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
+import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.Constant;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -64,6 +65,12 @@ public class DonatorRegisterActivity extends AppCompatActivity implements View.O
                 String confirmPassword = confirmPasswordId.getText().toString();
                 String fullName = fullNameId.getText().toString();
                 String telephoneNumber = telephoneNumberId.getText().toString();
+                emailId.clearFocus();
+                passwordId.clearFocus();
+                confirmPasswordId.clearFocus();
+                fullNameId.clearFocus();
+                telephoneNumberId.clearFocus();
+                Util.hideKeyboard(DonatorRegisterActivity.this);
                 allFieldValidation(email, password, confirmPassword, fullName, telephoneNumber);
             }
         });
@@ -134,7 +141,7 @@ public class DonatorRegisterActivity extends AppCompatActivity implements View.O
         // Register user
         if (!emailValidation && !passwordValidation && fullName.isEmpty() && telephoneNumberValidation) {
             Toast.makeText(DonatorRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!emailValidation && passwordValidation && !fullName.isEmpty() && telephoneNumberValidation) {
+        } else if (emailValidation && passwordValidation && !fullName.isEmpty() && telephoneNumberValidation) {
             registerUser(email, password, fullName, telephoneNumber);
         } else {
             Toast.makeText(DonatorRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
