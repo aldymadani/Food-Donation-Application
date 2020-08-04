@@ -138,13 +138,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
                 break;
             case R.id.loginSubmitButton:
-                btnRegister.setEnabled(false);
                 Util.hideKeyboard(LoginActivity.this);
                 emailField.clearFocus();
                 passwordField.clearFocus();
                 String email = emailField.getText().toString();
                 String password = passwordField.getText().toString();
                 if (inputValidation(email, password)) {
+                    btnRegister.setEnabled(false);
+                    btnSubmit.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     authenticateUser(email, password);
                 }
                 break;
@@ -156,11 +158,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         // Email checking
+        boolean emailValidation = false;
         if (email.isEmpty()) {
             textInputEmail.setError("Please enter your email");
         } else if (!email.matches(emailPattern)) {
             textInputEmail.setError("Please input a valid email");
         } else {
+            emailValidation = true;
             textInputEmail.setErrorEnabled(false);
         }
 
@@ -172,16 +176,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         // User authentication
-        if (email.isEmpty() && password.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!email.isEmpty() && !password.isEmpty()) {
-            btnSubmit.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-            btnRegister.setEnabled(false);
+        if (emailValidation && !password.isEmpty()) {
             isValid = true;
         } else {
-            btnSubmit.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(LoginActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
 
@@ -208,6 +205,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         btnRegister.setEnabled(true);
                     } else {
                         textInputPassword.setErrorEnabled(false);
+                        textInputEmail.setErrorEnabled(false);
                         String uuid = mFirebaseAuth.getCurrentUser().getUid();
                         checkRole(uuid);
                     }

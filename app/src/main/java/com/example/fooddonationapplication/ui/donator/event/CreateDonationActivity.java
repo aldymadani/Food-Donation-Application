@@ -57,7 +57,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class CreateDonationActivity extends AppCompatActivity {
+public class CreateDonationActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
     private static final String TAG = "DonateActivity";
 
@@ -105,31 +105,10 @@ public class CreateDonationActivity extends AppCompatActivity {
             hasImage = true;
         }
 
-        etDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                setupCalendar();
-            } else {
-                if (datePickerDialog != null) {
-                    datePickerDialog.hide();
-                }
-            }
-            }
-        });
-
-        etTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                setupClock();
-            } else {
-                if (timePickerDialog != null) {
-                    timePickerDialog.hide();
-                }
-            }
-            }
-        });
+        etFoodItems.setOnFocusChangeListener(this);
+        etDate.setOnFocusChangeListener(this);
+        etTime.setOnFocusChangeListener(this);
+        etQuantity.setOnFocusChangeListener(this);
 
         foodImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +131,7 @@ public class CreateDonationActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         dialog.dismiss();
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(CreateDonationActivity.this, new String[] {Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
+                            ActivityCompat.requestPermissions(CreateDonationActivity.this, new String[]{Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
                         } else {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             if (intent.resolveActivity(getPackageManager()) != null) {
@@ -167,7 +146,7 @@ public class CreateDonationActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         dialog.dismiss();
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
                         } else {
                             Intent galleryIntent = new Intent();
                             galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -480,5 +459,40 @@ public class CreateDonationActivity extends AppCompatActivity {
         etDate = findViewById(R.id.donate_date);
         etTime = findViewById(R.id.donate_time);
         etQuantity = findViewById(R.id.donate_quantity);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            switch (v.getId()) {
+                case R.id.donate_food_item:
+                    textInputFoodItems.setErrorEnabled(false);
+                    break;
+                case R.id.donate_date:
+                    textInputDate.setErrorEnabled(false);
+                    setupCalendar();
+                    break;
+                case R.id.donate_time:
+                    textInputTime.setErrorEnabled(false);
+                    setupClock();
+                    break;
+                case R.id.donate_quantity:
+                    textInputQuantity.setErrorEnabled(false);
+                    break;
+            }
+        } else {
+            switch (v.getId()) {
+                case R.id.donate_date:
+                    if (datePickerDialog != null) {
+                        datePickerDialog.hide();
+                    }
+                    break;
+                case R.id.donate_time:
+                    if (timePickerDialog != null) {
+                        timePickerDialog.hide();
+                    }
+                    break;
+            }
+        }
     }
 }

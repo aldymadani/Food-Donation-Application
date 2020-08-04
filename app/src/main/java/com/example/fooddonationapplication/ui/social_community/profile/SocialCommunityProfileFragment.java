@@ -64,7 +64,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class SocialCommunityProfileFragment extends Fragment {
+public class SocialCommunityProfileFragment extends Fragment implements View.OnFocusChangeListener {
     private static final String TAG = "SocialProfileFragment";
 
     private FragmentActivity activity;
@@ -101,9 +101,6 @@ public class SocialCommunityProfileFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_profile_social_community, container, false);
         activity = requireActivity();
         initializeComponents();
-
-        updateProgressBar.setVisibility(View.INVISIBLE);
-        updateCredentialProgressBar.setVisibility(View.INVISIBLE);
 
         // Disable Total Event Created Edit Text
         totalEventCreated.setFocusable(false);
@@ -624,5 +621,22 @@ public class SocialCommunityProfileFragment extends Fragment {
         socialCommunityProfilePhotoProgressBar = rootView.findViewById(R.id.socialCommunityProfilePhotoProgressBar);
 
         socialCommunityPhoto = rootView.findViewById(R.id.socialCommunityProfilePhoto);
+
+        updateProgressBar.setVisibility(View.INVISIBLE);
+        updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            switch (v.getId()) {
+                case R.id.socialCommunityProfileTelephoneNumber:
+                    telephoneNumberLayout.setErrorEnabled(false);
+                    break;
+                case R.id.socialCommunityProfileDescription:
+                    descriptionLayout.setErrorEnabled(false);
+                    break;
+            }
+        }
     }
 }

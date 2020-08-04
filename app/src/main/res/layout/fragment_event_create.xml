@@ -62,7 +62,7 @@
             app:layout_constraintTop_toBottomOf="@+id/create_event_name_layout">
 
             <EditText
-                android:id="@+id/create_event_description_"
+                android:id="@+id/create_event_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="152dp"

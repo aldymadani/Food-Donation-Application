@@ -50,7 +50,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SocialCommunityRegisterActivity extends AppCompatActivity {
+public class SocialCommunityRegisterActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
     private static final String TAG = "SocialRegisterActivity";
     private static final int GalleryPick = 1;
@@ -78,9 +78,16 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
+        emailId.setOnFocusChangeListener(this);
+        passwordId.setOnFocusChangeListener(this);
+        confirmPasswordId.setOnFocusChangeListener(this);
+        socialCommunityNameId.setOnFocusChangeListener(this);
+        telephoneNumberId.setOnFocusChangeListener(this);
+        socialCommunityDescription.setOnFocusChangeListener(this);
+
         hasImage = false;
         mViewModel = new ViewModelProvider(this).get(SocialCommunityRegisterViewModel.class);
-        if(mViewModel.getImageBitmap() != null) {
+        if (mViewModel.getImageBitmap() != null) {
             bitmap = mViewModel.getImageBitmap();
             socialCommunityPhoto.setImageBitmap(bitmap);
             hasImage = true;
@@ -103,7 +110,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(SocialCommunityRegisterActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
                 } else {
                     Intent galleryIntent = new Intent();
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -163,7 +170,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
 
             CropImage.activity(ImageURI)
                     .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
+                    .setAspectRatio(1, 1)
                     .start(this);
         }
 
@@ -280,7 +287,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
                     allActionStatus(true);
-                    if(task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                    if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
                         textInputEmail.setError("Email is already used");
                         Toast.makeText(SocialCommunityRegisterActivity.this, "The email address is already in use by another account.", Toast.LENGTH_SHORT).show();
                     } else {
@@ -321,7 +328,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
                         socialCommunityImageURI = uri.toString();
-                        Log.d(TAG,socialCommunityImageURI);
+                        Log.d(TAG, socialCommunityImageURI);
                         registerToDatabase();
                     }
                 });
@@ -403,5 +410,30 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity {
 
         btnSignUp = findViewById(R.id.socialCommunityRegisterConfirm);
         progressBar = findViewById(R.id.socialCommunityRegisterProgressBar);
+    }
+
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()) {
+            case R.id.socialCommunityRegisterEmail:
+                textInputEmail.setErrorEnabled(false);
+                break;
+            case R.id.socialCommunityRegisterPassword:
+                textInputPassword.setErrorEnabled(false);
+                break;
+            case R.id.socialCommunityRegisterConfirmPassword:
+                textInputConfirmPassword.setErrorEnabled(false);
+                break;
+            case R.id.socialCommunityRegisterSocialCommunityName:
+                textInputSocialCommunityName.setErrorEnabled(false);
+                break;
+            case R.id.socialCommunityRegisterTelephoneNumber:
+                textInputTelephoneNumber.setErrorEnabled(false);
+                break;
+            case R.id.socialCommunityRegisterDescription:
+                textInputSocialCommunityDescription.setErrorEnabled(false);
+                break;
+        }
     }
 }

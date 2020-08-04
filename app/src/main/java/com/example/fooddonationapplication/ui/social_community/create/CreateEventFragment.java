@@ -55,7 +55,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class CreateEventFragment extends Fragment {
+public class CreateEventFragment extends Fragment implements View.OnFocusChangeListener {
 
     private static final String TAG = "CreateEventFragment";
     private EditText eventName, eventDescription, eventEndDate, targetQuantity;
@@ -93,25 +93,12 @@ public class CreateEventFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_event_create, container, false);
-        hasImage = false;
-        eventName = rootView.findViewById(R.id.create_event_name);
-        eventDescription = rootView.findViewById(R.id.create_event_description_);
-        eventEndDate = rootView.findViewById(R.id.create_event_end_date);
-        targetQuantity = rootView.findViewById(R.id.create_event_target_quantity);
-
-        eventNameLayout = rootView.findViewById(R.id.create_event_name_layout);
-        eventDescriptionLayout = rootView.findViewById(R.id.create_event_description_layout);
-        eventEndDateLayout = rootView.findViewById(R.id.create_event_end_date_layout);
-        targetQuantityLayout = rootView.findViewById(R.id.create_event_target_quantity_layout);
-
-        createEventConfirmation = rootView.findViewById(R.id.create_event_confirm_event);
-        eventPhoto = rootView.findViewById(R.id.create_event_image);
-        progressBar = rootView.findViewById(R.id.create_event_progressBar);
-
-        progressBar.setVisibility(View.INVISIBLE);
+        initializeComponents();
 
         // To hide the keyboard when user click in the end date text field
         eventEndDate.setInputType(InputType.TYPE_NULL);
+
+        hasImage = false;
 
         mViewModel = new ViewModelProvider(this).get(CreateEventViewModel.class);
 
@@ -120,19 +107,6 @@ public class CreateEventFragment extends Fragment {
             eventPhoto.setImageBitmap(bitmap);
             hasImage = true;
         }
-
-        eventEndDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    setupCalendar();
-                } else {
-                    if (datePickerDialog != null) {
-                        datePickerDialog.hide();
-                    }
-                }
-            }
-        });
 
         createEventConfirmation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -368,5 +342,52 @@ public class CreateEventFragment extends Fragment {
                                 });
                     }
                 });
+    }
+
+    private void initializeComponents() {
+        eventName = rootView.findViewById(R.id.create_event_name);
+        eventDescription = rootView.findViewById(R.id.create_event_description);
+        eventEndDate = rootView.findViewById(R.id.create_event_end_date);
+        targetQuantity = rootView.findViewById(R.id.create_event_target_quantity);
+
+        eventNameLayout = rootView.findViewById(R.id.create_event_name_layout);
+        eventDescriptionLayout = rootView.findViewById(R.id.create_event_description_layout);
+        eventEndDateLayout = rootView.findViewById(R.id.create_event_end_date_layout);
+        targetQuantityLayout = rootView.findViewById(R.id.create_event_target_quantity_layout);
+
+        createEventConfirmation = rootView.findViewById(R.id.create_event_confirm_event);
+        eventPhoto = rootView.findViewById(R.id.create_event_image);
+        progressBar = rootView.findViewById(R.id.create_event_progressBar);
+
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            switch (v.getId()) {
+                case R.id.create_event_name:
+                    eventNameLayout.setErrorEnabled(false);
+                    break;
+                case R.id.create_event_description:
+                    eventDescriptionLayout.setErrorEnabled(false);
+                    break;
+                case R.id.create_event_end_date:
+                    eventEndDateLayout.setErrorEnabled(false);
+                    setupCalendar();
+                    break;
+                case R.id.create_event_target_quantity:
+                    targetQuantityLayout.setErrorEnabled(false);
+                    break;
+            }
+        } else {
+            switch (v.getId()) {
+                case R.id.create_event_end_date:
+                    if (datePickerDialog != null) {
+                        datePickerDialog.hide();
+                    }
+                    break;
+            }
+        }
     }
 }

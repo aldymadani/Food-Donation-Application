@@ -32,7 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DonatorRegisterActivity extends AppCompatActivity {
+public class DonatorRegisterActivity extends AppCompatActivity implements View.OnFocusChangeListener {
     private static final String TAG = "DonatorRegisterActivity";
 
     private TextInputLayout textInputEmail, textInputPassword, textInputConfirmPassword, textInputFullName, textInputTelephoneNumber;
@@ -50,6 +50,11 @@ public class DonatorRegisterActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         progressBar.setVisibility(View.INVISIBLE);
+        emailId.setOnFocusChangeListener(this);
+        passwordId.setOnFocusChangeListener(this);
+        confirmPasswordId.setOnFocusChangeListener(this);
+        fullNameId.setOnFocusChangeListener(this);
+        telephoneNumberId.setOnFocusChangeListener(this);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +151,6 @@ public class DonatorRegisterActivity extends AppCompatActivity {
                     allActionStatus(true);
                     if(task.getException() instanceof FirebaseAuthUserCollisionException) {
                         textInputEmail.setError("Email is already used");
-                        Toast.makeText(DonatorRegisterActivity.this, "The email address is already in use by another account.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(DonatorRegisterActivity.this, "Sign Up is unsuccessful, please try again", Toast.LENGTH_SHORT).show();
                     }
@@ -231,7 +235,6 @@ public class DonatorRegisterActivity extends AppCompatActivity {
         emailId = findViewById(R.id.register_email);
         passwordId = findViewById(R.id.register_password);
         confirmPasswordId = findViewById(R.id.register_confirm_password);
-        btnSignUp = findViewById(R.id.register_confirm);
         fullNameId = findViewById(R.id.register_full_name);
         telephoneNumberId = findViewById(R.id.register_telephone_number);
         textInputEmail = findViewById(R.id.register_email_layout);
@@ -239,6 +242,28 @@ public class DonatorRegisterActivity extends AppCompatActivity {
         textInputConfirmPassword = findViewById(R.id.register_confirm_password_layout);
         textInputFullName = findViewById(R.id.register_full_name_layout);
         textInputTelephoneNumber = findViewById(R.id.register_telephone_number_layout);
+        btnSignUp = findViewById(R.id.register_confirm);
         progressBar = findViewById(R.id.progressBar);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()) {
+            case R.id.register_email:
+                textInputEmail.setErrorEnabled(false);
+                break;
+            case R.id.register_password:
+                textInputPassword.setErrorEnabled(false);
+                break;
+            case R.id.register_confirm_password:
+                textInputConfirmPassword.setErrorEnabled(false);
+                break;
+            case R.id.register_full_name:
+                textInputFullName.setErrorEnabled(false);
+                break;
+            case R.id.register_telephone_number:
+                textInputTelephoneNumber.setErrorEnabled(false);
+                break;
+        }
     }
 }

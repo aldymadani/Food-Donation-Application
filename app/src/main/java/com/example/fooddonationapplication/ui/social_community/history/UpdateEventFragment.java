@@ -82,7 +82,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpdateEventFragment extends Fragment {
+public class UpdateEventFragment extends Fragment implements View.OnFocusChangeListener {
 
     private static final String TAG = "UpdateEventFragment";
     private EditText eventTitle, eventDescription, eventEndDate, eventTargetQuantity, eventTotalDonation;
@@ -132,16 +132,11 @@ public class UpdateEventFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_event_update, container, false);
         initializeComponents();
 
-        updateEventProgressBar.setVisibility(View.INVISIBLE);
-        deleteEventProgressBar.setVisibility(View.INVISIBLE);
-        sendNotificationProgressBar.setVisibility(View.INVISIBLE);
-
         // Variable to check if there are changes
         hasChanged = false;
         hasChangedTitle = false;
 
         // Coding started
-
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
         event = fragmentActivity.getIntent().getParcelableExtra("eventData");
@@ -220,19 +215,6 @@ public class UpdateEventFragment extends Fragment {
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                     galleryIntent.setType("image/*");
                     startActivityForResult(galleryIntent, GalleryPick);
-                }
-            }
-        });
-
-        eventEndDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    setupCalendar();
-                } else {
-                    if (datePickerDialog != null) {
-                        datePickerDialog.hide();
-                    }
                 }
             }
         });
@@ -748,5 +730,38 @@ public class UpdateEventFragment extends Fragment {
         deleteEventProgressBar = rootView.findViewById(R.id.updateEventDeleteProgressBar);
         sendNotificationProgressBar = rootView.findViewById(R.id.updateEventSendNotificationButtonProgressBar);
         imageEventPhotoProgressBar = rootView.findViewById(R.id.updateEventImageProgressBar);
+
+        updateEventProgressBar.setVisibility(View.INVISIBLE);
+        deleteEventProgressBar.setVisibility(View.INVISIBLE);
+        sendNotificationProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            switch (v.getId()) {
+                case R.id.updateEventEventTitle:
+                    eventTitleLayout.setErrorEnabled(false);
+                    break;
+                case R.id.updateEventDescription:
+                    eventDescriptionLayout.setErrorEnabled(false);
+                    break;
+                case R.id.updateEventEndDate:
+                    eventEndDateLayout.setErrorEnabled(false);
+                    setupCalendar();
+                    break;
+                case R.id.updateEventTargetQuantity:
+                    eventTargetQuantityLayout.setErrorEnabled(false);
+                    break;
+            }
+        } else {
+            switch (v.getId()) {
+                case R.id.updateEventEndDate:
+                    if (datePickerDialog != null) {
+                        datePickerDialog.hide();
+                    }
+                    break;
+            }
+        }
     }
 }

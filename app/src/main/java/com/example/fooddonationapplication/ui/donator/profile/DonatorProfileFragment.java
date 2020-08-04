@@ -46,7 +46,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DonatorProfileFragment extends Fragment {
+public class DonatorProfileFragment extends Fragment implements View.OnFocusChangeListener {
 
     private static final String TAG = "EditProfileFragment";
 
@@ -66,21 +66,7 @@ public class DonatorProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile_donator,container,false);
-
-        fullNameEditText = rootView.findViewById(R.id.edit_profile_name);
-        telephoneNumberEditText = rootView.findViewById(R.id.edit_profile_telephone_number);
-        progressBar = rootView.findViewById(R.id.edit_profile_progressbar);
-        logOutButton = rootView.findViewById(R.id.edit_profile_log_out);
-        updateProfileButton = rootView.findViewById(R.id.edit_profile_confirm);
-
-        fullNameLayout = rootView.findViewById(R.id.edit_profile_name_layout);
-        telephoneNumberLayout = rootView.findViewById(R.id.edit_profile_telephone_number_layout);
-
-        updateCredentialButton = rootView.findViewById(R.id.donatorProfileUpdateCredentialButton);
-        updateCredentialProgressBar = rootView.findViewById(R.id.donatorProfileUpdateCredentialProgressBar);
-
-        progressBar.setVisibility(View.INVISIBLE);
-        updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+        initializeComponents();
 
         hasChanged = false;
 
@@ -455,5 +441,41 @@ public class DonatorProfileFragment extends Fragment {
                 });
             }
         });
+    }
+
+    private void initializeComponents() {
+        fullNameEditText = rootView.findViewById(R.id.edit_profile_name);
+        telephoneNumberEditText = rootView.findViewById(R.id.edit_profile_telephone_number);
+        progressBar = rootView.findViewById(R.id.edit_profile_progressbar);
+        logOutButton = rootView.findViewById(R.id.edit_profile_log_out);
+        updateProfileButton = rootView.findViewById(R.id.edit_profile_confirm);
+
+        fullNameLayout = rootView.findViewById(R.id.edit_profile_name_layout);
+        telephoneNumberLayout = rootView.findViewById(R.id.edit_profile_telephone_number_layout);
+
+        updateCredentialButton = rootView.findViewById(R.id.donatorProfileUpdateCredentialButton);
+        updateCredentialProgressBar = rootView.findViewById(R.id.donatorProfileUpdateCredentialProgressBar);
+
+        // On Focus initialization
+        fullNameEditText.setOnFocusChangeListener(this);
+        telephoneNumberEditText.setOnFocusChangeListener(this);
+
+        // Hide progress bar
+        progressBar.setVisibility(View.INVISIBLE);
+        updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            switch (v.getId()) {
+                case R.id.edit_profile_name:
+                    fullNameLayout.setErrorEnabled(false);
+                    break;
+                case R.id.edit_profile_telephone_number:
+                    telephoneNumberLayout.setErrorEnabled(false);
+                    break;
+            }
+        }
     }
 }
