@@ -153,10 +153,9 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                 eventEndDate.setText(Util.convertToFullDate(chosenDate));
-                chosenDate += " 23:59:59";
                 eventEndDate.clearFocus();
                 try {
-                    chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate).getTime();
+                    chosenDateInMillis = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chosenDate + " 23:59:59").getTime();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

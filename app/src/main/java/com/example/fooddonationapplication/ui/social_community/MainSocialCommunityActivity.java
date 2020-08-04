@@ -14,13 +14,17 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
+import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.social_community.create.CreateEventFragment;
 import com.example.fooddonationapplication.ui.social_community.history.EventHistoryFragment;
 import com.example.fooddonationapplication.ui.social_community.profile.SocialCommunityProfileFragment;
+import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.viewmodel.MainSocialCommunityViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -44,8 +48,13 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_social_community);
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_social_community);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Util.backToLogin(MainSocialCommunityActivity.this);
+        }
+
         fragmentManager.beginTransaction().add(R.id.fragment_container_social_community, SocialCommunityProfileFragment, "3").commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container_social_community, EventHistoryFragment, "2").commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container_social_community, CreateEventFragment, "1").commit();

@@ -52,6 +52,11 @@ public class MainDonatorActivity extends AppCompatActivity {
 
         bottomNav = findViewById(R.id.bottom_navigation_donator);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Util.backToLogin(MainDonatorActivity.this);
+        }
+
         fragmentManager.beginTransaction().add(R.id.fragment_container_donator, editProfileFragment, "3").commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container_donator, donationHistoryFragment, "2").commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container_donator, eventFragment, "1").commit();
@@ -83,7 +88,7 @@ public class MainDonatorActivity extends AppCompatActivity {
                     }
                 });
 
-        final String userUuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String userUuid = user.getUid();
         FirebaseMessaging.getInstance().subscribeToTopic(userUuid)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -96,6 +101,7 @@ public class MainDonatorActivity extends AppCompatActivity {
 //                        Toast.makeText(MainSocialCommunityActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 

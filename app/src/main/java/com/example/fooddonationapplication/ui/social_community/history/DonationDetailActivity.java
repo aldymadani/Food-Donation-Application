@@ -138,7 +138,6 @@ public class DonationDetailActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(DonationDetailActivity.this, "Status is updated to Completed", Toast.LENGTH_SHORT).show();
                         setUpNotificationData("Received");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -184,7 +183,6 @@ public class DonationDetailActivity extends AppCompatActivity {
 
                         DocumentReference eventReference = db.collection("events").document(eventId);
                         batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
-//                batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
 
                         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -194,9 +192,8 @@ public class DonationDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         // File deleted successfully
-                                        setUpNotificationData("Rejected");
                                         Log.d(TAG, "onSuccess: deleted file");
-                                        Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
+                                        setUpNotificationData("Rejected");
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -226,7 +223,7 @@ public class DonationDetailActivity extends AppCompatActivity {
     private void setUpNotificationData(String status) {
         String TOPIC = "/topics/" + donation.getUuid(); //topic must match with what the receiver subscribed to
         String NOTIFICATION_TITLE = "Your donation on " + donation.getEventName() + " has been " + status;
-        String NOTIFICATION_MESSAGE = "Your " + donationDate.getText().toString() +  " donation has been " + status +". Your donation date is on " + donationDate.getText().toString() + ".";
+        String NOTIFICATION_MESSAGE = "Your " + foodItems.getText().toString() +  " donation has been " + status +". Your donation date is on " + donationDate.getText().toString() + ".";
 
         JSONObject notification = new JSONObject();
         JSONObject notifcationBody = new JSONObject();
@@ -238,10 +235,10 @@ public class DonationDetailActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.e(TAG, "onCreate: " + e.getMessage() );
         }
-        sendNotification(notification);
+        sendNotification(notification, status);
     }
 
-    private void sendNotification(JSONObject notification) {
+    private void sendNotification(JSONObject notification, String status) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
@@ -264,6 +261,11 @@ public class DonationDetailActivity extends AppCompatActivity {
             }
         };
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+        if (status.equalsIgnoreCase("Approved")) {
+            Toast.makeText(DonationDetailActivity.this, "Status is updated to Completed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
+        }
         deleteDonation.setVisibility(View.VISIBLE);
         deleteProgressBar.setVisibility(View.INVISIBLE);
         updateDonationStatus.setEnabled(true);

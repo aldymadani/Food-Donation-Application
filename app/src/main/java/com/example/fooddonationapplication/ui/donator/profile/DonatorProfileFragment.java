@@ -141,7 +141,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
     }
 
     private void unsubscribeNotification() {
-        FirebaseMessaging.getInstance().subscribeToTopic("FoodDonation")
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("FoodDonation")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -155,7 +155,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
                 });
 
         final String userUuid = user.getUid();
-        FirebaseMessaging.getInstance().subscribeToTopic(userUuid)
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(userUuid)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -202,7 +202,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
                             }
                         });
             } else {
-                updateUserDatabase();
+                getDonatorDocumentList();
             }
         }
     }
