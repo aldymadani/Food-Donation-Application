@@ -139,7 +139,7 @@ public class DonationDetailActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(DonationDetailActivity.this, "Status is updated to Completed", Toast.LENGTH_SHORT).show();
-                        finish();
+                        setUpNotificationData("Received");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -194,7 +194,7 @@ public class DonationDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         // File deleted successfully
-                                        setUpNotificationData();
+                                        setUpNotificationData("Rejected");
                                         Log.d(TAG, "onSuccess: deleted file");
                                         Toast.makeText(DonationDetailActivity.this, "Donation is successfully deleted", Toast.LENGTH_SHORT).show();
                                     }
@@ -223,10 +223,10 @@ public class DonationDetailActivity extends AppCompatActivity {
         mDialog.show();
     }
 
-    private void setUpNotificationData() {
+    private void setUpNotificationData(String status) {
         String TOPIC = "/topics/" + donation.getUuid(); //topic must match with what the receiver subscribed to
-        String NOTIFICATION_TITLE = "Your donation on " + donation.getEventName() + " has been rejected";
-        String NOTIFICATION_MESSAGE = "Your " + donationDate.getText().toString() +  " donation has been rejected. Your donation date is on " + donationDate.getText().toString() + ".";
+        String NOTIFICATION_TITLE = "Your donation on " + donation.getEventName() + " has been " + status;
+        String NOTIFICATION_MESSAGE = "Your " + donationDate.getText().toString() +  " donation has been " + status +". Your donation date is on " + donationDate.getText().toString() + ".";
 
         JSONObject notification = new JSONObject();
         JSONObject notifcationBody = new JSONObject();
@@ -264,10 +264,10 @@ public class DonationDetailActivity extends AppCompatActivity {
             }
         };
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-        finish();
         deleteDonation.setVisibility(View.VISIBLE);
         deleteProgressBar.setVisibility(View.INVISIBLE);
         updateDonationStatus.setEnabled(true);
+        finish();
     }
 
     private void disableAllTextField() {
