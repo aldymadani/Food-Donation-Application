@@ -35,6 +35,7 @@ import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -69,10 +70,6 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
     private Bitmap bitmap;
     private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userID, eventID;
     private boolean hasImage;
-
-    // For Photo
-    private static final int GalleryPick = 1;
-    private static final int TAKE_IMAGE_CODE = 10001;
 
     // Firestore Database Access
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -131,11 +128,11 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
                     public void onClick(View v) {
                         dialog.dismiss();
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(CreateDonationActivity.this, new String[]{Manifest.permission.CAMERA}, TAKE_IMAGE_CODE);
+                            ActivityCompat.requestPermissions(CreateDonationActivity.this, new String[]{Manifest.permission.CAMERA}, RequestCodeConstant.TAKE_IMAGE_CODE);
                         } else {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             if (intent.resolveActivity(getPackageManager()) != null) {
-                                startActivityForResult(intent, TAKE_IMAGE_CODE);
+                                startActivityForResult(intent, RequestCodeConstant.TAKE_IMAGE_CODE);
                             }
                         }
                     }
@@ -146,12 +143,12 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
                     public void onClick(View v) {
                         dialog.dismiss();
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodeConstant.GALLERY_PICK);
                         } else {
                             Intent galleryIntent = new Intent();
                             galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                             galleryIntent.setType("image/*");
-                            startActivityForResult(galleryIntent, GalleryPick);
+                            startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
                         }
                     }
                 });
@@ -228,21 +225,21 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == TAKE_IMAGE_CODE) {
+        if (requestCode == RequestCodeConstant.TAKE_IMAGE_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, TAKE_IMAGE_CODE);
+                    startActivityForResult(intent, RequestCodeConstant.TAKE_IMAGE_CODE);
                 }
             } else {
                 Toast.makeText(this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == GalleryPick) {
+        } else if (requestCode == RequestCodeConstant.GALLERY_PICK) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GalleryPick);
+                startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
             } else {
                 Toast.makeText(this, "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
@@ -252,7 +249,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TAKE_IMAGE_CODE) {
+        if (requestCode == RequestCodeConstant.TAKE_IMAGE_CODE) {
             switch (resultCode) {
                 case RESULT_OK:
                     bitmap = (Bitmap) data.getExtras().get("data");
@@ -262,7 +259,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
             }
         }
 
-        if (requestCode == GalleryPick) {
+        if (requestCode == RequestCodeConstant.GALLERY_PICK) {
             switch (resultCode) {
                 case RESULT_OK:
                     Uri ImageURI = data.getData();

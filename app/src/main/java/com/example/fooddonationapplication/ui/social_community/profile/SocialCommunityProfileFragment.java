@@ -86,7 +86,6 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
     private boolean hasTelephoneNumberChanged;
 
     // For photo
-    private static final int GalleryPick = 1;
     private Bitmap bitmap;
     private String eventImageURI;
     private boolean hasImageChanged;
@@ -135,7 +134,6 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
         FragmentActivity fragmentActivity = requireActivity();
         oldUserData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
         if (oldUserData == null) {
-            Toast.makeText(fragmentActivity, "Data isn't loaded", Toast.LENGTH_SHORT).show();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference docRef = db.collection("users").document(user.getUid());
@@ -197,12 +195,12 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodeConstant.GALLERY_PICK);
                 } else {
                     Intent galleryIntent = new Intent();
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                     galleryIntent.setType("image/*");
-                    startActivityForResult(galleryIntent, GalleryPick);
+                    startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
                 }
             }
         });
@@ -492,12 +490,12 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, String.valueOf(grantResults));
-        if (requestCode == GalleryPick) {
+        if (requestCode == RequestCodeConstant.GALLERY_PICK) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GalleryPick);
+                startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
             } else {
                 Toast.makeText(requireActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
@@ -507,7 +505,7 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == RequestCodeConstant.GALLERY_PICK && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
 
 

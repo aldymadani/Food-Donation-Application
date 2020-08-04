@@ -35,6 +35,7 @@ import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.ui.general.SocialCommunityRegisterActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.example.fooddonationapplication.viewmodel.CreateEventViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -76,8 +77,6 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
     private String eventImageURI;
     private View rootView;
     private boolean hasImage;
-
-    private static final int GalleryPick = 1;
 
     private String eventNameData;
     private String eventDescriptionData;
@@ -128,12 +127,12 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodeConstant.GALLERY_PICK);
                 } else {
                     Intent galleryIntent = new Intent();
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                     galleryIntent.setType("image/*");
-                    startActivityForResult(galleryIntent, GalleryPick);
+                    startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
                 }
             }
         });
@@ -178,12 +177,12 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, String.valueOf(grantResults));
-        if (requestCode == GalleryPick) {
+        if (requestCode == RequestCodeConstant.GALLERY_PICK) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GalleryPick);
+                startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
             } else {
                 Toast.makeText(requireActivity(), "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
@@ -193,7 +192,7 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == RequestCodeConstant.GALLERY_PICK && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
 
             CropImage.activity(ImageURI)

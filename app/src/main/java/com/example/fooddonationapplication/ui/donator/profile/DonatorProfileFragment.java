@@ -74,7 +74,6 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
         FragmentActivity fragmentActivity = requireActivity();
         oldUserData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.DONATOR_MODEL);
         if (oldUserData == null) {
-            Toast.makeText(getContext(), "Data isn't loaded", Toast.LENGTH_SHORT).show();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference docRef = db.collection("users").document(user.getUid());

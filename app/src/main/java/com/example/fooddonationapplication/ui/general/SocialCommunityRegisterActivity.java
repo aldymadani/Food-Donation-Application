@@ -29,6 +29,7 @@ import com.example.fooddonationapplication.ui.social_community.MainSocialCommuni
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.Constant;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
+import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.example.fooddonationapplication.viewmodel.SocialCommunityRegisterViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,7 +55,6 @@ import java.util.Map;
 public class SocialCommunityRegisterActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
     private static final String TAG = "SocialRegisterActivity";
-    private static final int GalleryPick = 1;
     private String socialCommunityImageURI, emailData, passwordData, confirmPasswordData, socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData;
 
     private EditText emailId, passwordId, confirmPasswordId, socialCommunityNameId, telephoneNumberId, socialCommunityDescription;
@@ -118,12 +118,12 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(SocialCommunityRegisterActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GalleryPick);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodeConstant.GALLERY_PICK);
                 } else {
                     Intent galleryIntent = new Intent();
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                     galleryIntent.setType("image/*");
-                    startActivityForResult(galleryIntent, GalleryPick);
+                    startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
                 }
             }
         });
@@ -158,12 +158,12 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == GalleryPick) {
+        if (requestCode == RequestCodeConstant.GALLERY_PICK) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GalleryPick);
+                startActivityForResult(galleryIntent, RequestCodeConstant.GALLERY_PICK);
             } else {
                 Toast.makeText(SocialCommunityRegisterActivity.this, "Media Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
@@ -173,7 +173,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GalleryPick && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == RequestCodeConstant.GALLERY_PICK && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
 
             CropImage.activity(ImageURI)
