@@ -10,9 +10,9 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 public class Donation implements Parcelable {
-    public String name;
-    public String phone;
-    public String uuid;
+    private String donatorName;
+    private String donatorPhone;
+    private String donatorId;
     private String socialCommunityId;
     private String socialCommunityName;
     private String socialCommunityPhoneNumber;
@@ -24,7 +24,7 @@ public class Donation implements Parcelable {
     private String pickUpTime;
     private String donationDate;
     private String imageURI;
-    private String donatorId;
+    private String donationId;
     private String status;
     private double totalDonation;
     private @ServerTimestamp Date timestamp;
@@ -49,16 +49,16 @@ public class Donation implements Parcelable {
         // Empty constructor
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDonatorName(String donatorName) {
+        this.donatorName = donatorName;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setDonatorPhone(String donatorPhone) {
+        this.donatorPhone = donatorPhone;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setDonatorId(String donatorId) {
+        this.donatorId = donatorId;
     }
 
     public void setSocialCommunityId(String socialCommunityId) {
@@ -105,24 +105,24 @@ public class Donation implements Parcelable {
         this.totalDonation = totalDonation;
     }
 
-    public void setDonatorId(String donatorId) {
-        this.donatorId = donatorId;
+    public void setDonationId(String donationId) {
+        this.donationId = donationId;
     }
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
-    public String getName() {
-        return name;
+    public String getDonatorName() {
+        return donatorName;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getDonatorPhone() {
+        return donatorPhone;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getDonatorId() {
+        return donatorId;
     }
 
     public String getSocialCommunityId() {
@@ -165,8 +165,8 @@ public class Donation implements Parcelable {
         return imageURI;
     }
 
-    public String getDonatorId() {
-        return donatorId;
+    public String getDonationId() {
+        return donationId;
     }
 
     public Date getTimestamp() {
@@ -174,9 +174,9 @@ public class Donation implements Parcelable {
     }
 
     protected Donation(Parcel in) {
-        name = in.readString();
-        phone = in.readString();
-        uuid = in.readString();
+        donatorName = in.readString();
+        donatorPhone = in.readString();
+        donatorId = in.readString();
         socialCommunityId = in.readString();
         socialCommunityName = in.readString();
         socialCommunityPhoneNumber = in.readString();
@@ -189,7 +189,7 @@ public class Donation implements Parcelable {
         donationDate = in.readString();
         imageURI = in.readString();
         totalDonation = in.readDouble();
-        donatorId = in.readString();
+        donationId = in.readString();
         status = in.readString();
     }
 
@@ -207,9 +207,9 @@ public class Donation implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(phone);
-        dest.writeString(uuid);
+        dest.writeString(donatorName);
+        dest.writeString(donatorPhone);
+        dest.writeString(donatorId);
         dest.writeString(socialCommunityId);
         dest.writeString(socialCommunityName);
         dest.writeString(socialCommunityPhoneNumber);
@@ -222,7 +222,7 @@ public class Donation implements Parcelable {
         dest.writeString(donationDate);
         dest.writeString(imageURI);
         dest.writeDouble(totalDonation);
-        dest.writeString(donatorId);
+        dest.writeString(donationId);
         dest.writeString(status);
     }
 

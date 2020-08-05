@@ -33,7 +33,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
@@ -54,7 +53,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -323,15 +321,15 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
         String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
 
         final Donation donation = new Donation();
-        donation.setName(donatorName);
-        donation.setUuid(userID);
+        donation.setDonatorName(donatorName);
+        donation.setDonatorId(userID);
         donation.setPickUpAddress(pickUpAddressData);
         donation.setFoodItems(foodItemsData);
         donation.setPickUpDate(chosenDate);
         donation.setPickUpTime(timeData);
         donation.setDonationDate(currentDate);
         donation.setTotalDonation(Double.parseDouble(totalDonationData));
-        donation.setDonatorId(donatorDocumentID);
+        donation.setDonationId(donatorDocumentID);
         donation.setEventName(eventTitle);
         donation.setEventId(eventID);
         donation.setSocialCommunityName(socialCommunityName);
@@ -346,7 +344,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            donation.setPhone(documentSnapshot.getString("phone"));
+                            donation.setDonatorPhone(documentSnapshot.getString("phone"));
                             db.collection("donations").document(donatorDocumentID)
                                     .set(donation)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

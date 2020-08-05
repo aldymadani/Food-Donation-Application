@@ -73,13 +73,13 @@ public class DonationDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         donation = intent.getParcelableExtra("Donator");
-        donatorId = donation.getUuid();
-        donationId = donation.getDonatorId();
+        donatorId = donation.getDonatorId();
+        donationId = donation.getDonationId();
         eventId = donation.getEventId();
         imageURI = donation.getImageURI();
         donationQuantityData = donation.getTotalDonation();
 
-        donatorNameTextView.setText(donation.getName());
+        donatorNameTextView.setText(donation.getDonatorName());
 
         Glide.with(this).load(imageURI)
                 .listener(new RequestListener<Drawable>() {
@@ -123,7 +123,7 @@ public class DonationDetailActivity extends AppCompatActivity {
         callDonator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.openCallIntent(DonationDetailActivity.this, donation.getPhone());
+                Util.openCallIntent(DonationDetailActivity.this, donation.getDonatorPhone());
             }
         });
 
@@ -221,7 +221,7 @@ public class DonationDetailActivity extends AppCompatActivity {
     }
 
     private void setUpNotificationData(String status) {
-        String TOPIC = "/topics/" + donation.getUuid(); //topic must match with what the receiver subscribed to
+        String TOPIC = "/topics/" + donation.getDonatorId(); //topic must match with what the receiver subscribed to
         String NOTIFICATION_TITLE = "Your donation on " + donation.getEventName() + " has been " + status;
         String NOTIFICATION_MESSAGE = "Your " + foodItems.getText().toString() +  " donation has been " + status +". Your donation date is on " + donationDate.getText().toString() + ".";
 

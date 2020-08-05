@@ -203,7 +203,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
     }
 
     private void getDonatorDocumentList() {
-        db.collection("donations").whereEqualTo("uuid", user.getUid()).get()
+        db.collection("donations").whereEqualTo("donatorId", user.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -223,8 +223,8 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
         WriteBatch batch = db.batch();
         for (int i = 0; i < list.size(); i++) {
             DocumentReference donatorReference = db.collection("donations").document((String) list.get(i));
-            batch.update(donatorReference, "name", newUserData.getName());
-            batch.update(donatorReference, "phone", newUserData.getPhone());
+            batch.update(donatorReference, "donatorName", newUserData.getName());
+            batch.update(donatorReference, "donatorPhone", newUserData.getPhone());
         }
 
         DocumentReference userReference = db.collection("users").document(user.getUid());

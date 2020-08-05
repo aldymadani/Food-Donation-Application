@@ -38,7 +38,7 @@ public class DonationListAdapter extends FirestoreRecyclerAdapter<Donation, Dona
 //        holder.totalDonation.setText("Total Donation : " + formattedTotalDonation + " Kg");
 //        holder.donationDate.setText("Donation Date : " + model.getDonationDate());
 
-        holder.donatorName.setText(model.getName());
+        holder.donatorName.setText(model.getDonatorName());
         holder.totalDonation.setText(formattedTotalDonation + " kg");
         holder.donationDate.setText(Util.convertToFullDate(model.getDonationDate()));
 

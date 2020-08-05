@@ -122,7 +122,7 @@ public class DonationHistoryListFragment extends Fragment {
 
     private void setUpRecyclerViewDonationHistory() {
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Query query = donatorRef.whereEqualTo("uuid", uuid).orderBy("timestamp", Query.Direction.DESCENDING);
+        Query query = donatorRef.whereEqualTo("donatorId", uuid).orderBy("timestamp", Query.Direction.DESCENDING);
         Log.d(TAG, uuid);
 
         FirestoreRecyclerOptions<Donation> options = new FirestoreRecyclerOptions.Builder<Donation>()
