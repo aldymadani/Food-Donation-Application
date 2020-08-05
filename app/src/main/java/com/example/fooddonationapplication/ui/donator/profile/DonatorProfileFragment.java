@@ -20,17 +20,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.fooddonationapplication.model.Donator;
-import com.example.fooddonationapplication.model.User;
-import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -217,13 +213,13 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
                                 list.add(document.getId());
                             }
                             Log.d(TAG, list.toString());
-                            updateDonatorDatabase((ArrayList) list);
+                            updateDatabase((ArrayList) list);
                         }
                     }
                 });
     }
 
-    private void updateDonatorDatabase(ArrayList list) {
+    private void updateDatabase(ArrayList list) {
         WriteBatch batch = db.batch();
         for (int i = 0; i < list.size(); i++) {
             DocumentReference donatorReference = db.collection("donations").document((String) list.get(i));
@@ -231,20 +227,6 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
             batch.update(donatorReference, "phone", newUserData.getPhone());
         }
 
-        DocumentReference userReference = db.collection("users").document(user.getUid());
-        batch.update(userReference, "name", newUserData.getName());
-        batch.update(userReference, "phone", newUserData.getPhone());
-
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                updateUserDatabase();
-            }
-        });
-    }
-
-    private void updateUserDatabase() {
-        WriteBatch batch = db.batch();
         DocumentReference userReference = db.collection("users").document(user.getUid());
         batch.update(userReference, "name", newUserData.getName());
         batch.update(userReference, "phone", newUserData.getPhone());
@@ -298,7 +280,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
                     boolean isReauthSuccess = data.getBooleanExtra(IntentNameExtra.REAUTH_RESULT, false);
                     if (isReauthSuccess) {
                         Toast.makeText(getContext(), "Reauthentication successful.", Toast.LENGTH_SHORT).show();
-                        openChangeCredential();
+                        openChangeCredentialDialog();
                     } else {
                         Toast.makeText(getContext(), "Reauthentication failed.", Toast.LENGTH_SHORT).show();
                     }
@@ -309,7 +291,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
         }
     }
 
-    private void openChangeCredential() {
+    private void openChangeCredentialDialog() {
         Util.hideKeyboard(requireActivity());
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
         View updateCredentialDialog = getLayoutInflater().inflate(R.layout.dialog_option, null);

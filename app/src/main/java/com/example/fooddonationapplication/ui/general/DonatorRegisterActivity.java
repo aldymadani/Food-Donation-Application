@@ -71,12 +71,15 @@ public class DonatorRegisterActivity extends AppCompatActivity implements View.O
                 fullNameId.clearFocus();
                 telephoneNumberId.clearFocus();
                 Util.hideKeyboard(DonatorRegisterActivity.this);
-                allFieldValidation(email, password, confirmPassword, fullName, telephoneNumber);
+                if (allFieldValidation(email, password, confirmPassword, fullName, telephoneNumber)) {
+                    registerUser(email, password, fullName, telephoneNumber);
+                }
             }
         });
     }
 
-    protected void allFieldValidation(String email, String password, String confirmPassword, String fullName, String telephoneNumber) {
+    protected boolean allFieldValidation(String email, String password, String confirmPassword, String fullName, String telephoneNumber) {
+        boolean isValidated = false;
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         // Email checking
@@ -139,13 +142,15 @@ public class DonatorRegisterActivity extends AppCompatActivity implements View.O
         }
 
         // Register user
-        if (!emailValidation && !passwordValidation && fullName.isEmpty() && telephoneNumberValidation) {
+        if (!emailValidation && !passwordValidation && fullName.isEmpty() && !telephoneNumberValidation) {
             Toast.makeText(DonatorRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
         } else if (emailValidation && passwordValidation && !fullName.isEmpty() && telephoneNumberValidation) {
-            registerUser(email, password, fullName, telephoneNumber);
+            isValidated = true;
         } else {
             Toast.makeText(DonatorRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
+
+        return isValidated;
     }
 
     protected void registerUser(String email, String password, final String fullName, final String telephoneNumber) {

@@ -331,7 +331,7 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
         boolean telephoneNumberValidation = false;
         if (telephoneNumber.getText().toString().isEmpty()) {
             telephoneNumberLayout.setError("Please input your telephone number");
-        } else if (telephoneNumber.getText().toString().length() <= 7 || telephoneNumber.getText().toString().length() > 13) {
+        } else if (telephoneNumber.getText().toString().length() <= 5 || telephoneNumber.getText().toString().length() > 13) {
             telephoneNumberLayout.setError("Please Please input a valid telephone number");
         } else {
             telephoneNumberValidation = true;

@@ -110,7 +110,9 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
                 telephoneNumberId.clearFocus();
                 socialCommunityDescription.clearFocus();
                 Util.hideKeyboard(SocialCommunityRegisterActivity.this);
-                checkingAllFields();
+                if (checkingAllFields()) {
+                    registerUser();
+                }
             }
         });
 
@@ -204,7 +206,8 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
         }
     }
 
-    private void checkingAllFields() {
+    private boolean checkingAllFields() {
+        boolean isValidated = false;
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         // Email checking
@@ -279,13 +282,15 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
         }
 
         // Register user
-        if (!emailValidation && !passwordValidation && socialCommunityNameData.isEmpty() && !telephoneNumberValidation && socialCommunityDescriptionData.isEmpty()) {
+        if (!emailValidation && !passwordValidation && socialCommunityNameData.isEmpty() && !telephoneNumberValidation && socialCommunityDescriptionData.isEmpty() && !hasImage) {
             Toast.makeText(SocialCommunityRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
         } else if (emailValidation && passwordValidation && !socialCommunityNameData.isEmpty() && telephoneNumberValidation && !socialCommunityDescriptionData.isEmpty() && hasImage) {
-            registerUser();
+            isValidated = true;
         } else {
             Toast.makeText(SocialCommunityRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
+
+        return isValidated;
     }
 
     private void registerUser() {

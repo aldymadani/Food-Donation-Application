@@ -173,12 +173,12 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventPhoto, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
-                    imageEventPhotoProgressBar.setVisibility(View.INVISIBLE);
+                    imageEventPhotoProgressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    imageEventPhotoProgressBar.setVisibility(View.INVISIBLE);
+                    imageEventPhotoProgressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Error in loading the image", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -568,9 +568,8 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         }
         newEvent.setTargetQuantity(Double.parseDouble(eventTargetQuantity.getText().toString()));
 
+        // Checking if there are any changes
         hasChanged = !event.isSame(newEvent);
-        Log.d(TAG, "NEW: " + newEvent.getDescription());
-        Log.d(TAG, "OLD: " + event.getDescription());
 
         if (!event.getTitle().equalsIgnoreCase(newEvent.getTitle())) {
             hasChangedTitle = true;
@@ -675,9 +674,6 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-//        String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.v(TAG, date);
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(event.getEventID() + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
