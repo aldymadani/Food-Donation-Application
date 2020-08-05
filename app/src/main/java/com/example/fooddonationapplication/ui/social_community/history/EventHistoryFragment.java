@@ -83,7 +83,7 @@ public class EventHistoryFragment extends Fragment {
         emptyHistoryImage.setVisibility(View.INVISIBLE);
         emptyHistoryText.setVisibility(View.INVISIBLE);
 
-        Query query = eventRef.whereEqualTo("socialCommunityID", uuid);
+        Query query = eventRef.whereEqualTo("socialCommunityId", uuid).orderBy("timestamp", Query.Direction.DESCENDING);
         setUpRecyclerViewEventHistory(query);
 
         // Retrieving data from activity
@@ -134,7 +134,7 @@ public class EventHistoryFragment extends Fragment {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Query newQuery = eventRef.whereEqualTo("socialCommunityID", uuid);
+                Query newQuery = eventRef.whereEqualTo("socialCommunityId", uuid);
                 searchInputLayout.setErrorEnabled(false);
                 searchField.setText("");
                 Util.hideKeyboard(requireActivity());

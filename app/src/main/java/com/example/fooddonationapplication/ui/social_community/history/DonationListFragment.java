@@ -80,7 +80,7 @@ public class DonationListFragment extends Fragment {
         FragmentActivity fragmentActivity = requireActivity();
         Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
         if (eventData != null) {
-            eventID = eventData.getEventID();
+            eventID = eventData.getEventId();
             Log.d(TAG, eventID);
         }
 
@@ -126,6 +126,9 @@ public class DonationListFragment extends Fragment {
                     if (documentSnapshot.getDouble("totalDonation") <= 0) {
                         donationListEmptyImage.setVisibility(View.VISIBLE);
                         donationListEmptyTextView.setVisibility(View.VISIBLE);
+                        sortBy.setVisibility(View.INVISIBLE);
+                        titleTotalDonation.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.INVISIBLE);
                     } else {
                         sortBy.setVisibility(View.VISIBLE);
                         titleTotalDonation.setVisibility(View.VISIBLE);
@@ -133,6 +136,8 @@ public class DonationListFragment extends Fragment {
                         DecimalFormat df = new DecimalFormat("#.###");
                         String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
                         titleTotalDonation.setText("People have donated " + formattedTotalDonation + " Kg of food");
+                        donationListEmptyImage.setVisibility(View.INVISIBLE);
+                        donationListEmptyTextView.setVisibility(View.INVISIBLE);
                     }
                 }
             }

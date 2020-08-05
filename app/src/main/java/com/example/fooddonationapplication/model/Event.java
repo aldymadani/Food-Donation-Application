@@ -10,7 +10,7 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 public class Event implements Parcelable {
-    private String imageURI, eventID, title, description, socialCommunityID, endDate, titleForSearch;
+    private String imageURI, eventId, title, description, socialCommunityId, endDate, titleForSearch;
     private double targetQuantity, totalDonation;
     private long endDateInMillis;
     private @ServerTimestamp Date timestamp;
@@ -32,8 +32,8 @@ public class Event implements Parcelable {
         this.imageURI = imageURI;
     }
 
-    public void setEventID(String eventID) {
-        this.eventID = eventID;
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     public void setTitle(String title) {
@@ -44,8 +44,8 @@ public class Event implements Parcelable {
         this.description = description;
     }
 
-    public void setSocialCommunityID(String socialCommunityID) {
-        this.socialCommunityID = socialCommunityID;
+    public void setSocialCommunityId(String socialCommunityId) {
+        this.socialCommunityId = socialCommunityId;
     }
 
 
@@ -73,12 +73,12 @@ public class Event implements Parcelable {
         this.timestamp = timestamp;
     }
 
-    public Event(String imageURI, String eventID, String title, String description, String socialCommunityID, String socialCommunityName, String socialCommunityTelephoneNumber, String endDate, long endDateInMillis, double targetQuantity, double totalDonation, Date timestamp) {
+    public Event(String imageURI, String eventid, String title, String description, String socialCommunityID, String socialCommunityName, String socialCommunityTelephoneNumber, String endDate, long endDateInMillis, double targetQuantity, double totalDonation, Date timestamp) {
         this.imageURI = imageURI;
-        this.eventID = eventID;
+        this.eventId = eventid;
         this.title = title;
         this.description = description;
-        this.socialCommunityID = socialCommunityID;
+        this.socialCommunityId = socialCommunityID;
         this.endDate = endDate;
         this.endDateInMillis = endDateInMillis;
         this.targetQuantity = targetQuantity;
@@ -86,8 +86,8 @@ public class Event implements Parcelable {
         this.timestamp = timestamp;
     }
 
-    public String getSocialCommunityID() {
-        return socialCommunityID;
+    public String getSocialCommunityId() {
+        return socialCommunityId;
     }
 
     public double getTargetQuantity() {
@@ -98,8 +98,8 @@ public class Event implements Parcelable {
         return imageURI;
     }
 
-    public String getEventID() {
-        return eventID;
+    public String getEventId() {
+        return eventId;
     }
 
     public String getTitle() {
@@ -141,10 +141,10 @@ public class Event implements Parcelable {
 
     protected Event(Parcel in) {
         imageURI = in.readString();
-        eventID = in.readString();
+        eventId = in.readString();
         title = in.readString();
         description = in.readString();
-        socialCommunityID = in.readString();
+        socialCommunityId = in.readString();
         endDate = in.readString();
         targetQuantity = in.readDouble();
         totalDonation = in.readDouble();
@@ -172,10 +172,10 @@ public class Event implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(imageURI);
-        dest.writeString(eventID);
+        dest.writeString(eventId);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeString(socialCommunityID);
+        dest.writeString(socialCommunityId);
         dest.writeString(endDate);
         dest.writeDouble(targetQuantity);
         dest.writeDouble(totalDonation);

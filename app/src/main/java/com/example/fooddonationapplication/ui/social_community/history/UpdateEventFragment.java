@@ -28,7 +28,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -145,7 +144,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             // TODO: Alert when data is null
             fragmentActivity.finish();
         }
-        eventId = event.getEventID();
+        eventId = event.getEventId();
 
         // Initialize the text in text field
         eventTitle.setText(event.getTitle());
@@ -290,7 +289,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         String TOPIC = "/topics/FoodDonation"; //topic must match with what the receiver subscribed to
         String NOTIFICATION_TITLE = event.getTitle();
         String NOTIFICATION_MESSAGE = event.getDescription();
-        String NOTIFICATION_EVENT_ID = event.getEventID();
+        String NOTIFICATION_EVENT_ID = event.getEventId();
 
         JSONObject notification = new JSONObject();
         JSONObject notifcationBody = new JSONObject();
@@ -486,7 +485,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
 
     private void updateEventDatabase() {
         WriteBatch batch = db.batch();
-        DocumentReference eventReference = db.collection("events").document(event.getEventID());
+        DocumentReference eventReference = db.collection("events").document(event.getEventId());
         batch.update(eventReference,
                 "title", newEvent.getTitle(),
                 "titleForSearch", newEvent.getTitle().toLowerCase(),
@@ -589,7 +588,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         // Perform delete donation on the database
         allActionStatus(false, "DELETE_START");
         WriteBatch batch = db.batch();
-        DocumentReference eventReference = db.collection("events").document(event.getEventID());
+        DocumentReference eventReference = db.collection("events").document(event.getEventId());
         batch.delete(eventReference); // TODO don't use batch, use single deletion
 
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -674,7 +673,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(event.getEventID() + ".jpeg");
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("event-image").child(event.getEventId() + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,7 +30,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
-import com.example.fooddonationapplication.ui.general.SocialCommunityRegisterActivity;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
@@ -41,7 +38,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -303,14 +299,14 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
         final Event event = new Event();
         event.setTitle(eventNameData);
         event.setDescription(eventDescriptionData);
-        event.setEventID(eventId);
+        event.setEventId(eventId);
         event.setEndDate(endDateData);
         event.setEndDateInMillis(chosenDateInMillis);
         event.setTargetQuantity(Double.parseDouble(targetQuantityData));
         event.setTotalDonation(0);
         event.setTitleForSearch(eventNameData.toLowerCase());
         event.setImageURI(eventImageURI);
-        event.setSocialCommunityID(socialCommunityID);
+        event.setSocialCommunityId(socialCommunityID);
 
         db.collection("users").document(socialCommunityID)
                 .update("totalEventCreated", FieldValue.increment(1))
