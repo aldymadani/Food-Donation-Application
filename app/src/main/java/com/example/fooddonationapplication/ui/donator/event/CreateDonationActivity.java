@@ -66,7 +66,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
     private ProgressBar progressBar;
     private ImageView foodImage;
     private Bitmap bitmap;
-    private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userID, eventID;
+    private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userID, eventId;
     private boolean hasImage;
 
     // Firestore Database Access
@@ -309,7 +309,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
     }
 
     private void CreateDonation() {
-        eventID = getIntent().getStringExtra("eventID");
+        eventId = getIntent().getStringExtra("eventId");
         String eventTitle = getIntent().getStringExtra("eventName");
         String socialCommunityId = getIntent().getStringExtra("socialCommunityId");
         String socialCommunityName = getIntent().getStringExtra("socialCommunityName");
@@ -331,7 +331,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
         donation.setTotalDonation(Double.parseDouble(totalDonationData));
         donation.setDonationId(donatorDocumentID);
         donation.setEventName(eventTitle);
-        donation.setEventId(eventID);
+        donation.setEventId(eventId);
         donation.setSocialCommunityName(socialCommunityName);
         donation.setSocialCommunityPhoneNumber(socialCommunityPhone);
         donation.setSocialCommunityId(socialCommunityId);
@@ -368,7 +368,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
 
     private void UpdateUserAndEventDonation() {
         final DocumentReference userDocumentReference = db.collection("users").document(userID);
-        final DocumentReference eventDocumentReference = db.collection("events").document(eventID);
+        final DocumentReference eventDocumentReference = db.collection("events").document(eventId);
         double updateTotalDonation = Double.parseDouble(totalDonationData);
 
         WriteBatch batch = db.batch();

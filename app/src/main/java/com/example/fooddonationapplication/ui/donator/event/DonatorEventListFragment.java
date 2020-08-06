@@ -41,14 +41,13 @@ public class DonatorEventListFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventRef = db.collection("events");
 
-    private EventListAdapter adapter;
+    private EventListAdapter mAdapter;
     private RecyclerView recyclerView;
     private ImageView searchButton, emptyEventImage;
     private TextView emptyEventTextView;
     private TextInputLayout searchKeywordLayout;
     private EditText searchKeyword;
     private SwipeRefreshLayout swipeLayout;
-    FirestorePagingAdapter mAdapter;
 
     @Nullable
     @Override
@@ -76,7 +75,7 @@ public class DonatorEventListFragment extends Fragment {
         FragmentActivity fragmentActivity = requireActivity();
         String eventIdFromNotification = fragmentActivity.getIntent().getStringExtra(IntentNameExtra.NOTIFICATION_EVENT_ID);
         if (eventIdFromNotification != null) {
-            query = eventRef.whereEqualTo("eventID", eventIdFromNotification);
+            query = eventRef.whereEqualTo("eventId", eventIdFromNotification);
         } else {
             query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
         }
