@@ -51,7 +51,7 @@ public class EventHistoryFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventRef = db.collection("events");
 
-    private FirestorePagingAdapter eventHistoryAdapter;
+    private EventHistoryAdapter eventHistoryAdapter;
     private View rootView;
     private TextInputLayout searchInputLayout;
     private EditText searchField;

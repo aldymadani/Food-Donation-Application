@@ -41,14 +41,13 @@ public class EventListFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventRef = db.collection("events");
 
-    private EventListAdapter adapter;
+    private EventListAdapter mAdapter;
     private RecyclerView recyclerView;
     private ImageView searchButton, emptyEventImage;
     private TextView emptyEventTextView;
     private TextInputLayout searchKeywordLayout;
     private EditText searchKeyword;
     private SwipeRefreshLayout swipeLayout;
-    FirestorePagingAdapter mAdapter;
 
     @Nullable
     @Override
