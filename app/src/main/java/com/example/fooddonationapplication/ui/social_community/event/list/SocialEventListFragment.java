@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.ui.donator.history;
+package com.example.fooddonationapplication.ui.social_community.event.list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,19 +13,19 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.ViewPagerAdapter;
-import com.example.fooddonationapplication.ui.donator.history.child.ChildDonationHistoryListFragment;
+import com.example.fooddonationapplication.ui.social_community.event.list.child.ChildEventListFragment;
 import com.example.fooddonationapplication.util.constant.Constant;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.google.android.material.tabs.TabLayout;
 
-public class DonationHistoryListFragment extends Fragment {
+public class SocialEventListFragment extends Fragment {
 
     private ViewPagerAdapter eventAdapter;
     private FragmentActivity fragmentActivity;
     private ViewPager mViewPager;
     private TabLayout mTabs;
-    private ChildDonationHistoryListFragment onProgressDonation;
-    private ChildDonationHistoryListFragment completedDonation;
+    private ChildEventListFragment currentEvent;
+    private ChildEventListFragment pastEvent;
     private View rootView;
 
     @Nullable
@@ -49,18 +49,18 @@ public class DonationHistoryListFragment extends Fragment {
 
     private void setDefaultFragment() {
         if (this.isAdded()) {
-            onProgressDonation = new ChildDonationHistoryListFragment();
-            Bundle onProgressBundle = new Bundle();
-            onProgressBundle.putString(IntentNameExtra.DONATION_LIST_ARGUMENT, Constant.ON_PROGRESS_DONATIONS);
-            onProgressDonation.setArguments(onProgressBundle);
+            currentEvent = new ChildEventListFragment();
+            Bundle currentBundle = new Bundle();
+            currentBundle.putString(IntentNameExtra.EVENT_LIST_ARGUMENT, Constant.CURRENT_EVENT);
+            currentEvent.setArguments(currentBundle);
 
-            completedDonation = new ChildDonationHistoryListFragment();
-            Bundle completedBundle = new Bundle();
-            completedBundle.putString(IntentNameExtra.DONATION_LIST_ARGUMENT, Constant.COMPLETED_DONATIONS);
-            completedDonation.setArguments(completedBundle);
+            pastEvent = new ChildEventListFragment();
+            Bundle pastBundle = new Bundle();
+            pastBundle.putString(IntentNameExtra.EVENT_LIST_ARGUMENT, Constant.PAST_EVENT);
+            pastEvent.setArguments(pastBundle);
 
-            eventAdapter.addFragment(onProgressDonation, "On-Progress");
-            eventAdapter.addFragment(completedDonation, "Completed");
+            eventAdapter.addFragment(currentEvent, "Current");
+            eventAdapter.addFragment(pastEvent, "Past");
 
             mViewPager.setAdapter(eventAdapter);
             mViewPager.setCurrentItem(0);

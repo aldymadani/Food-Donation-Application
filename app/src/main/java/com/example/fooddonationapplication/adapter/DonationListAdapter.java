@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donation;
-import com.example.fooddonationapplication.ui.social_community.history.DonationDetailActivity;
+import com.example.fooddonationapplication.ui.social_community.event.detail.DonationDetailActivity;
 import com.example.fooddonationapplication.util.Util;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;

@@ -3,7 +3,6 @@ package com.example.fooddonationapplication.services;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,7 +11,6 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -20,8 +18,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.ui.general.SplashScreenActivity;
-import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
-import com.example.fooddonationapplication.ui.social_community.history.UpdateEventActivity;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;

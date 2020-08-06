@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.ui.social_community.history;
+package com.example.fooddonationapplication.ui.social_community.event.detail.child;
 
 import android.Manifest;
 import android.app.Activity;

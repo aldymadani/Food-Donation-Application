@@ -45,6 +45,7 @@ dependencies {
     implementation 'android.arch.paging:runtime:1.0.1'
     implementation 'com.google.firebase:firebase-messaging:20.2.3'
 
+    // Volley implementation
     implementation 'com.android.volley:volley:1.1.1'
 
     // Github Firestore implementation
@@ -54,7 +55,8 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Support design for show / hide password implementation
-    implementation 'com.google.android.material:material:1.1.0'
+    // Reason for this version: https://github.com/material-components/material-components-android/issues/621
+    implementation 'com.google.android.material:material:1.2.0-rc01'
 
     // Card view and recycler view implementation
     implementation "androidx.recyclerview:recyclerview:1.1.0"

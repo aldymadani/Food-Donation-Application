@@ -3,23 +3,18 @@ package com.example.fooddonationapplication.ui.donator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.model.Donator;
-import com.example.fooddonationapplication.ui.donator.profile.DonatorProfileFragment;
-import com.example.fooddonationapplication.ui.donator.event.EventListFragment;
 import com.example.fooddonationapplication.ui.donator.history.DonationHistoryListFragment;
-import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.ui.donator.profile.DonatorProfileFragment;
+import com.example.fooddonationapplication.ui.donator.event.DonatorEventListFragment;
 import com.example.fooddonationapplication.util.Util;
-import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.example.fooddonationapplication.viewmodel.MainDonatorViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,13 +25,12 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class MainDonatorActivity extends AppCompatActivity {
 
     private static final String TAG = "MainDonatorActivity";
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    Fragment eventFragment = new EventListFragment();
+    Fragment eventFragment = new DonatorEventListFragment();
     Fragment donationHistoryFragment = new DonationHistoryListFragment();
     Fragment editProfileFragment = new DonatorProfileFragment();
     Fragment activeFragment;

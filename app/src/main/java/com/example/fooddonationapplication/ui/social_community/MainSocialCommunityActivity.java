@@ -1,22 +1,18 @@
 package com.example.fooddonationapplication.ui.social_community;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
-import com.example.fooddonationapplication.ui.donator.MainDonatorActivity;
 import com.example.fooddonationapplication.ui.social_community.create.CreateEventFragment;
-import com.example.fooddonationapplication.ui.social_community.history.EventHistoryFragment;
+import com.example.fooddonationapplication.ui.social_community.event.list.SocialEventListFragment;
 import com.example.fooddonationapplication.ui.social_community.profile.SocialCommunityProfileFragment;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.viewmodel.MainSocialCommunityViewModel;
@@ -25,10 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.io.IOException;
 
 public class MainSocialCommunityActivity extends AppCompatActivity {
 
@@ -36,7 +29,7 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment CreateEventFragment = new CreateEventFragment();
-    Fragment EventHistoryFragment = new EventHistoryFragment();
+    Fragment SocialEventListFragment = new SocialEventListFragment();
     Fragment SocialCommunityProfileFragment = new SocialCommunityProfileFragment();
     Fragment activeFragment;
     Fragment firstInactiveFragment;
@@ -56,7 +49,7 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
         }
 
         fragmentManager.beginTransaction().add(R.id.fragment_container_social_community, SocialCommunityProfileFragment, "3").commit();
-        fragmentManager.beginTransaction().add(R.id.fragment_container_social_community, EventHistoryFragment, "2").commit();
+        fragmentManager.beginTransaction().add(R.id.fragment_container_social_community, SocialEventListFragment, "2").commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container_social_community, CreateEventFragment, "1").commit();
         mViewModel = new ViewModelProvider(this).get(MainSocialCommunityViewModel.class);
         Log.d(TAG, String.valueOf(mViewModel.getLastSeen()));
@@ -66,11 +59,11 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
         if (mViewModel.getLastSeen() == 1) {
             bottomNav.setSelectedItemId(R.id.nav_create_event);
         } else if (mViewModel.getLastSeen() == 2) {
-            bottomNav.setSelectedItemId(R.id.nav_event_history);
+            bottomNav.setSelectedItemId(R.id.nav_event_list);
         } else if (mViewModel.getLastSeen() == 3){
             bottomNav.setSelectedItemId(R.id.nav_social_community_profile);
         } else {
-            bottomNav.setSelectedItemId(R.id.nav_event_history);
+            bottomNav.setSelectedItemId(R.id.nav_event_list);
         }
 
         FirebaseMessaging.getInstance().unsubscribeFromTopic("FoodDonation")
@@ -93,12 +86,12 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
                     switch (menuItem.getItemId()) {
                         case R.id.nav_create_event:
                             activeFragment = CreateEventFragment;
-                            firstInactiveFragment = EventHistoryFragment;
+                            firstInactiveFragment = SocialEventListFragment;
                             secondInactiveFragment = SocialCommunityProfileFragment;
                             mViewModel.setLastSeen(1);
                             break;
-                        case R.id.nav_event_history:
-                            activeFragment = EventHistoryFragment;
+                        case R.id.nav_event_list:
+                            activeFragment = SocialEventListFragment;
                             firstInactiveFragment = CreateEventFragment;
                             secondInactiveFragment = SocialCommunityProfileFragment;
                             mViewModel.setLastSeen(2);
@@ -106,7 +99,7 @@ public class MainSocialCommunityActivity extends AppCompatActivity {
                         case R.id.nav_social_community_profile:
                             activeFragment = SocialCommunityProfileFragment;
                             firstInactiveFragment = CreateEventFragment;
-                            secondInactiveFragment = EventHistoryFragment;
+                            secondInactiveFragment = SocialEventListFragment;
                             mViewModel.setLastSeen(3);
                             break;
                     }

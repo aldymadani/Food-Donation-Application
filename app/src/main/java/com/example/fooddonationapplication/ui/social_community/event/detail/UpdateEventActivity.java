@@ -1,14 +1,14 @@
-package com.example.fooddonationapplication.ui.social_community.history;
+package com.example.fooddonationapplication.ui.social_community.event.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.ViewPagerAdapter;
+import com.example.fooddonationapplication.ui.social_community.event.detail.child.DonationListFragment;
+import com.example.fooddonationapplication.ui.social_community.event.detail.child.UpdateEventFragment;
 import com.example.fooddonationapplication.util.Util;
 import com.google.android.material.tabs.TabLayout;
 

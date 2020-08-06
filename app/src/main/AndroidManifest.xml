@@ -29,8 +29,8 @@
         <activity android:name=".ui.donator.event.EventDetailActivity" />
         <activity android:name=".ui.donator.event.CreateDonationActivity" />
         <activity android:name=".ui.donator.history.DonationHistoryDetailActivity" />
-        <activity android:name=".ui.social_community.history.DonationDetailActivity" />
-        <activity android:name=".ui.social_community.history.UpdateEventActivity" />
+        <activity android:name=".ui.social_community.event.detail.DonationDetailActivity" />
+        <activity android:name=".ui.social_community.event.detail.UpdateEventActivity" />
         <activity
             android:name=".ui.social_community.MainSocialCommunityActivity"
             android:windowSoftInputMode="adjustNothing" />

@@ -12,4 +12,8 @@ public class IntentNameExtra {
 
     // Notification stuff
     public static final String NOTIFICATION_EVENT_ID = "notificationEventId";
+
+    // Event list stuff
+    public static final String EVENT_LIST_ARGUMENT = "eventListArgs";
+    public static final String DONATION_LIST_ARGUMENT = "donationListArgs";
 }

@@ -35,7 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class EventListFragment extends Fragment {
+public class DonatorEventListFragment extends Fragment {
     private static final String TAG = "EventListFragment";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();

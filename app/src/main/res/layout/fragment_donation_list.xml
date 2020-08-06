@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.social_community.history.DonationListFragment">
+    tools:context=".ui.social_community.event.detail.child.DonationListFragment">
 
     <TextView
         android:id="@+id/donationListTitle"

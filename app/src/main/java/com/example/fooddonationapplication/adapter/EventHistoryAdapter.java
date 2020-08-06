@@ -24,7 +24,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
-import com.example.fooddonationapplication.ui.social_community.history.UpdateEventActivity;
+import com.example.fooddonationapplication.ui.social_community.event.detail.UpdateEventActivity;
 import com.example.fooddonationapplication.util.Util;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;

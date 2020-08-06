@@ -59,4 +59,5 @@
     <string name="donation_history_total_title">You have donated … kg of Food</string>
     <string name="donator_history_total_title">People have donated … kg of food</string>
     <string name="sort_by_spinner">Sort By</string>
+    <string name="event_list_bottom_navbar">Event</string>
 </resources>

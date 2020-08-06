@@ -1,4 +1,4 @@
-package com.example.fooddonationapplication.ui.social_community.history;
+package com.example.fooddonationapplication.ui.social_community.event.detail;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
@@ -240,13 +241,13 @@ public class DonationDetailActivity extends AppCompatActivity {
 
     private void sendNotification(JSONObject notification, String status) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
-                new com.android.volley.Response.Listener<JSONObject>() {
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i(TAG, "onResponse: " + response.toString());
                     }
                 },
-                new com.android.volley.Response.ErrorListener() {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i(TAG, "onErrorResponse: Didn't work");

@@ -1,6 +1,5 @@
-package com.example.fooddonationapplication.ui.social_community.history;
+package com.example.fooddonationapplication.ui.social_community.event.list.child;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -8,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +30,6 @@ import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,8 +40,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class EventHistoryFragment extends Fragment {
-
+public class ChildEventListFragment extends Fragment {
     private static final String TAG = "EventHistoryFragment";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -60,6 +55,7 @@ public class EventHistoryFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
     private RecyclerView recyclerView;
     private SocialCommunity socialCommunity;
+    private String eventArgs;
 
     @Nullable
     @Override
@@ -84,6 +80,11 @@ public class EventHistoryFragment extends Fragment {
         swipeLayout.setVisibility(View.INVISIBLE);
         emptyHistoryImage.setVisibility(View.INVISIBLE);
         emptyHistoryText.setVisibility(View.INVISIBLE);
+
+        eventArgs = getArguments().getString(IntentNameExtra.EVENT_LIST_ARGUMENT, "");
+
+        Log.d("SocialEventListFragment", "List Event Fragment initiated!");
+        Log.d("SocialEventListFragment", "Event arguments: " + eventArgs);
 
         Query query = eventRef.whereEqualTo("socialCommunityId", uuid).orderBy("timestamp", Query.Direction.DESCENDING);
         setUpRecyclerViewEventHistory(query);
@@ -194,13 +195,9 @@ public class EventHistoryFragment extends Fragment {
                 .build();
 
         eventHistoryAdapter = new EventHistoryAdapter(options, requireActivity(), swipeLayout);
-//        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
-//                .setQuery(query, Event.class)
-//                .build();
 
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
 
-//        eventHistoryAdapter = new EventHistoryAdapter(options, getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
