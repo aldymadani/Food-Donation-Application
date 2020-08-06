@@ -80,7 +80,7 @@ public class EventDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Event event = intent.getParcelableExtra("Event");
 
-        final String eventIDData = event.getEventId();
+        final String eventIdData = event.getEventId();
         final String eventTitleData = event.getTitle();
         String eventImageData = event.getImageURI();
         String eventDescriptionData = event.getDescription();
@@ -157,7 +157,7 @@ public class EventDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EventDetailActivity.this, CreateDonationActivity.class);
-                intent.putExtra("eventID", eventIDData);
+                intent.putExtra("eventId", eventIdData);
                 intent.putExtra("eventName", eventTitleData);
                 intent.putExtra("socialCommunityId", eventSocialCommunityIdData);
                 intent.putExtra("socialCommunityName", socialCommunityNameData);

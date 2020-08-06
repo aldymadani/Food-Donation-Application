@@ -75,7 +75,7 @@ public class EventListFragment extends Fragment {
         FragmentActivity fragmentActivity = requireActivity();
         String eventIdFromNotification = fragmentActivity.getIntent().getStringExtra(IntentNameExtra.NOTIFICATION_EVENT_ID);
         if (eventIdFromNotification != null) {
-            query = eventRef.whereEqualTo("eventID", eventIdFromNotification);
+            query = eventRef.whereEqualTo("eventId", eventIdFromNotification);
         } else {
             query = eventRef.whereGreaterThanOrEqualTo("endDateInMillis", System.currentTimeMillis()).orderBy("endDateInMillis");
         }

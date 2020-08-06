@@ -135,8 +135,6 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(itemView.getContext(), UpdateEventActivity.class);
-//                intent.putExtra("eventID", model.getEventID());
-//                intent.putExtra("totalDonation", formattedTotalDonation);
                     intent.putExtra("eventData", event);
                     itemView.getContext().startActivity(intent);
                 }

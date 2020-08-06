@@ -48,7 +48,7 @@ public class DonationListFragment extends Fragment {
 
     private View rootView;
 
-    private String eventID;
+    private String eventId;
     private String totalDonation;
     private MaterialSpinner sortBy;
 
@@ -74,17 +74,17 @@ public class DonationListFragment extends Fragment {
         donationListEmptyImage.setVisibility(View.INVISIBLE);
         donationListEmptyTextView.setVisibility(View.INVISIBLE);
 
-        eventID = "";
+        eventId = "";
         totalDonation = "";
 
         FragmentActivity fragmentActivity = requireActivity();
         Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
         if (eventData != null) {
-            eventID = eventData.getEventId();
-            Log.d(TAG, eventID);
+            eventId = eventData.getEventId();
+            Log.d(TAG, eventId);
         }
 
-        Query query = donatorRef.whereEqualTo("eventId", eventID);
+        Query query = donatorRef.whereEqualTo("eventId", eventId);
         setUpRecyclerViewDonator(query);
 
         sortBy.setItems("All", "On-Progress", "Completed");
@@ -94,11 +94,11 @@ public class DonationListFragment extends Fragment {
                 Toast.makeText(getContext(), "Clicked " + item, Toast.LENGTH_SHORT).show();
                 Query newQuery = null;
                 if (item.equals("All")) {
-                    newQuery = donatorRef.whereEqualTo("eventId", eventID);
+                    newQuery = donatorRef.whereEqualTo("eventId", eventId);
                 } else if (item.equals("On-Progress")) {
-                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "On-Progress");
+                    newQuery = donatorRef.whereEqualTo("eventId", eventId).whereEqualTo("status", "On-Progress");
                 } else if (item.equals("Completed")) {
-                    newQuery = donatorRef.whereEqualTo("eventId", eventID).whereEqualTo("status", "Completed");
+                    newQuery = donatorRef.whereEqualTo("eventId", eventId).whereEqualTo("status", "Completed");
                 }
                 setUpRecyclerViewDonator(newQuery);
                 donatorAdapter.startListening();
@@ -119,7 +119,7 @@ public class DonationListFragment extends Fragment {
         super.onStart();
         donatorAdapter.startListening();
         CollectionReference eventRef = db.collection("events");
-        eventRef.document(eventID).addSnapshotListener(requireActivity(), new EventListener<DocumentSnapshot>() {
+        eventRef.document(eventId).addSnapshotListener(requireActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
