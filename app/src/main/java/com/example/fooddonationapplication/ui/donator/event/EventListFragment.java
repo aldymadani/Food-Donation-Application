@@ -2,9 +2,11 @@ package com.example.fooddonationapplication.ui.donator.event;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -98,20 +100,21 @@ public class EventListFragment extends Fragment {
             }
         });
 
+        searchKeyword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchEvent();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Query newQuery = null;
-                String search = searchKeyword.getText().toString().toLowerCase();
-                if (!searchKeyword.getText().toString().isEmpty()) {
-                    Util.hideKeyboard(requireActivity());
-                    searchKeyword.clearFocus();
-                    newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
-                } else {
-                    return;
-                }
-                setUpRecyclerView(newQuery);
-                mAdapter.startListening();;
+                searchEvent();
             }
         });
 
@@ -130,6 +133,20 @@ public class EventListFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void searchEvent() {
+        Query newQuery = null;
+        String search = searchKeyword.getText().toString().toLowerCase();
+        if (!searchKeyword.getText().toString().isEmpty()) {
+            Util.hideKeyboard(requireActivity());
+            searchKeyword.clearFocus();
+            newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
+        } else {
+            return;
+        }
+        setUpRecyclerView(newQuery);
+        mAdapter.startListening();;
     }
 
     private void setUpRecyclerView(Query query) {
