@@ -350,8 +350,15 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(getApplicationContext(), "Donation is successfully created", Toast.LENGTH_SHORT).show();
-                                            UpdateUserAndEventDonation();
+                                            Toast.makeText(CreateDonationActivity.this, "Donation is successfully created", Toast.LENGTH_SHORT).show();
+                                            Log.d(TAG, "Donation successfully written!");
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            btnConfirm.setVisibility(View.VISIBLE);
+
+                                            // Go To Main Menu Again
+                                            Intent intent = new Intent(getApplicationContext(), MainDonatorActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -364,29 +371,6 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
                         }
                     }
                 });
-    }
-
-    private void UpdateUserAndEventDonation() {
-        final DocumentReference userDocumentReference = db.collection("users").document(userID);
-        final DocumentReference eventDocumentReference = db.collection("events").document(eventId);
-        double updateTotalDonation = Double.parseDouble(totalDonationData);
-
-        WriteBatch batch = db.batch();
-        batch.update(userDocumentReference, "totalDonation", FieldValue.increment(updateTotalDonation));
-        batch.update(eventDocumentReference, "totalDonation", FieldValue.increment(updateTotalDonation));
-
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(CreateDonationActivity.this, "Donation is successfully created", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), MainDonatorActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                Log.d(TAG, "Event successfully written!");
-                progressBar.setVisibility(View.INVISIBLE);
-                btnConfirm.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     private void setupClock() {

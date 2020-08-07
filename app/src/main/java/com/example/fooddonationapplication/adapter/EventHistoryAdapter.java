@@ -163,21 +163,21 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
             eventTitle.setText(event.getTitle());
             eventTotalDonation.setText(formattedTotalDonation + " / " + event.getTargetQuantity() + " kg");
             eventEndDate.setText(Util.convertToFullDate(event.getEndDate()));
-             Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventImage);
+//             Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventImage);
              // Glide implementation
-//            Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
-//                    .listener(new RequestListener<Drawable>() {
-//                        @Override
-//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                            return false;
-//                        }
-//                    }).error(R.drawable.ic_error_black_24dp).into(eventImage);
+            Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).error(R.drawable.ic_error_black_24dp).into(eventImage);
         }
     }
 }

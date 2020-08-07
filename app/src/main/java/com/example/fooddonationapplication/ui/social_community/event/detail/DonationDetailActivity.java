@@ -1,15 +1,19 @@
 package com.example.fooddonationapplication.ui.social_community.event.detail;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,10 +49,11 @@ import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DonationDetailActivity extends AppCompatActivity {
+public class DonationDetailActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
     private static final String TAG = "DonatorDetailActivity";
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -57,9 +62,13 @@ public class DonationDetailActivity extends AppCompatActivity {
     private ProgressBar imageLoadingProgressBar, deleteProgressBar, updateDonationStatusProgressBar;
     private ImageView foodImagePhoto;
     private Button callDonator, deleteDonation, updateDonationStatus;
-    private String donationId, donatorId, eventId, imageURI;
+    private String donationId, donatorId, eventId, imageURI, chosenDate;
     private double donationQuantityData;
     private Donation donation;
+
+    // DatePicker and TimePicker
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
 
     // Send Notification
     final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
@@ -79,6 +88,7 @@ public class DonationDetailActivity extends AppCompatActivity {
         eventId = donation.getEventId();
         imageURI = donation.getImageURI();
         donationQuantityData = donation.getTotalDonation();
+        chosenDate = donation.getPickUpDate();
 
         donatorNameTextView.setText(donation.getDonatorName());
 
@@ -97,19 +107,20 @@ public class DonationDetailActivity extends AppCompatActivity {
                     }
                 }).error(R.drawable.ic_error_black_24dp).into(foodImagePhoto);
 
-        donationDate.setText(donation.getDonationDate());
-        deliveryDate.setText(donation.getPickUpDate());
+        donationDate.setText(Util.convertToFullDate(donation.getDonationDate()));
+        deliveryDate.setText(Util.convertToFullDate(chosenDate));
         deliveryTime.setText(donation.getPickUpTime());
         pickUpAddress.setText(donation.getPickUpAddress());
         foodItems.setText(donation.getFoodItems());
         donationQuantity.setText(String.valueOf(donation.getTotalDonation()));
         donationStatus.setText(donation.getStatus());
 
-        disableAllTextField();
+        disableTextField("On-Progress");
 
         if (donation.getStatus().equalsIgnoreCase("Completed")) {
             updateDonationStatus.setVisibility(View.GONE);
             deleteDonation.setVisibility(View.GONE);
+            disableTextField("Completed");
         }
 
 
@@ -134,21 +145,43 @@ public class DonationDetailActivity extends AppCompatActivity {
                 deleteDonation.setEnabled(false);
                 updateDonationStatus.setVisibility(View.INVISIBLE);
                 updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
-                DocumentReference donationReference = db.collection("donations").document(donationId);
-                donationReference.update("status", "Completed")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        setUpNotificationData("Received");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        deleteDonation.setEnabled(true);
-                        updateDonationStatus.setVisibility(View.VISIBLE);
-                        updateDonationStatusProgressBar.setVisibility(View.INVISIBLE);
-                    }
-                });
+                completeDonationStatus();
+            }
+        });
+    }
+
+    private void completeDonationStatus() {
+        double totalDonation = Double.parseDouble(donationQuantity.getText().toString());
+        WriteBatch batch = db.batch();
+
+        // Update donations collection
+        DocumentReference donationDocumentReference = db.collection("donations").document(donationId);
+        batch.update(donationDocumentReference, "totalDonation", totalDonation);
+        batch.update(donationDocumentReference, "status", "Completed");
+        batch.update(donationDocumentReference, "foodItems", foodItems.getText().toString());
+        batch.update(donationDocumentReference, "pickUpDate", chosenDate);
+        batch.update(donationDocumentReference, "pickUpTime", deliveryTime.getText().toString());
+
+        // Update users collection
+        DocumentReference userDocumentReference = db.collection("users").document(donatorId);
+        batch.update(userDocumentReference, "totalDonation", FieldValue.increment(totalDonation));
+
+        // Update events collection
+        DocumentReference eventDocumentReference = db.collection("events").document(eventId);
+        batch.update(eventDocumentReference, "totalDonation", FieldValue.increment(totalDonation));
+
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                setUpNotificationData("Received");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(DonationDetailActivity.this, "Donation is failed to update", Toast.LENGTH_SHORT).show();
+                deleteDonation.setEnabled(true);
+                updateDonationStatus.setVisibility(View.VISIBLE);
+                updateDonationStatusProgressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -170,42 +203,17 @@ public class DonationDetailActivity extends AppCompatActivity {
                         updateDonationStatus.setEnabled(false);
 
                         // Delete Operation
-                        WriteBatch batch = db.batch();
-                        DocumentReference donatorReference = db.collection("donations").document(donationId);
-                        batch.delete(donatorReference);
-
-                        double decreaseTotalDonation = donationQuantityData * -1;
-                        Log.d(TAG, String.valueOf(decreaseTotalDonation));
-
-                        DocumentReference userReference = db.collection("users").document(donatorId);
-                        batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
-//                batch.update(userReference, "totalDonation", FieldValue.increment(decreaseTotalDonation), SetOptions.merge());
-
-
-                        DocumentReference eventReference = db.collection("events").document(eventId);
-                        batch.update(eventReference, "totalDonation", FieldValue.increment(decreaseTotalDonation));
-
-                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageURI);
-                                storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        db.collection("donations").document(donationId).delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // File deleted successfully
-                                        Log.d(TAG, "onSuccess: deleted file");
-                                        setUpNotificationData("Rejected");
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        deleteImageFromFirebaseStorage(imageURI);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Uh-oh, an error occurred!
-                                        Log.d(TAG, "onFailure: did not delete file");
-                                        deleteDonation.setVisibility(View.VISIBLE);
-                                        deleteProgressBar.setVisibility(View.INVISIBLE);
-                                        updateDonationStatus.setEnabled(true);
-                                    }
-                                });
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: Did not delete the event: " + e);
+                                Toast.makeText(DonationDetailActivity.this, "Failed to delete the donation", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -219,6 +227,29 @@ public class DonationDetailActivity extends AppCompatActivity {
                 .build();
 
         mDialog.show();
+    }
+
+    private void deleteImageFromFirebaseStorage(String imageURI) {
+        // Delete from Firebase Storage
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageURI);
+        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+                Log.d(TAG, "onSuccess: deleted file");
+                setUpNotificationData("Rejected");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                Log.d(TAG, "onFailure: did not delete file: " + exception);
+                Toast.makeText(DonationDetailActivity.this, "Failed to delete the donation", Toast.LENGTH_SHORT).show();
+                deleteDonation.setVisibility(View.VISIBLE);
+                deleteProgressBar.setVisibility(View.INVISIBLE);
+                updateDonationStatus.setEnabled(true);
+            }
+        });
     }
 
     private void setUpNotificationData(String status) {
@@ -273,34 +304,89 @@ public class DonationDetailActivity extends AppCompatActivity {
         finish();
     }
 
-    private void disableAllTextField() {
+    private void setupCalendar() {
+        Calendar calendar = Calendar.getInstance();
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        datePickerDialog = new DatePickerDialog(DonationDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                chosenDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                deliveryDate.setText(Util.convertToFullDate(chosenDate));
+                deliveryDate.clearFocus();
+            }
+        }, year, month, day);
+        long now = System.currentTimeMillis() - 1000;
+        datePickerDialog.getDatePicker().setMinDate(now);
+        calendar.add(Calendar.YEAR, 0);
+        long eventEndDate = getIntent().getExtras().getLong("endDateInMillis");
+        Log.d(TAG, String.valueOf(eventEndDate));
+        datePickerDialog.getDatePicker().setMaxDate(eventEndDate);
+        datePickerDialog.setOnCancelListener(new android.content.DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(android.content.DialogInterface dialog) {
+                deliveryDate.clearFocus();
+            }
+        });
+        datePickerDialog.show();
+    }
+
+    private void setupClock() {
+        timePickerDialog = new TimePickerDialog(DonationDetailActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                String amPm;
+                if (hourOfDay >= 12) {
+                    amPm = " PM";
+                } else {
+                    amPm = " AM";
+                }
+                deliveryTime.clearFocus();
+                deliveryTime.setText(String.format("%02d:%02d", hourOfDay, minutes) + amPm);
+            }
+        }, 0, 0, false);
+        timePickerDialog.setOnCancelListener(new android.content.DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(android.content.DialogInterface dialog) {
+                deliveryTime.clearFocus();
+            }
+        });
+        timePickerDialog.show();
+    }
+
+    private void disableTextField(String status) {
         donationDate.setFocusable(false);
         donationDate.setFocusableInTouchMode(false);
         donationDate.setCursorVisible(false);
-
-        deliveryDate.setFocusable(false);
-        deliveryDate.setFocusableInTouchMode(false);
-        deliveryDate.setCursorVisible(false);
-
-        deliveryTime.setFocusable(false);
-        deliveryTime.setFocusableInTouchMode(false);
-        deliveryTime.setCursorVisible(false);
 
         pickUpAddress.setFocusable(false);
         pickUpAddress.setFocusableInTouchMode(false);
         pickUpAddress.setCursorVisible(false);
 
-        foodItems.setFocusable(false);
-        foodItems.setFocusableInTouchMode(false);
-        foodItems.setCursorVisible(false);
-
-        donationQuantity.setFocusable(false);
-        donationQuantity.setFocusableInTouchMode(false);
-        donationQuantity.setCursorVisible(false);
-
         donationStatus.setFocusable(false);
         donationStatus.setFocusableInTouchMode(false);
         donationStatus.setCursorVisible(false);
+
+        if (status.equalsIgnoreCase("Completed")) {
+            deliveryDate.setFocusable(false);
+            deliveryDate.setFocusableInTouchMode(false);
+            deliveryDate.setCursorVisible(false);
+
+            deliveryTime.setFocusable(false);
+            deliveryTime.setFocusableInTouchMode(false);
+            deliveryTime.setCursorVisible(false);
+
+            foodItems.setFocusable(false);
+            foodItems.setFocusableInTouchMode(false);
+            foodItems.setCursorVisible(false);
+
+            donationQuantity.setFocusable(false);
+            donationQuantity.setFocusableInTouchMode(false);
+            donationQuantity.setCursorVisible(false);
+        }
     }
 
     private void initializeComponents() {
@@ -323,5 +409,32 @@ public class DonationDetailActivity extends AppCompatActivity {
 
         updateDonationStatus = findViewById(R.id.donationDetailUpdateStatusButton);
         updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            switch (v.getId()) {
+                case R.id.donationDetailDeliveryDate:
+                    setupCalendar();
+                    break;
+                case R.id.donationDetailDeliveryTime:
+                    setupClock();
+                    break;
+            }
+        } else {
+            switch (v.getId()) {
+                case R.id.donationDetailDeliveryDate:
+                    if (datePickerDialog != null) {
+                        datePickerDialog.hide();
+                    }
+                    break;
+                case R.id.donationDetailDeliveryTime:
+                    if (timePickerDialog != null) {
+                        timePickerDialog.hide();
+                    }
+                    break;
+            }
+        }
     }
 }
