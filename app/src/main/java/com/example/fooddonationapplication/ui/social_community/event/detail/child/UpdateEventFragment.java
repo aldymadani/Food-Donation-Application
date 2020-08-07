@@ -38,6 +38,7 @@ import com.example.fooddonationapplication.services.MySingleton;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.ui.social_community.MainSocialCommunityActivity;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.example.fooddonationapplication.viewmodel.UpdateEventViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -133,7 +134,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         // Coding started
         // Retrieving data from activity
         FragmentActivity fragmentActivity = requireActivity();
-        event = fragmentActivity.getIntent().getParcelableExtra("eventData");
+        event = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.EVENT_DATA);
         if (event == null) {
             Toast.makeText(getContext(), "NULL DATA", Toast.LENGTH_SHORT).show();
             // TODO: Alert when data is null

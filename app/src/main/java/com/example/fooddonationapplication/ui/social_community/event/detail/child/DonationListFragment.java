@@ -21,6 +21,7 @@ import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.adapter.DonationListAdapter;
 import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.model.Event;
+import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -68,9 +69,9 @@ public class DonationListFragment extends Fragment {
         titleTotalDonation = rootView.findViewById(R.id.donationListTitle);
         recyclerView = rootView.findViewById(R.id.donationListRecyclerView);
 
-        sortBy.setVisibility(View.INVISIBLE);
-        titleTotalDonation.setVisibility(View.INVISIBLE);
-        recyclerView.setVisibility(View.INVISIBLE);
+//        sortBy.setVisibility(View.INVISIBLE);
+//        titleTotalDonation.setVisibility(View.INVISIBLE);
+//        recyclerView.setVisibility(View.INVISIBLE);
         donationListEmptyImage.setVisibility(View.INVISIBLE);
         donationListEmptyTextView.setVisibility(View.INVISIBLE);
 
@@ -78,7 +79,8 @@ public class DonationListFragment extends Fragment {
         totalDonation = "";
 
         FragmentActivity fragmentActivity = requireActivity();
-        Event eventData = fragmentActivity.getIntent().getParcelableExtra("eventData");
+        Event eventData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.EVENT_DATA);
+        Toast.makeText(fragmentActivity, String.valueOf(eventData), Toast.LENGTH_SHORT).show();
         if (eventData != null) {
             eventId = eventData.getEventId();
             Log.d(TAG, eventId);
@@ -86,6 +88,7 @@ public class DonationListFragment extends Fragment {
 
         Query query = donatorRef.whereEqualTo("eventId", eventId);
         setUpRecyclerViewDonator(query);
+
 
         sortBy.setItems("All", "On-Progress", "Completed");
         sortBy.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
@@ -104,6 +107,12 @@ public class DonationListFragment extends Fragment {
                 donatorAdapter.startListening();
             }
         });
+
+//        donationListEmptyImage.setVisibility(View.VISIBLE);
+//        donationListEmptyTextView.setVisibility(View.VISIBLE);
+//        sortBy.setVisibility(View.INVISIBLE);
+//        titleTotalDonation.setVisibility(View.INVISIBLE);
+//        recyclerView.setVisibility(View.INVISIBLE);
 
         return rootView;
     }
@@ -124,20 +133,20 @@ public class DonationListFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
                     if (documentSnapshot.getDouble("totalDonation") <= 0) {
-                        donationListEmptyImage.setVisibility(View.VISIBLE);
-                        donationListEmptyTextView.setVisibility(View.VISIBLE);
-                        sortBy.setVisibility(View.INVISIBLE);
-                        titleTotalDonation.setVisibility(View.INVISIBLE);
-                        recyclerView.setVisibility(View.INVISIBLE);
+//                        donationListEmptyImage.setVisibility(View.VISIBLE);
+//                        donationListEmptyTextView.setVisibility(View.VISIBLE);
+//                        sortBy.setVisibility(View.INVISIBLE);
+//                        titleTotalDonation.setVisibility(View.INVISIBLE);
+//                        recyclerView.setVisibility(View.INVISIBLE);
                     } else {
-                        sortBy.setVisibility(View.VISIBLE);
-                        titleTotalDonation.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        DecimalFormat df = new DecimalFormat("#.###");
-                        String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
-                        titleTotalDonation.setText("People have donated " + formattedTotalDonation + " Kg of food");
-                        donationListEmptyImage.setVisibility(View.INVISIBLE);
-                        donationListEmptyTextView.setVisibility(View.INVISIBLE);
+//                        sortBy.setVisibility(View.VISIBLE);
+//                        titleTotalDonation.setVisibility(View.VISIBLE);
+//                        recyclerView.setVisibility(View.VISIBLE);
+//                        DecimalFormat df = new DecimalFormat("#.###");
+//                        String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
+//                        titleTotalDonation.setText("People have donated " + formattedTotalDonation + " Kg of food");
+//                        donationListEmptyImage.setVisibility(View.INVISIBLE);
+//                        donationListEmptyTextView.setVisibility(View.INVISIBLE);
                     }
                 }
             }

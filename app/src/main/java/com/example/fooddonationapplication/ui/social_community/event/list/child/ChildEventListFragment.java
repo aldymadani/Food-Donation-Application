@@ -26,6 +26,7 @@ import com.example.fooddonationapplication.adapter.EventHistoryAdapter;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.util.Util;
+import com.example.fooddonationapplication.util.constant.Constant;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
@@ -60,6 +61,9 @@ public class ChildEventListFragment extends Fragment {
     private SocialCommunity socialCommunity;
     private String eventArgs;
 
+    private Query query = null;
+    private String uuid = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,7 +77,7 @@ public class ChildEventListFragment extends Fragment {
         emptyHistoryImage = rootView.findViewById(R.id.eventHistoryEmptyPicture);
         emptyHistoryText = rootView.findViewById(R.id.eventHistoryEmptyTextView);
 
-        final String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d(TAG, uuid);
 
         recyclerView.setVisibility(View.INVISIBLE);
@@ -91,14 +95,7 @@ public class ChildEventListFragment extends Fragment {
         Log.d("SocialEventListFragment", "List Event Fragment initiated!");
         Log.d("SocialEventListFragment", "Event arguments: " + eventArgs);
 
-        Query query = null;
-        if (eventArgs.equalsIgnoreCase("currentEvent")) {
-            query = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.ASCENDING);
-            setUpRecyclerViewEventHistory(query, "current");
-        } else if (eventArgs.equalsIgnoreCase("pastEvent")) {
-            query = eventRef.whereLessThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.DESCENDING);
-            setUpRecyclerViewEventHistory(query, "past");
-        }
+        refreshData();
 
         // Retrieving data from activity
 //        FragmentActivity fragmentActivity = requireActivity();
@@ -143,41 +140,34 @@ public class ChildEventListFragment extends Fragment {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Query newQuery = null;
-                searchInputLayout.setErrorEnabled(false);
-                searchField.setText("");
-                Util.hideKeyboard(requireActivity());
-                searchField.clearFocus();
-                if (eventArgs.equalsIgnoreCase("currentEvent")) {
-                    newQuery = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.ASCENDING);
-                    setUpRecyclerViewEventHistory(newQuery, "current");
-                } else if (eventArgs.equalsIgnoreCase("pastEvent")) {
-                    newQuery = eventRef.whereLessThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.DESCENDING);
-                    setUpRecyclerViewEventHistory(newQuery, "past");
-                }
-                eventHistoryAdapter.refresh();
-                swipeLayout.setRefreshing(false);
+                refreshData();
             }
         });
 
         return rootView;
     }
 
+    private void refreshData() {
+        Util.hideKeyboard(requireActivity());
+        searchInputLayout.setErrorEnabled(false);
+        searchField.setText("");
+        searchField.clearFocus();
+        if (eventArgs.equalsIgnoreCase(Constant.CURRENT_EVENT)) {
+            query = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.ASCENDING);
+            setUpRecyclerViewEventHistory(query, Constant.CURRENT_EVENT);
+        } else if (eventArgs.equalsIgnoreCase(Constant.PAST_EVENT)) {
+            query = eventRef.whereLessThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.DESCENDING);
+            setUpRecyclerViewEventHistory(query, Constant.PAST_EVENT);
+        }
+    }
+
     private void searchEvent(String uuid) {
-        Query newQuery = null;
         String search = searchField.getText().toString().toLowerCase();
         if (!search.isEmpty()) {
             Util.hideKeyboard(requireActivity());
             searchField.clearFocus();
-            if (eventArgs.equalsIgnoreCase("currentEvent")) {
-                newQuery = eventRef.whereLessThanOrEqualTo("titleForSearch",search + "z").whereGreaterThanOrEqualTo("titleForSearch", search).whereEqualTo("socialCommunityId", uuid);
-                setUpRecyclerViewEventHistory(newQuery, "current");
-                eventHistoryAdapter.startListening();
-            } else if (eventArgs.equalsIgnoreCase("pastEvent")) {
-                newQuery = eventRef.whereLessThanOrEqualTo("titleForSearch",search + "z").whereGreaterThanOrEqualTo("titleForSearch", search).whereEqualTo("socialCommunityId", uuid);
-                setUpRecyclerViewEventHistory(newQuery, "past");
-                eventHistoryAdapter.startListening();
-            }
+            query = eventRef.whereLessThanOrEqualTo("titleForSearch",search + "z").whereGreaterThanOrEqualTo("titleForSearch", search).whereEqualTo("socialCommunityId", uuid);
+            setUpRecyclerViewEventHistory(query, eventArgs);
         }
     }
 
@@ -203,6 +193,9 @@ public class ChildEventListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.requireActivity()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.requireActivity(), gridColumnCount));
         recyclerView.setAdapter(eventHistoryAdapter);
+
+        eventHistoryAdapter.startListening();
+        eventHistoryAdapter.refresh();
     }
 
     @Override

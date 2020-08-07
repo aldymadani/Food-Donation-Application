@@ -10,18 +10,15 @@
         android:id="@+id/donationListTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="32dp"
         android:gravity="center_horizontal"
-        android:text="@string/donator_history_total_title"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
+        android:text="@string/sort_by_title"
+        android:textColor="@color/colorCardView"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/donationListSpinner"
+        app:layout_constraintBottom_toBottomOf="@+id/donationListSpinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/donationListSpinner" />
 
 <!--    <TextView-->
 <!--        android:id="@+id/donationListSortByTitle"-->
@@ -41,12 +38,15 @@
         android:id="@+id/donationListSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@android:color/black"
         android:text="@string/sort_by_spinner"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/donationListTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/donationListTitle" />
+        app:layout_constraintStart_toEndOf="@+id/donationListTitle"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/donationListRecyclerView"
