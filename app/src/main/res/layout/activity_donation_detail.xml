@@ -223,7 +223,6 @@
                         android:drawableStart="@drawable/ic_delivery"
                         android:drawablePadding="@dimen/drawable_padding"
                         android:ems="10"
-                        android:enabled="false"
                         android:inputType="date"
                         android:textColor="#000000" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -248,8 +247,7 @@
                         android:drawableStart="@drawable/time_icon"
                         android:drawablePadding="@dimen/drawable_padding"
                         android:ems="10"
-                        android:enabled="false"
-                        android:inputType="numberDecimal"
+                        android:inputType="time"
                         android:textColor="#000000" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -303,7 +301,6 @@
                         android:drawableStart="@drawable/food_items_icon"
                         android:drawablePadding="@dimen/drawable_padding"
                         android:ems="10"
-                        android:enabled="false"
                         android:inputType="text"
                         android:textColor="#000000" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -327,7 +324,6 @@
                         android:drawableStart="@drawable/quantity_icon"
                         android:drawablePadding="@dimen/drawable_padding"
                         android:ems="10"
-                        android:enabled="false"
                         android:inputType="numberDecimal"
                         android:textColor="#000000" />
                 </com.google.android.material.textfield.TextInputLayout>

@@ -36,17 +36,12 @@ import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.util.Util;
 import com.example.fooddonationapplication.util.constant.RequestCodeConstant;
 import com.example.fooddonationapplication.viewmodel.DonatorViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -66,12 +61,12 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
     private ProgressBar progressBar;
     private ImageView foodImage;
     private Bitmap bitmap;
-    private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userID, eventId;
+    private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userId, eventId;
     private boolean hasImage;
 
     // Firestore Database Access
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    final String donatorDocumentID = db.collection("donations").document().getId();
+    final String donationDocumetId = db.collection("donations").document().getId();
 
     // View Model
     DonatorViewModel mViewModel;
@@ -278,7 +273,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(donatorDocumentID + ".jpeg");
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("donated-food").child(donationDocumetId + ".jpeg");
 
         reference.putBytes(baos.toByteArray())
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -315,21 +310,21 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
         String socialCommunityName = getIntent().getStringExtra("socialCommunityName");
         String socialCommunityPhone = getIntent().getStringExtra("socialCommunityPhoneNumber");
 
-        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String donatorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
 
         final Donation donation = new Donation();
         donation.setDonatorName(donatorName);
-        donation.setDonatorId(userID);
+        donation.setDonatorId(userId);
         donation.setPickUpAddress(pickUpAddressData);
         donation.setFoodItems(foodItemsData);
         donation.setPickUpDate(chosenDate);
         donation.setPickUpTime(timeData);
         donation.setDonationDate(currentDate);
         donation.setTotalDonation(Double.parseDouble(totalDonationData));
-        donation.setDonationId(donatorDocumentID);
+        donation.setDonationId(donationDocumetId);
         donation.setEventName(eventTitle);
         donation.setEventId(eventId);
         donation.setSocialCommunityName(socialCommunityName);
@@ -338,14 +333,14 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
         donation.setStatus("On-Progress");
         donation.setImageURI(foodImageURI);
 
-        db.collection("users").document(userID)
+        db.collection("users").document(userId)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             donation.setDonatorPhone(documentSnapshot.getString("phone"));
-                            db.collection("donations").document(donatorDocumentID)
+                            db.collection("donations").document(donationDocumetId)
                                     .set(donation)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override

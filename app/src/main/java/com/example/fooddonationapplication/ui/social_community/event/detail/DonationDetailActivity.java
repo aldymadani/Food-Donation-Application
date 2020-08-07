@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,6 +60,7 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
     private static final String TAG = "DonatorDetailActivity";
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private TextView donatorNameTextView;
+    private TextInputLayout deliveryDateLayout, deliveryTimeLayout, foodItemsLayout, donationQuantityLayout;
     private EditText donationDate, deliveryDate, deliveryTime, pickUpAddress, foodItems, donationQuantity, donationStatus;
     private ProgressBar imageLoadingProgressBar, deleteProgressBar, updateDonationStatusProgressBar;
     private ImageView foodImagePhoto;
@@ -80,6 +83,10 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation_detail);
         initializeComponents();
+
+        // To hide the keyboard when user click in the date and time text field
+        deliveryDate.setInputType(InputType.TYPE_NULL);
+        deliveryTime.setInputType(InputType.TYPE_NULL);
 
         Intent intent = getIntent();
         donation = intent.getParcelableExtra("Donator");
@@ -142,12 +149,42 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         updateDonationStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteDonation.setEnabled(false);
-                updateDonationStatus.setVisibility(View.INVISIBLE);
-                updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
-                completeDonationStatus();
+                if (!hasEmptyField()) {
+                    deleteDonation.setEnabled(false);
+                    updateDonationStatus.setVisibility(View.INVISIBLE);
+                    updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
+                    completeDonationStatus();
+                }
             }
         });
+    }
+
+    private boolean hasEmptyField() {
+        boolean hasEmpty = true;
+
+        // Checking food items field
+        boolean foodItemsValidation = false;
+        if (foodItems.getText().toString().isEmpty()) {
+            foodItemsLayout.setError("Please input the donated food");
+        } else {
+            foodItemsLayout.setErrorEnabled(false);
+            foodItemsValidation = true;
+        }
+
+        // Checking donation quantity field
+        boolean donationQuantityValidation = false;
+        if (donationQuantity.getText().toString().isEmpty()) {
+            donationQuantityLayout.setError("Please input the donation quantity");
+        } else {
+            donationQuantityLayout.setErrorEnabled(false);
+            donationQuantityValidation = true;
+        }
+
+        if (foodItemsValidation && donationQuantityValidation) {
+            hasEmpty = false;
+        }
+
+        return hasEmpty;
     }
 
     private void completeDonationStatus() {
@@ -322,9 +359,6 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         long now = System.currentTimeMillis() - 1000;
         datePickerDialog.getDatePicker().setMinDate(now);
         calendar.add(Calendar.YEAR, 0);
-        long eventEndDate = getIntent().getExtras().getLong("endDateInMillis");
-        Log.d(TAG, String.valueOf(eventEndDate));
-        datePickerDialog.getDatePicker().setMaxDate(eventEndDate);
         datePickerDialog.setOnCancelListener(new android.content.DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(android.content.DialogInterface dialog) {
@@ -404,11 +438,19 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         donationQuantity = findViewById(R.id.donationDetailTotalDonation);
         donationStatus = findViewById(R.id.donationDetailDonationStatus);
 
+        deliveryDateLayout = findViewById(R.id.donationDetailDeliveryDateLayout);
+        deliveryTimeLayout = findViewById(R.id.donationDetailDeliveryTimeLayout);
+        foodItemsLayout = findViewById(R.id.donationDetailFoodItemsLayout);
+        donationQuantityLayout = findViewById(R.id.donationDetailTotalDonationLayout);
+
         deleteDonation = findViewById(R.id.donationDetailDeleteDonationButton);
         deleteProgressBar = findViewById(R.id.donatorDetailButtonProgressBar);
 
         updateDonationStatus = findViewById(R.id.donationDetailUpdateStatusButton);
         updateDonationStatusProgressBar = findViewById(R.id.donatorDetailUpdateStatusButtonProgressBar);
+
+        deliveryDate.setOnFocusChangeListener(this);
+        deliveryTime.setOnFocusChangeListener(this);
     }
 
     @Override
@@ -416,10 +458,18 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         if (hasFocus) {
             switch (v.getId()) {
                 case R.id.donationDetailDeliveryDate:
+                    Util.hideKeyboard(DonationDetailActivity.this);
                     setupCalendar();
                     break;
                 case R.id.donationDetailDeliveryTime:
+                    Util.hideKeyboard(DonationDetailActivity.this);
                     setupClock();
+                    break;
+                case R.id.donationDetailFoodItems:
+                    foodItemsLayout.setErrorEnabled(false);
+                    break;
+                case R.id.donationDetailTotalDonation:
+                    donationQuantityLayout.setErrorEnabled(false);
                     break;
             }
         } else {
