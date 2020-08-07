@@ -39,6 +39,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.DecimalFormat;
 
 public class ChildEventListFragment extends Fragment {
     private static final String TAG = "EventHistoryFragment";
@@ -81,47 +84,49 @@ public class ChildEventListFragment extends Fragment {
         emptyHistoryImage.setVisibility(View.INVISIBLE);
         emptyHistoryText.setVisibility(View.INVISIBLE);
 
+        final String socialCommunityId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         eventArgs = getArguments().getString(IntentNameExtra.EVENT_LIST_ARGUMENT, "");
 
         Log.d("SocialEventListFragment", "List Event Fragment initiated!");
         Log.d("SocialEventListFragment", "Event arguments: " + eventArgs);
 
-        Query query = eventRef.whereEqualTo("socialCommunityId", uuid).orderBy("timestamp", Query.Direction.DESCENDING);
-        setUpRecyclerViewEventHistory(query);
+        Query query = null;
+        if (eventArgs.equalsIgnoreCase("currentEvent")) {
+            query = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.ASCENDING);
+            setUpRecyclerViewEventHistory(query, "current");
+        } else if (eventArgs.equalsIgnoreCase("pastEvent")) {
+            query = eventRef.whereLessThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.DESCENDING);
+            setUpRecyclerViewEventHistory(query, "past");
+        }
 
         // Retrieving data from activity
-        FragmentActivity fragmentActivity = requireActivity();
-        socialCommunity = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
+//        FragmentActivity fragmentActivity = requireActivity();
+//        socialCommunity = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL);
 
-        if (socialCommunity == null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference docRef = db.collection("users").document(user.getUid());
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            socialCommunity = document.toObject(SocialCommunity.class);
-                            initializeTextData();
-                        } else {
-                            Log.d(TAG, "No such document");
-                        }
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().isEmpty()) {
+                        emptyHistoryImage.setVisibility(View.VISIBLE);
+                        emptyHistoryText.setVisibility(View.VISIBLE);
                     } else {
-                        Log.d(TAG, "get failed with ", task.getException());
+                        recyclerView.setVisibility(View.VISIBLE);
+                        searchField.setVisibility(View.VISIBLE);
+                        searchInputLayout.setVisibility(View.VISIBLE);
+                        searchButton.setVisibility(View.VISIBLE);
+                        swipeLayout.setVisibility(View.VISIBLE);
                     }
                 }
-            });
-        } else {
-            initializeTextData();
-        }
+            }
+        });
 
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    searchEvent();
+                    searchEvent(socialCommunityId);
                     return true;
                 }
                 return false;
@@ -131,19 +136,25 @@ public class ChildEventListFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchEvent();
+                searchEvent(socialCommunityId);
             }
         });
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Query newQuery = eventRef.whereEqualTo("socialCommunityId", uuid);
+                Query newQuery = null;
                 searchInputLayout.setErrorEnabled(false);
                 searchField.setText("");
                 Util.hideKeyboard(requireActivity());
                 searchField.clearFocus();
-                setUpRecyclerViewEventHistory(newQuery);
+                if (eventArgs.equalsIgnoreCase("currentEvent")) {
+                    newQuery = eventRef.whereGreaterThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.ASCENDING);
+                    setUpRecyclerViewEventHistory(newQuery, "current");
+                } else if (eventArgs.equalsIgnoreCase("pastEvent")) {
+                    newQuery = eventRef.whereLessThan("endDateInMillis", System.currentTimeMillis()).whereEqualTo("socialCommunityId", uuid).orderBy("endDateInMillis", Query.Direction.DESCENDING);
+                    setUpRecyclerViewEventHistory(newQuery, "past");
+                }
                 eventHistoryAdapter.refresh();
                 swipeLayout.setRefreshing(false);
             }
@@ -152,35 +163,25 @@ public class ChildEventListFragment extends Fragment {
         return rootView;
     }
 
-    private void searchEvent() {
+    private void searchEvent(String uuid) {
         Query newQuery = null;
         String search = searchField.getText().toString().toLowerCase();
         if (!search.isEmpty()) {
             Util.hideKeyboard(requireActivity());
             searchField.clearFocus();
-            newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
-        } else {
-            return;
-        }
-        setUpRecyclerViewEventHistory(newQuery);
-        eventHistoryAdapter.startListening();
-    }
-
-    private void initializeTextData() {
-        int totalEvent = socialCommunity.getTotalEventCreated();
-        if (totalEvent > 0) {
-            recyclerView.setVisibility(View.VISIBLE);
-            searchField.setVisibility(View.VISIBLE);
-            searchInputLayout.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
-            swipeLayout.setVisibility(View.VISIBLE);
-        } else {
-            emptyHistoryImage.setVisibility(View.VISIBLE);
-            emptyHistoryText.setVisibility(View.VISIBLE);
+            if (eventArgs.equalsIgnoreCase("currentEvent")) {
+                newQuery = eventRef.whereLessThanOrEqualTo("titleForSearch",search + "z").whereGreaterThanOrEqualTo("titleForSearch", search).whereEqualTo("socialCommunityId", uuid);
+                setUpRecyclerViewEventHistory(newQuery, "current");
+                eventHistoryAdapter.startListening();
+            } else if (eventArgs.equalsIgnoreCase("pastEvent")) {
+                newQuery = eventRef.whereLessThanOrEqualTo("titleForSearch",search + "z").whereGreaterThanOrEqualTo("titleForSearch", search).whereEqualTo("socialCommunityId", uuid);
+                setUpRecyclerViewEventHistory(newQuery, "past");
+                eventHistoryAdapter.startListening();
+            }
         }
     }
 
-    private void setUpRecyclerViewEventHistory(Query query) {
+    private void setUpRecyclerViewEventHistory(Query query, String status) {
         // Init Paging Configuration
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
@@ -194,7 +195,7 @@ public class ChildEventListFragment extends Fragment {
                 .setQuery(query, config, Event.class)
                 .build();
 
-        eventHistoryAdapter = new EventHistoryAdapter(options, requireActivity(), swipeLayout);
+        eventHistoryAdapter = new EventHistoryAdapter(options, requireActivity(), swipeLayout, status);
 
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
 

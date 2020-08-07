@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
 
@@ -46,7 +47,6 @@ public class ChildDonationHistoryListFragment extends Fragment {
     private CollectionReference donatorRef = db.collection("donations");
     private DonationHistoryAdapter donationHistoryAdapter;
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private Donator donator;
     private View rootView;
     private String donationArgs;
 
@@ -54,14 +54,12 @@ public class ChildDonationHistoryListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_donation_history,container,false);
-        totalDonationTextView = rootView.findViewById(R.id.donatorTitleTotalDonation);
         emptyDonationImage = rootView.findViewById(R.id.donationEmptyLogo);
         recyclerView = rootView.findViewById(R.id.donationHistoryRecyclerView);
         emptyDonationTextView = rootView.findViewById(R.id.donationEmptyLogoText);
 
         recyclerView.setVisibility(View.INVISIBLE);
         emptyDonationImage.setVisibility(View.INVISIBLE);
-        totalDonationTextView.setVisibility(View.INVISIBLE);
         emptyDonationTextView.setVisibility(View.INVISIBLE);
 
         donationArgs = getArguments().getString(IntentNameExtra.DONATION_LIST_ARGUMENT, "");
@@ -79,46 +77,21 @@ public class ChildDonationHistoryListFragment extends Fragment {
 
         setUpRecyclerViewDonationHistory(query);
 
-        // Retrieving data from activity
-        FragmentActivity fragmentActivity = requireActivity();
-        donator = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.DONATOR_MODEL);
-        if (donator == null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference docRef = db.collection("users").document(user.getUid());
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            donator = document.toObject(Donator.class);
-                            initializeData();
-                        } else {
-                            Log.d(TAG, "No such document");
-                        }
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().isEmpty()) {
+                        emptyDonationTextView.setVisibility(View.VISIBLE);
+                        emptyDonationImage.setVisibility(View.VISIBLE);
                     } else {
-                        Log.d(TAG, "get failed with ", task.getException());
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
-            });
-        } else {
-            initializeData();
-        }
-        return rootView;
-    }
+            }
+        });
 
-    private void initializeData() {
-        if (donator.getTotalDonation() > 0) {
-            DecimalFormat df = new DecimalFormat("#.###");
-            String formattedTotalDonation = df.format(donator.getTotalDonation());
-            totalDonationTextView.setText("You have donated " + formattedTotalDonation + " kg of food");
-            recyclerView.setVisibility(View.VISIBLE);
-            totalDonationTextView.setVisibility(View.VISIBLE);
-        } else {
-            emptyDonationTextView.setVisibility(View.VISIBLE);
-            emptyDonationImage.setVisibility(View.VISIBLE);
-        }
+        return rootView;
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -29,6 +30,7 @@ import com.example.fooddonationapplication.util.Util;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.firebase.ui.firestore.paging.LoadingState;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 
@@ -36,20 +38,22 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
 
     private static final String TAG = "EventHistoryAdapter";
 
+    private String status;
     private Context context;
     private SwipeRefreshLayout swipeLayout;
 
-    public EventHistoryAdapter(@NonNull FirestorePagingOptions<Event> options, Context context, SwipeRefreshLayout swipeRefresh) {
+    public EventHistoryAdapter(@NonNull FirestorePagingOptions<Event> options, Context context, SwipeRefreshLayout swipeRefresh, String status) {
         super(options);
         this.context = context;
         this.swipeLayout = swipeRefresh;
+        this.status = status;
     }
 
     @NonNull
     @Override
     public EventHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event_history, parent, false);
-        return new EventHistoryViewHolder(view);
+        return new EventHistoryViewHolder(view, status);
     }
 
     @Override
@@ -99,9 +103,27 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
         TextView eventTotalDonation;
         TextView eventEndDate;
         CardView parentLayout;
+        String status;
 
-        EventHistoryViewHolder(@NonNull View itemView) {
+        public void setVisibility(boolean isVisible, CardView parentLayout){
+            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)itemView.getLayoutParams();
+            if (isVisible){
+                param.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                param.width = ConstraintLayout.LayoutParams.MATCH_PARENT;
+                itemView.setVisibility(View.VISIBLE);
+            } else {
+                itemView.setVisibility(View.GONE);
+                param.height = 0;
+                param.width = 0;
+                param.setMargins(0,0,0,0);
+                parentLayout.setLayoutParams(param);
+            }
+            itemView.setLayoutParams(param);
+        }
+
+        EventHistoryViewHolder(@NonNull View itemView, String status) {
             super(itemView);
+            this.status = status;
             eventImage = itemView.findViewById(R.id.eventHistoryImage);
             eventTitle = itemView.findViewById(R.id.eventHistoryTitle);
             eventTotalDonation = itemView.findViewById(R.id.eventHistoryTotalDonationText);
@@ -110,26 +132,19 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
         }
 
         void bind(final Event event) {
-            DecimalFormat df = new DecimalFormat("#.###");
-            final String formattedTotalDonation = df.format(event.getTotalDonation());
-
-            eventTitle.setText(event.getTitle());
-            eventTotalDonation.setText(formattedTotalDonation + " / " + event.getTargetQuantity() + " kg");
-            eventEndDate.setText(Util.convertToFullDate(event.getEndDate()));
-            // Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventPhoto);
-            Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            return false;
-                        }
-                    }).error(R.drawable.ic_error_black_24dp).into(eventImage);
+            if (status.equalsIgnoreCase("current")) {
+                if (event.getEndDateInMillis() > System.currentTimeMillis()) {
+                    setupData(event);
+                } else {
+                    setVisibility(false, parentLayout);
+                }
+            } else {
+                if (event.getEndDateInMillis() < System.currentTimeMillis()) {
+                    setupData(event);
+                } else {
+                    setVisibility(false, parentLayout);
+                }
+            }
 
             parentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -139,6 +154,30 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
                     itemView.getContext().startActivity(intent);
                 }
             });
+        }
+
+        void setupData(Event event) {
+            DecimalFormat df = new DecimalFormat("#.###");
+            final String formattedTotalDonation = df.format(event.getTotalDonation());
+
+            eventTitle.setText(event.getTitle());
+            eventTotalDonation.setText(formattedTotalDonation + " / " + event.getTargetQuantity() + " kg");
+            eventEndDate.setText(Util.convertToFullDate(event.getEndDate()));
+             Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventImage);
+             // Glide implementation
+//            Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
+//                    .listener(new RequestListener<Drawable>() {
+//                        @Override
+//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                            return false;
+//                        }
+//                    }).error(R.drawable.ic_error_black_24dp).into(eventImage);
         }
     }
 }

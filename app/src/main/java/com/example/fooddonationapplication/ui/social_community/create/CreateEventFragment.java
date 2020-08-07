@@ -68,7 +68,6 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
     private Long chosenDateInMillis;
 
     // For photo
-    int TAKE_IMAGE_CODE = 10001;
     private Bitmap bitmap;
     private String eventImageURI;
     private View rootView;
@@ -293,22 +292,22 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
     }
 
     private void InitializeEvent() {
-        final String socialCommunityID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String socialCommunityId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d(TAG, eventId);
 
         final Event event = new Event();
         event.setTitle(eventNameData);
         event.setDescription(eventDescriptionData);
         event.setEventId(eventId);
-        event.setEndDate(endDateData);
+        event.setEndDate(chosenDate);
         event.setEndDateInMillis(chosenDateInMillis);
         event.setTargetQuantity(Double.parseDouble(targetQuantityData));
         event.setTotalDonation(0);
         event.setTitleForSearch(eventNameData.toLowerCase());
         event.setImageURI(eventImageURI);
-        event.setSocialCommunityId(socialCommunityID);
+        event.setSocialCommunityId(socialCommunityId);
 
-        db.collection("users").document(socialCommunityID)
+        db.collection("users").document(socialCommunityId)
                 .update("totalEventCreated", FieldValue.increment(1))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

@@ -34,10 +34,6 @@ public class DonationListAdapter extends FirestoreRecyclerAdapter<Donation, Dona
         DecimalFormat df = new DecimalFormat("#.###");
         String formattedTotalDonation = df.format(model.getTotalDonation());
 
-//        holder.donatorName.setText("Donator Name : " + model.getName());
-//        holder.totalDonation.setText("Total Donation : " + formattedTotalDonation + " Kg");
-//        holder.donationDate.setText("Donation Date : " + model.getDonationDate());
-
         holder.donatorName.setText(model.getDonatorName());
         holder.totalDonation.setText(formattedTotalDonation + " kg");
         holder.donationDate.setText(Util.convertToFullDate(model.getDonationDate()));

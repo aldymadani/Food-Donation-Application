@@ -115,11 +115,6 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
 
     ListenerRegistration eventTotalDonationListerner;
 
-    // Send Notification
-    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
-    final private String serverKey = "key=" + "AAAA_kQBhCI:APA91bFc0c2ZXDUJdQRzTIESv_qs2SLJocXUPqPII0WSjaeTEZgshflKKBOk74lJAWkoFBCcz7THIBlXEmDoCaHzfaMOwv4ZEh-5ZiQP1GBAREorM8mypdYwvvbxx87aY3ZuVLzib_tJ";
-    final private String contentType = "application/json";
-
     public UpdateEventFragment() {
         // Required empty public constructor
     }
@@ -306,6 +301,11 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
     }
 
     private void sendNotification(JSONObject notification) {
+        // Send Notification
+        String FCM_API = "https://fcm.googleapis.com/fcm/send";
+        final String serverKey = "key=" + "AAAA_kQBhCI:APA91bFc0c2ZXDUJdQRzTIESv_qs2SLJocXUPqPII0WSjaeTEZgshflKKBOk74lJAWkoFBCcz7THIBlXEmDoCaHzfaMOwv4ZEh-5ZiQP1GBAREorM8mypdYwvvbxx87aY3ZuVLzib_tJ";
+        final String contentType = "application/json";
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
