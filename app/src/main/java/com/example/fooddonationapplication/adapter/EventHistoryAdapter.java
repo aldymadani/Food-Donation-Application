@@ -107,28 +107,6 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
         CardView parentLayout;
         String status;
 
-        public void setVisibility(boolean isVisible, CardView parentLayout){
-            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)itemView.getLayoutParams();
-
-            if (isVisible){
-                param.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-                param.width = ConstraintLayout.LayoutParams.MATCH_PARENT;
-                itemView.setVisibility(View.VISIBLE);
-            } else {
-                itemView.setVisibility(View.GONE);
-                param.height = 0;
-                param.width = 0;
-//                params = new RecyclerView.LayoutParams(0, 0);
-//                param.setMargins(0,0,0,0);
-
-//                 parentLayout.setLayoutParams(params);
-
-                parentLayout.setVisibility(View.GONE);
-//                param.setMargins(0,0,0,0);
-            };
-            itemView.setLayoutParams(param);
-        }
-
         EventHistoryViewHolder(@NonNull View itemView, String status) {
             super(itemView);
             this.status = status;
@@ -145,8 +123,6 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
                 if (event.getEndDateInMillis() > System.currentTimeMillis()) {
                     setupData(event);
                 } else {
-                    // Toast.makeText(itemView.getContext(), status, Toast.LENGTH_SHORT).show();
-                    // setVisibility(false, parentLayout);
                     Util.hide(parentLayout);
                     parentLayout.setLayoutParams(new RecyclerView.LayoutParams(1, 1));
                 }
@@ -154,8 +130,6 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
                 if (event.getEndDateInMillis() < System.currentTimeMillis()) {
                     setupData(event);
                 } else {
-                    // Toast.makeText(itemView.getContext(), status, Toast.LENGTH_SHORT).show();
-                    // setVisibility(false, parentLayout);
                     Util.hide(parentLayout);
                     parentLayout.setLayoutParams(new RecyclerView.LayoutParams(1, 1));
                 }
@@ -179,7 +153,8 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
                     itemView.getContext().startActivity(intent);
                 }
             });
-             // Glide implementation
+
+             // Glide implementation for Future Reference
 //            Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
 //                    .listener(new RequestListener<Drawable>() {
 //                        @Override

@@ -84,6 +84,11 @@ public class ChildDonationHistoryListFragment extends Fragment {
                     if (task.getResult().isEmpty()) {
                         emptyDonationTextView.setVisibility(View.VISIBLE);
                         emptyDonationImage.setVisibility(View.VISIBLE);
+                        if (donationArgs.equalsIgnoreCase("onProgressDonations")) {
+                            emptyDonationTextView.setText("You don't have any on-progress donation");
+                        } else {
+                            emptyDonationTextView.setText("You don't have any completed donation");
+                        }
                     } else {
                         recyclerView.setVisibility(View.VISIBLE);
                     }

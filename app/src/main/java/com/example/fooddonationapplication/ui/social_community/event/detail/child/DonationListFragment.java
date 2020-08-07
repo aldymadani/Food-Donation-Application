@@ -2,6 +2,7 @@ package com.example.fooddonationapplication.ui.social_community.event.detail.chi
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -23,12 +24,15 @@ import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.util.constant.IntentNameExtra;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.text.DecimalFormat;
@@ -50,7 +54,6 @@ public class DonationListFragment extends Fragment {
     private View rootView;
 
     private String eventId;
-    private String totalDonation;
     private MaterialSpinner sortBy;
 
     public DonationListFragment() {
@@ -69,18 +72,16 @@ public class DonationListFragment extends Fragment {
         titleTotalDonation = rootView.findViewById(R.id.donationListTitle);
         recyclerView = rootView.findViewById(R.id.donationListRecyclerView);
 
-//        sortBy.setVisibility(View.INVISIBLE);
-//        titleTotalDonation.setVisibility(View.INVISIBLE);
-//        recyclerView.setVisibility(View.INVISIBLE);
+        sortBy.setVisibility(View.INVISIBLE);
+        titleTotalDonation.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
         donationListEmptyImage.setVisibility(View.INVISIBLE);
         donationListEmptyTextView.setVisibility(View.INVISIBLE);
 
         eventId = "";
-        totalDonation = "";
 
         FragmentActivity fragmentActivity = requireActivity();
         Event eventData = fragmentActivity.getIntent().getParcelableExtra(IntentNameExtra.EVENT_DATA);
-        Toast.makeText(fragmentActivity, String.valueOf(eventData), Toast.LENGTH_SHORT).show();
         if (eventData != null) {
             eventId = eventData.getEventId();
             Log.d(TAG, eventId);
@@ -89,12 +90,26 @@ public class DonationListFragment extends Fragment {
         Query query = donatorRef.whereEqualTo("eventId", eventId);
         setUpRecyclerViewDonator(query);
 
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().isEmpty()) {
+                        donationListEmptyImage.setVisibility(View.VISIBLE);
+                        donationListEmptyTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        sortBy.setVisibility(View.VISIBLE);
+                        titleTotalDonation.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
         sortBy.setItems("All", "On-Progress", "Completed");
         sortBy.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Toast.makeText(getContext(), "Clicked " + item, Toast.LENGTH_SHORT).show();
                 Query newQuery = null;
                 if (item.equals("All")) {
                     newQuery = donatorRef.whereEqualTo("eventId", eventId);
@@ -107,12 +122,6 @@ public class DonationListFragment extends Fragment {
                 donatorAdapter.startListening();
             }
         });
-
-//        donationListEmptyImage.setVisibility(View.VISIBLE);
-//        donationListEmptyTextView.setVisibility(View.VISIBLE);
-//        sortBy.setVisibility(View.INVISIBLE);
-//        titleTotalDonation.setVisibility(View.INVISIBLE);
-//        recyclerView.setVisibility(View.INVISIBLE);
 
         return rootView;
     }
@@ -127,30 +136,6 @@ public class DonationListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         donatorAdapter.startListening();
-        CollectionReference eventRef = db.collection("events");
-        eventRef.document(eventId).addSnapshotListener(requireActivity(), new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (documentSnapshot.exists()) {
-                    if (documentSnapshot.getDouble("totalDonation") <= 0) {
-//                        donationListEmptyImage.setVisibility(View.VISIBLE);
-//                        donationListEmptyTextView.setVisibility(View.VISIBLE);
-//                        sortBy.setVisibility(View.INVISIBLE);
-//                        titleTotalDonation.setVisibility(View.INVISIBLE);
-//                        recyclerView.setVisibility(View.INVISIBLE);
-                    } else {
-//                        sortBy.setVisibility(View.VISIBLE);
-//                        titleTotalDonation.setVisibility(View.VISIBLE);
-//                        recyclerView.setVisibility(View.VISIBLE);
-//                        DecimalFormat df = new DecimalFormat("#.###");
-//                        String formattedTotalDonation = df.format(documentSnapshot.getDouble("totalDonation"));
-//                        titleTotalDonation.setText("People have donated " + formattedTotalDonation + " Kg of food");
-//                        donationListEmptyImage.setVisibility(View.INVISIBLE);
-//                        donationListEmptyTextView.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-        });
     }
 
     private void setUpRecyclerViewDonator(Query query) {

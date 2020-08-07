@@ -108,6 +108,11 @@ public class ChildEventListFragment extends Fragment {
                     if (task.getResult().isEmpty()) {
                         emptyHistoryImage.setVisibility(View.VISIBLE);
                         emptyHistoryText.setVisibility(View.VISIBLE);
+                        if (eventArgs.equalsIgnoreCase(Constant.CURRENT_EVENT)) {
+                            emptyHistoryText.setText("You don't have any active event");
+                        } else {
+                            emptyHistoryText.setText("You don't have any past event");
+                        }
                     } else {
                         recyclerView.setVisibility(View.VISIBLE);
                         searchField.setVisibility(View.VISIBLE);
