@@ -80,6 +80,30 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editProfileTotalDonationLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Total Donation"
+            app:layout_constraintEnd_toEndOf="@+id/edit_profile_telephone_number_layout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/edit_profile_telephone_number_layout"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout">
+
+            <EditText
+                android:id="@+id/editProfileTotalDonation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:drawableStart="@drawable/quantity_icon"
+                android:drawablePadding="@dimen/drawable_padding"
+                android:ems="10"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/donatorProfileUpdateCredentialButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
@@ -96,7 +120,7 @@
             app:layout_constraintEnd_toStartOf="@+id/edit_profile_confirm"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_telephone_number_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/editProfileTotalDonationLayout" />
 
         <ProgressBar
             android:id="@+id/donatorProfileUpdateCredentialProgressBar"

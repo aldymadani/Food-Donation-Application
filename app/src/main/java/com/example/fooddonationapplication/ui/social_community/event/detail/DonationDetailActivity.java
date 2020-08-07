@@ -175,6 +175,8 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         boolean donationQuantityValidation = false;
         if (donationQuantity.getText().toString().isEmpty()) {
             donationQuantityLayout.setError("Please input the donation quantity");
+        } else if (Double.parseDouble(donationQuantity.getText().toString()) < 1) {
+            donationQuantityLayout.setError("Minimum donation is 1 Kg");
         } else {
             donationQuantityLayout.setErrorEnabled(false);
             donationQuantityValidation = true;

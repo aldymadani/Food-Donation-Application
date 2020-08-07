@@ -192,7 +192,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         updateEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!hasEmptyField()) {
+                if(fieldValidation()) {
                     allActionStatus(false, "UPDATE_START");
                     checkingChanges();
                 }
@@ -518,8 +518,8 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         });
     }
 
-    private boolean hasEmptyField() {
-        boolean hasEmpty = true;
+    private boolean fieldValidation() {
+        boolean fieldValidation = false;
         if (eventTitle.getText().toString().isEmpty()) {
             eventTitleLayout.setError("Please input the event title");
         } else {
@@ -539,18 +539,22 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             eventEndDateLayout.setErrorEnabled(false);
         }
 
+        boolean targetQuantityValidation = false;
         if (eventTargetQuantity.getText().toString().isEmpty()) {
             eventTargetQuantityLayout.setError("Please input your target quantity of the event");
+        } else if (Double.parseDouble(eventTargetQuantity.getText().toString()) < 50) {
+            eventTargetQuantityLayout.setError("Minimum target quantity is 50 kg");
         } else {
             eventTargetQuantityLayout.setErrorEnabled(false);
+            targetQuantityValidation = true;
         }
 
         if (!eventTitle.getText().toString().isEmpty() && !eventDescription.getText().toString().isEmpty()
-                && !eventEndDate.getText().toString().isEmpty() && !eventTargetQuantity.getText().toString().isEmpty()) {
-            hasEmpty = false;
+                && !eventEndDate.getText().toString().isEmpty() && targetQuantityValidation) {
+            fieldValidation = true;
         }
 
-        return hasEmpty;
+        return fieldValidation;
     }
 
     private void checkingChanges() {

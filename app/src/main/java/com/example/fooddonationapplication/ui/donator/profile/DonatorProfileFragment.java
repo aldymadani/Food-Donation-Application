@@ -39,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
 
     private static final String TAG = "EditProfileFragment";
 
-    private EditText fullNameEditText, telephoneNumberEditText;
+    private EditText fullNameEditText, telephoneNumberEditText, totalDonationEditText;
     private TextInputLayout fullNameLayout, telephoneNumberLayout;
     private Button logOutButton, updateProfileButton, updateCredentialButton;
     private ProgressBar progressBar, updateCredentialProgressBar;
@@ -167,6 +168,9 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
     private void initializeTextData() {
         telephoneNumberEditText.setText(oldUserData.getPhone());
         fullNameEditText.setText(user.getDisplayName());
+        DecimalFormat df = new DecimalFormat("#.###");
+        final String formattedTotalDonation = df.format(oldUserData.getTotalDonation());
+        totalDonationEditText.setText(formattedTotalDonation);
     }
 
     private void checkingChanges() {
@@ -430,6 +434,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
         progressBar = rootView.findViewById(R.id.edit_profile_progressbar);
         logOutButton = rootView.findViewById(R.id.edit_profile_log_out);
         updateProfileButton = rootView.findViewById(R.id.edit_profile_confirm);
+        totalDonationEditText = rootView.findViewById(R.id.editProfileTotalDonation);
 
         fullNameLayout = rootView.findViewById(R.id.edit_profile_name_layout);
         telephoneNumberLayout = rootView.findViewById(R.id.edit_profile_telephone_number_layout);
@@ -444,6 +449,11 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
         // Hide progress bar
         progressBar.setVisibility(View.INVISIBLE);
         updateCredentialProgressBar.setVisibility(View.INVISIBLE);
+
+        // Disable the total donation field
+        totalDonationEditText.setFocusable(false);
+        totalDonationEditText.setFocusableInTouchMode(false);
+        totalDonationEditText.setCursorVisible(false);
     }
 
     @Override

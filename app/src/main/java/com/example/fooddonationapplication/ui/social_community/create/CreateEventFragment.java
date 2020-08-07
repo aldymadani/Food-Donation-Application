@@ -270,19 +270,23 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
             eventEndDateLayout.setErrorEnabled(false);
         }
 
+        boolean targetQuantityValidation = false;
         if (targetQuantityData.isEmpty()) {
             targetQuantityLayout.setError("Please fill in the target quantity");
+        } else if (Double.parseDouble(targetQuantityData) < 50) {
+            targetQuantityLayout.setError("Minimum target quantity is 50 kg");
         } else {
             targetQuantityLayout.setErrorEnabled(false);
+            targetQuantityValidation = true;
         }
 
         if (!hasImage) {
             Toast.makeText(getContext(), "Please insert the event image", Toast.LENGTH_SHORT).show();
         }
 
-        if (eventNameData.isEmpty() && eventDescriptionData.isEmpty() && endDateData.isEmpty() && targetQuantityData.isEmpty() && !hasImage) {
+        if (eventNameData.isEmpty() && eventDescriptionData.isEmpty() && endDateData.isEmpty() && !targetQuantityValidation && !hasImage) {
             Toast.makeText(getContext(), "Please complete in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!eventNameData.isEmpty() && !eventDescriptionData.isEmpty() && !endDateData.isEmpty() && !targetQuantityData.isEmpty() && hasImage) {
+        } else if (!eventNameData.isEmpty() && !eventDescriptionData.isEmpty() && !endDateData.isEmpty() && targetQuantityValidation && hasImage) {
             progressBar.setVisibility(View.VISIBLE);
             createEventConfirmation.setVisibility(View.INVISIBLE);
             handleUpload(bitmap);
