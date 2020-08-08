@@ -55,6 +55,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
@@ -182,11 +183,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         deleteEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (event.getTotalDonation() > 0) {
-                    Toast.makeText(getContext(), "Please ensure that the event have no donator", Toast.LENGTH_SHORT).show();
-                } else {
-                    setUpDeleteEventDialog();
-                }
+                checkDonation();
             }
         });
 
@@ -255,6 +252,24 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             }
         });
         return rootView;
+    }
+
+    private void checkDonation() {
+        CollectionReference donatorRef = db.collection("donations");
+        Query query = donatorRef.whereEqualTo("eventId", eventId);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().isEmpty()) {
+                        setUpDeleteEventDialog();
+                    } else {
+                        Toast.makeText(getContext(), "Please ensure that the event have no donator", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     private void setUpDeleteEventDialog() {

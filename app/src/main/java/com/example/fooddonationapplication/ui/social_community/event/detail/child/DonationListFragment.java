@@ -97,10 +97,15 @@ public class DonationListFragment extends Fragment {
                     if (task.getResult().isEmpty()) {
                         donationListEmptyImage.setVisibility(View.VISIBLE);
                         donationListEmptyTextView.setVisibility(View.VISIBLE);
+                        sortBy.setVisibility(View.INVISIBLE);
+                        titleTotalDonation.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.INVISIBLE);
                     } else {
                         sortBy.setVisibility(View.VISIBLE);
                         titleTotalDonation.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.VISIBLE);
+                        donationListEmptyImage.setVisibility(View.INVISIBLE);
+                        donationListEmptyTextView.setVisibility(View.INVISIBLE);
                     }
                 }
             }
