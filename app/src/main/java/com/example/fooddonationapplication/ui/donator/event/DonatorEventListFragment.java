@@ -81,7 +81,8 @@ public class DonatorEventListFragment extends Fragment {
         }
         setUpRecyclerView(query);
 
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Query allEvents = eventRef;
+        allEvents.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

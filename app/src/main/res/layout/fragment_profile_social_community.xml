@@ -100,7 +100,6 @@
                 android:layout_marginTop="24dp"
                 android:drawableStart="@drawable/ic_description_black_24dp"
                 android:drawablePadding="@dimen/drawable_padding"
-                android:ems="10"
                 android:inputType="textMultiLine" />
 
         </com.google.android.material.textfield.TextInputLayout>
