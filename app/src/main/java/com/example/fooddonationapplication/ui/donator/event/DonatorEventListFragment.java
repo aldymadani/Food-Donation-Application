@@ -62,11 +62,7 @@ public class DonatorEventListFragment extends Fragment {
         emptyEventImage = rootView.findViewById(R.id.eventEmptyPicture);
         emptyEventTextView =rootView.findViewById(R.id.eventEmptyTextView);
 
-        searchKeyword.setVisibility(View.INVISIBLE);
-        searchKeywordLayout.setVisibility(View.INVISIBLE);
-        searchButton.setVisibility(View.INVISIBLE);
-        swipeLayout.setVisibility(View.INVISIBLE);
-        recyclerView.setVisibility(View.INVISIBLE);
+//        recyclerView.setVisibility(View.INVISIBLE);
         emptyEventImage.setVisibility(View.INVISIBLE);
         emptyEventTextView.setVisibility(View.INVISIBLE);
 
@@ -81,24 +77,7 @@ public class DonatorEventListFragment extends Fragment {
         }
         setUpRecyclerView(query);
 
-        Query allEvents = eventRef;
-        allEvents.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().isEmpty()) {
-                        emptyEventImage.setVisibility(View.VISIBLE);
-                        emptyEventTextView.setVisibility(View.VISIBLE);
-                    } else {
-                        searchKeyword.setVisibility(View.VISIBLE);
-                        searchKeywordLayout.setVisibility(View.VISIBLE);
-                        searchButton.setVisibility(View.VISIBLE);
-                        swipeLayout.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
+        checkActiveEvents(query, "INITIAL");
 
         searchKeyword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -126,6 +105,7 @@ public class DonatorEventListFragment extends Fragment {
                 searchKeyword.setText("");
                 Util.hideKeyboard(requireActivity());
                 searchKeyword.clearFocus();
+                checkActiveEvents(newQuery, "INITIAL");
                 setUpRecyclerView(newQuery);
                 mAdapter.refresh();
                 swipeLayout.setRefreshing(false);
@@ -133,6 +113,39 @@ public class DonatorEventListFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void checkActiveEvents(Query query, String status) {
+
+        if (status.equalsIgnoreCase("INITIAL")) {
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            emptyEventImage.setVisibility(View.VISIBLE);
+                            emptyEventTextView.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.INVISIBLE);
+                        } else {
+                            emptyEventImage.setVisibility(View.INVISIBLE);
+                            emptyEventTextView.setVisibility(View.INVISIBLE);
+//                            recyclerView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
+        } else {
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        emptyEventImage.setVisibility(View.INVISIBLE);
+                        emptyEventTextView.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
     }
 
     private void searchEvent() {
@@ -145,6 +158,7 @@ public class DonatorEventListFragment extends Fragment {
         } else {
             return;
         }
+        checkActiveEvents(newQuery, "SEARCH");
         setUpRecyclerView(newQuery);
         mAdapter.startListening();;
     }

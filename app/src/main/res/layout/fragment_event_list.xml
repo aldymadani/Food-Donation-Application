@@ -91,22 +91,16 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:srcCompat="@drawable/ic_reset" />-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/eventEmptyPicture"
+        android:layout_width="400dp"
+        android:layout_height="230dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/event_empty_edited"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/eventEmptyPicture"
-            android:layout_width="400dp"
-            android:layout_height="230dp"
-            android:src="@drawable/event_empty_edited"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/eventSearchLayout" />
         <TextView
             android:id="@+id/eventEmptyTextView"
             android:layout_width="wrap_content"
@@ -115,13 +109,12 @@
             android:paddingEnd="64dp"
             android:gravity="center_horizontal"
             android:lineSpacingMultiplier="1.15"
-            android:text="Currently, there are no available events"
+            android:text="Currently, there are no active events available"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/eventEmptyPicture"
             app:layout_constraintStart_toStartOf="@+id/eventEmptyPicture"
             app:layout_constraintTop_toBottomOf="@+id/eventEmptyPicture" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
