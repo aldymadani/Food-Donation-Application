@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.fooddonationapplication.model.Donator;
+import com.example.fooddonationapplication.ui.general.DonatorRegisterActivity;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.util.Util;
@@ -29,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
@@ -62,7 +64,7 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_profile_donator,container,false);
+        rootView = inflater.inflate(R.layout.fragment_profile_donator, container, false);
         initializeComponents();
 
         hasChanged = false;
@@ -348,7 +350,12 @@ public class DonatorProfileFragment extends Fragment implements View.OnFocusChan
                                         Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
                                     } else if (!task.isSuccessful()) {
                                         Log.d(TAG, String.valueOf(task.getException()));
-                                        Toast.makeText(getContext(), String.valueOf(task.getException()), Toast.LENGTH_SHORT).show();
+                                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                            Toast.makeText(getContext(), "Email is already used", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getContext(), "Edit Credential is unsuccessful, please try again", Toast.LENGTH_SHORT).show();
+                                        }
+//                                        Toast.makeText(getContext(), String.valueOf(task.getException()), Toast.LENGTH_SHORT).show();
                                         updateCredentialButton.setVisibility(View.VISIBLE);
                                         updateCredentialProgressBar.setVisibility(View.INVISIBLE);
                                         updateProfileButton.setEnabled(true);
