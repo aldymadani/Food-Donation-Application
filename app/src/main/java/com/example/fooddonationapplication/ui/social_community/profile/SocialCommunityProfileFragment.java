@@ -28,7 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fooddonationapplication.model.Donator;
 import com.example.fooddonationapplication.model.SocialCommunity;
 import com.example.fooddonationapplication.ui.general.LoginActivity;
 import com.example.fooddonationapplication.R;
@@ -88,7 +87,7 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
 
     // For photo
     private Bitmap bitmap;
-    private String eventImageURI;
+    private String imageURL;
     private boolean hasImageChanged;
 
     // View Model
@@ -246,7 +245,7 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
             hasChanged = true;
             handleUpload(bitmap);
         } else {
-            newUserData.setImageURI(oldUserData.getImageURI());
+            newUserData.setImageURL(oldUserData.getImageURL());
             updateUserData();
         }
     }
@@ -304,7 +303,7 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
         DocumentReference userReference = db.collection("users").document(user.getUid());
         batch.update(userReference, "description", newUserData.getDescription());
         batch.update(userReference, "phone", newUserData.getPhone());
-        batch.update(userReference, "imageURI", newUserData.getImageURI());
+        batch.update(userReference, "imageURL", newUserData.getImageURL());
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -317,7 +316,7 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
                 // Checking for the new things again
                 oldUserData.setDescription(newUserData.getDescription());
                 oldUserData.setPhone(newUserData.getPhone());
-                oldUserData.setImageURI(newUserData.getImageURI());
+                oldUserData.setImageURL(newUserData.getImageURL());
                 hasImageChanged = false;
                 hasChanged = false;
                 hasTelephoneNumberChanged = false;
@@ -514,7 +513,6 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
         if (requestCode == RequestCodeConstant.GALLERY_PICK && resultCode == Activity.RESULT_OK && data != null) {
             Uri ImageURI = data.getData();
 
-
             CropImage.activity(ImageURI)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setAspectRatio(1,1)
@@ -587,11 +585,11 @@ public class SocialCommunityProfileFragment extends Fragment implements View.OnF
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
-                        eventImageURI = uri.toString();
-                        Log.d(TAG,eventImageURI);
-                        newUserData.setImageURI(eventImageURI);
+                        imageURL = uri.toString();
+                        Log.d(TAG, imageURL);
+                        newUserData.setImageURL(imageURL);
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setPhotoUri(Uri.parse(eventImageURI))
+                                .setPhotoUri(Uri.parse(imageURL))
                                 .build();
                         user.updateProfile(profileUpdates)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {

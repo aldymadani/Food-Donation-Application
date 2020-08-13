@@ -69,7 +69,7 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
 
     // For photo
     private Bitmap bitmap;
-    private String eventImageURI;
+    private String eventImageURL;
     private View rootView;
     private boolean hasImage;
 
@@ -244,8 +244,8 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
-                        eventImageURI = uri.toString();
-                        Log.d(TAG, eventImageURI);
+                        eventImageURL = uri.toString();
+                        Log.d(TAG, eventImageURL);
                         InitializeEvent();
                     }
                 });
@@ -308,7 +308,7 @@ public class CreateEventFragment extends Fragment implements View.OnFocusChangeL
         event.setTargetQuantity(Double.parseDouble(targetQuantityData));
         event.setTotalDonation(0);
         event.setTitleForSearch(eventNameData.toLowerCase());
-        event.setImageURI(eventImageURI);
+        event.setImageURL(eventImageURL);
         event.setSocialCommunityId(socialCommunityId);
 
         db.collection("users").document(socialCommunityId)

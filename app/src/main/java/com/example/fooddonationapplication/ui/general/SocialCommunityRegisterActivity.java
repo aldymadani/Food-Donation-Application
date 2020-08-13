@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -49,13 +48,11 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SocialCommunityRegisterActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
     private static final String TAG = "SocialRegisterActivity";
-    private String socialCommunityImageURI, emailData, passwordData, confirmPasswordData, socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData;
+    private String socialCommunityImageURL, emailData, passwordData, confirmPasswordData, socialCommunityNameData, telephoneNumberData, socialCommunityDescriptionData;
 
     private EditText emailId, passwordId, confirmPasswordId, socialCommunityNameId, telephoneNumberId, socialCommunityDescription;
     private Button btnSignUp;
@@ -340,8 +337,8 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
-                        socialCommunityImageURI = uri.toString();
-                        Log.d(TAG, socialCommunityImageURI);
+                        socialCommunityImageURL = uri.toString();
+                        Log.d(TAG, socialCommunityImageURL);
                         registerToDatabase();
                     }
                 });
@@ -352,7 +349,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
-                .setPhotoUri(Uri.parse(socialCommunityImageURI))
+                .setPhotoUri(Uri.parse(socialCommunityImageURL))
                 .build();
 
         user.updateProfile(profileUpdates)
@@ -383,7 +380,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
         socialCommunity.setPhone(telephoneNumberData);
         socialCommunity.setRole(Constant.SOCIAL_COMMUNITY_ROLE);
         socialCommunity.setDescription(socialCommunityDescriptionData);
-        socialCommunity.setImageURI(socialCommunityImageURI);
+        socialCommunity.setImageURL(socialCommunityImageURL);
         socialCommunity.setTotalEventCreated(0);
         socialCommunity.setNotificationAvailabilityInMillis(System.currentTimeMillis());
         socialCommunity.setUuid(uuid);

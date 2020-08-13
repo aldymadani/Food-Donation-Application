@@ -61,7 +61,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
     private ProgressBar progressBar;
     private ImageView foodImage;
     private Bitmap bitmap;
-    private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURI, userId, eventId;
+    private String pickUpAddressData, foodItemsData, timeData, totalDonationData, chosenDate, foodImageURL, userId, eventId;
     private boolean hasImage;
 
     // Firestore Database Access
@@ -296,8 +296,8 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
-                        foodImageURI = uri.toString();
-                        Log.d(TAG, foodImageURI);
+                        foodImageURL = uri.toString();
+                        Log.d(TAG, foodImageURL);
                         CreateDonation();
                     }
                 });
@@ -331,7 +331,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
         donation.setSocialCommunityPhoneNumber(socialCommunityPhone);
         donation.setSocialCommunityId(socialCommunityId);
         donation.setStatus("On-Progress");
-        donation.setImageURI(foodImageURI);
+        donation.setImageURL(foodImageURL);
 
         db.collection("users").document(userId)
                 .get()

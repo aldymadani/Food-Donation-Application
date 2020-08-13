@@ -116,7 +116,7 @@ public class EventListAdapter extends FirestorePagingAdapter<Event, EventListAda
             textViewTitle.setText(event.getTitle());
             textViewTotalDonation.setText(formattedTotalDonation + " / " + formattedTargetQuantity + " kg");
             textViewEndDate.setText(Util.convertToFullDate(event.getEndDate()));
-            Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
+            Glide.with(itemView.getContext()).load(event.getImageURL()).override(300,200)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

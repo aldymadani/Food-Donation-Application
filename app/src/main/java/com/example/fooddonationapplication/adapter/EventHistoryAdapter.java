@@ -2,28 +2,19 @@ package com.example.fooddonationapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Event;
 import com.example.fooddonationapplication.ui.social_community.event.detail.UpdateEventActivity;
@@ -143,7 +134,7 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
             eventTitle.setText(event.getTitle());
             eventTotalDonation.setText(formattedTotalDonation + " / " + event.getTargetQuantity() + " kg");
             eventEndDate.setText(Util.convertToFullDate(event.getEndDate()));
-            Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventImage);
+            Picasso.get().load(event.getImageURL()).error(R.drawable.ic_error_black_24dp).into(eventImage);
 
             parentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,7 +146,7 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
             });
 
              // Glide implementation for Future Reference
-//            Glide.with(itemView.getContext()).load(event.getImageURI()).override(300,200)
+//            Glide.with(itemView.getContext()).load(event.getImageURL()).override(300,200)
 //                    .listener(new RequestListener<Drawable>() {
 //                        @Override
 //                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

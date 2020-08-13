@@ -23,7 +23,7 @@ public class Donation implements Parcelable {
     private String pickUpDate;
     private String pickUpTime;
     private String donationDate;
-    private String imageURI;
+    private String imageURL;
     private String donationId;
     private String status;
     private double totalDonation;
@@ -97,8 +97,8 @@ public class Donation implements Parcelable {
         this.donationDate = donationDate;
     }
 
-    public void setImageURI(String imageURI) {
-        this.imageURI = imageURI;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public void setTotalDonation(double totalDonation) {
@@ -161,8 +161,8 @@ public class Donation implements Parcelable {
         return donationDate;
     }
 
-    public String getImageURI() {
-        return imageURI;
+    public String getImageURL() {
+        return imageURL;
     }
 
     public String getDonationId() {
@@ -187,7 +187,7 @@ public class Donation implements Parcelable {
         pickUpDate = in.readString();
         pickUpTime = in.readString();
         donationDate = in.readString();
-        imageURI = in.readString();
+        imageURL = in.readString();
         totalDonation = in.readDouble();
         donationId = in.readString();
         status = in.readString();
@@ -220,7 +220,7 @@ public class Donation implements Parcelable {
         dest.writeString(pickUpDate);
         dest.writeString(pickUpTime);
         dest.writeString(donationDate);
-        dest.writeString(imageURI);
+        dest.writeString(imageURL);
         dest.writeDouble(totalDonation);
         dest.writeString(donationId);
         dest.writeString(status);

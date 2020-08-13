@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SocialCommunity extends User implements Parcelable {
-    private String description, imageURI;
+    private String description, imageURL;
     private int totalEventCreated;
     private long notificationAvailabilityInMillis;
 
@@ -20,12 +20,12 @@ public class SocialCommunity extends User implements Parcelable {
         this.description = description;
     }
 
-    public String getImageURI() {
-        return imageURI;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImageURI(String imageURI) {
-        this.imageURI = imageURI;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public int getTotalEventCreated() {
@@ -74,7 +74,7 @@ public class SocialCommunity extends User implements Parcelable {
         super.setPhone(in.readString());
         super.setUuid(in.readString());
         description = in.readString();
-        imageURI = in.readString();
+        imageURL = in.readString();
         totalEventCreated = in.readInt();
         notificationAvailabilityInMillis = in.readLong();
     }
@@ -85,7 +85,7 @@ public class SocialCommunity extends User implements Parcelable {
         dest.writeString(super.getPhone());
         dest.writeString(super.getUuid());
         dest.writeString(description);
-        dest.writeString(imageURI);
+        dest.writeString(imageURL);
         dest.writeInt(totalEventCreated);
         dest.writeLong(notificationAvailabilityInMillis);
     }

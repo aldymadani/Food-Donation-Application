@@ -65,7 +65,7 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
     private ProgressBar imageLoadingProgressBar, deleteProgressBar, updateDonationStatusProgressBar;
     private ImageView foodImagePhoto;
     private Button callDonator, deleteDonation, updateDonationStatus;
-    private String donationId, donatorId, eventId, imageURI, chosenDate;
+    private String donationId, donatorId, eventId, imageURL, chosenDate;
     private double donationQuantityData;
     private Donation donation;
 
@@ -93,13 +93,13 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         donatorId = donation.getDonatorId();
         donationId = donation.getDonationId();
         eventId = donation.getEventId();
-        imageURI = donation.getImageURI();
+        imageURL = donation.getImageURL();
         donationQuantityData = donation.getTotalDonation();
         chosenDate = donation.getPickUpDate();
 
         donatorNameTextView.setText(donation.getDonatorName());
 
-        Glide.with(this).load(imageURI)
+        Glide.with(this).load(imageURL)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -246,7 +246,7 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        deleteImageFromFirebaseStorage(imageURI);
+                                        deleteImageFromFirebaseStorage(imageURL);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override

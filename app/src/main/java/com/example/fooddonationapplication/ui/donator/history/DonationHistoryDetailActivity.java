@@ -76,7 +76,7 @@ public class DonationHistoryDetailActivity extends AppCompatActivity {
         totalDonation.setText(String.valueOf(totalDonationData));
         donationDate.setText(donation.getDonationDate());
 
-        Glide.with(this).load(donation.getImageURI())
+        Glide.with(this).load(donation.getImageURL())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

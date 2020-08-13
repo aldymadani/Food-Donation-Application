@@ -10,7 +10,7 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 public class Event implements Parcelable {
-    private String imageURI, eventId, title, description, socialCommunityId, endDate, titleForSearch;
+    private String imageURL, eventId, title, description, socialCommunityId, endDate, titleForSearch;
     private double targetQuantity, totalDonation;
     private long endDateInMillis;
     private @ServerTimestamp Date timestamp;
@@ -28,8 +28,8 @@ public class Event implements Parcelable {
         // Empty constructor required
     }
 
-    public void setImageURI(String imageURI) {
-        this.imageURI = imageURI;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public void setEventId(String eventId) {
@@ -73,8 +73,8 @@ public class Event implements Parcelable {
         this.timestamp = timestamp;
     }
 
-    public Event(String imageURI, String eventid, String title, String description, String socialCommunityID, String socialCommunityName, String socialCommunityTelephoneNumber, String endDate, long endDateInMillis, double targetQuantity, double totalDonation, Date timestamp) {
-        this.imageURI = imageURI;
+    public Event(String imageURL, String eventid, String title, String description, String socialCommunityID, String socialCommunityName, String socialCommunityTelephoneNumber, String endDate, long endDateInMillis, double targetQuantity, double totalDonation, Date timestamp) {
+        this.imageURL = imageURL;
         this.eventId = eventid;
         this.title = title;
         this.description = description;
@@ -94,8 +94,8 @@ public class Event implements Parcelable {
         return targetQuantity;
     }
 
-    public String getImageURI() {
-        return imageURI;
+    public String getImageURL() {
+        return imageURL;
     }
 
     public String getEventId() {
@@ -140,7 +140,7 @@ public class Event implements Parcelable {
     }
 
     protected Event(Parcel in) {
-        imageURI = in.readString();
+        imageURL = in.readString();
         eventId = in.readString();
         title = in.readString();
         description = in.readString();
@@ -171,7 +171,7 @@ public class Event implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(imageURI);
+        dest.writeString(imageURL);
         dest.writeString(eventId);
         dest.writeString(title);
         dest.writeString(description);

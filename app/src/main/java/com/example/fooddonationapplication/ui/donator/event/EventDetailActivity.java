@@ -41,7 +41,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private Button eventDonateButton, callButton;
     private ImageView eventImage, socialCommunityLogo;
     private ProgressBar eventProgressBar, socialCommunityLogoProgressBar;
-    private String socialCommunityNameData, socialCommunityTelephoneNumberData, socialCommunityDescription, socialCommunityImageURI;
+    private String socialCommunityNameData, socialCommunityTelephoneNumberData, socialCommunityDescription, socialCommunityImageURL;
     private int totalEventCreated;
 
     @Override
@@ -82,7 +82,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
         final String eventIdData = event.getEventId();
         final String eventTitleData = event.getTitle();
-        String eventImageData = event.getImageURI();
+        String eventImageData = event.getImageURL();
         String eventDescriptionData = event.getDescription();
         final String eventSocialCommunityIdData = event.getSocialCommunityId();
         String eventEndDateData = event.getEndDate();
@@ -108,13 +108,13 @@ public class EventDetailActivity extends AppCompatActivity {
                             socialCommunityTelephoneNumberData = documentSnapshot.getString("phone");
                             socialCommunityNameData = documentSnapshot.getString("name");
                             socialCommunityDescription  = documentSnapshot.getString("description");
-                            socialCommunityImageURI = documentSnapshot.getString("imageURI");
+                            socialCommunityImageURL = documentSnapshot.getString("imageURL");
                             totalEventCreated = documentSnapshot.getLong("totalEventCreated").intValue();
 
                             // Initialize Data on Social Community Layout
                             eventSocialCommunityName.setText(socialCommunityNameData);
                             eventSocialCommunityTelephoneNumber.setText(socialCommunityTelephoneNumberData);
-                            Glide.with(getApplicationContext()).load(socialCommunityImageURI)
+                            Glide.with(getApplicationContext()).load(socialCommunityImageURL)
                                     .listener(new RequestListener<Drawable>() {
                                     @Override
                                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -202,7 +202,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 updateCredentialProgressBar.setVisibility(View.GONE);
                 updateProfileProgressBar.setVisibility(View.GONE);
 
-                Glide.with(getApplicationContext()).load(socialCommunityImageURI)
+                Glide.with(getApplicationContext()).load(socialCommunityImageURL)
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

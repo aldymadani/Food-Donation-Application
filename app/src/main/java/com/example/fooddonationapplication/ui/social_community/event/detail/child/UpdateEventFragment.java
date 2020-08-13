@@ -103,7 +103,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
 
     // For photo
     private Bitmap bitmap;
-    private String eventImageURI, eventId;
+    private String eventimageURL, eventId;
     private boolean hasImageChanged;
 
     // For Date Picker
@@ -166,7 +166,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             imageEventPhotoProgressBar.setVisibility(View.INVISIBLE);
             hasImageChanged = mViewModel.isHasImageChanged();
         } else {
-            Picasso.get().load(event.getImageURI()).error(R.drawable.ic_error_black_24dp).into(eventPhoto, new com.squareup.picasso.Callback() {
+            Picasso.get().load(event.getImageURL()).error(R.drawable.ic_error_black_24dp).into(eventPhoto, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     imageEventPhotoProgressBar.setVisibility(View.GONE);
@@ -508,7 +508,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
                 "description", newEvent.getDescription(),
                 "endDate", newEvent.getEndDate(),
                 "endDateInMillis", newEvent.getEndDateInMillis(),
-                "imageURI", newEvent.getImageURI(),
+                "imageURL", newEvent.getImageURL(),
                 "targetQuantity", newEvent.getTargetQuantity()
         );
 
@@ -522,7 +522,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
                 event.setDescription(newEvent.getDescription());
                 event.setEndDate(newEvent.getEndDate());
                 event.setEndDateInMillis(newEvent.getEndDateInMillis());
-                event.setImageURI(newEvent.getImageURI());
+                event.setImageURL(newEvent.getImageURL());
                 event.setTargetQuantity(newEvent.getTargetQuantity());
 
                 hasChangedTitle = false;
@@ -599,7 +599,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             hasChanged = true;
             handleUpload(bitmap);
         } else {
-            newEvent.setImageURI(event.getImageURI());
+            newEvent.setImageURL(event.getImageURL());
             updateEvent();
         }
     }
@@ -619,7 +619,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // Perform deletion of the image on the firebase storage
-                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(event.getImageURI());
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(event.getImageURL());
                 storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -716,9 +716,9 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.d(TAG, "OnSuccess: " + uri);
-                        eventImageURI = uri.toString();
-                        Log.d(TAG,eventImageURI);
-                        newEvent.setImageURI(eventImageURI);
+                        eventimageURL = uri.toString();
+                        Log.d(TAG, eventimageURL);
+                        newEvent.setImageURL(eventimageURL);
                         updateEvent();
                     }
                 });
