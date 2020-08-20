@@ -130,9 +130,10 @@ public class EventHistoryAdapter extends FirestorePagingAdapter<Event, EventHist
         void setupData(final Event event) {
             DecimalFormat df = new DecimalFormat("#.###");
             final String formattedTotalDonation = df.format(event.getTotalDonation());
+            final String formattedTargetQuantity = df.format(event.getTargetQuantity());
 
             eventTitle.setText(event.getTitle());
-            eventTotalDonation.setText(formattedTotalDonation + " / " + event.getTargetQuantity() + " kg");
+            eventTotalDonation.setText(formattedTotalDonation + " / " + formattedTargetQuantity + " kg");
             eventEndDate.setText(Util.convertToFullDate(event.getEndDate()));
             Picasso.get().load(event.getImageURL()).error(R.drawable.ic_error_black_24dp).into(eventImage);
 

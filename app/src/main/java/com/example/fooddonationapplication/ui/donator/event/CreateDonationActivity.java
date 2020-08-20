@@ -194,7 +194,7 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
         if (totalDonationData.isEmpty()) {
             textInputQuantity.setError("Please fill in the quantity");
         } else if (Double.parseDouble(totalDonationData) < 1) {
-            textInputQuantity.setError("Minimum donation is 1 Kg");
+            textInputQuantity.setError("Minimum donation is 1 kg");
         } else {
             validQuantity = true;
             textInputQuantity.setErrorEnabled(false);
@@ -204,14 +204,10 @@ public class CreateDonationActivity extends AppCompatActivity implements View.On
             Toast.makeText(getApplicationContext(), "Please insert the food image", Toast.LENGTH_SHORT).show();
         }
 
-        if (foodItemsData.isEmpty() && !pickupDateValidation && timeData.isEmpty() && totalDonationData.isEmpty() && !hasImage && !validQuantity) {
-            Toast.makeText(getApplicationContext(), "Please complete in all the information", Toast.LENGTH_SHORT).show();
-        } else if (!foodItemsData.isEmpty() && pickupDateValidation && !timeData.isEmpty() && !totalDonationData.isEmpty() && hasImage && validQuantity) {
+        if (!foodItemsData.isEmpty() && pickupDateValidation && !timeData.isEmpty() && !totalDonationData.isEmpty() && hasImage && validQuantity) {
             progressBar.setVisibility(View.VISIBLE);
             btnConfirm.setVisibility(View.INVISIBLE);
             handleUpload(bitmap);
-        } else {
-            Toast.makeText(getApplicationContext(), "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
     }
 

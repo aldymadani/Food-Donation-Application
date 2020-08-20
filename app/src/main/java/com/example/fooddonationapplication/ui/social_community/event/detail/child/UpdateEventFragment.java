@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.fooddonationapplication.R;
@@ -148,7 +149,9 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         eventDescription.setText(event.getDescription());
         eventEndDate.setText(Util.convertToFullDate(event.getEndDate()));
         chosenDate = event.getEndDate();
-        eventTargetQuantity.setText(String.valueOf(event.getTargetQuantity()));
+        DecimalFormat df = new DecimalFormat("#.###");
+        final String formattedTargetQuantity = df.format(event.getTargetQuantity());
+        eventTargetQuantity.setText(formattedTargetQuantity);
 
         // Disable the totalDonation text field
         eventTotalDonation.setFocusableInTouchMode(false);
@@ -227,23 +230,27 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
             @Override
             public void onClick(View v) {
                 allActionStatus(false, "NOTIFICATION_START");
+                // Check for the event status (active or expired)
                 if (event.getEndDateInMillis() < System.currentTimeMillis()) {
                     allActionStatus(true, "NOTIFICATION_FINISH");
                     Toast.makeText(requireActivity(), "Sorry, your event is expired already", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendNotificationButton.setVisibility(View.INVISIBLE);
+                    // Check for social community limit on sending notification
                     String userUuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     db.collection("users").document(userUuid)
                             .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if (documentSnapshot.exists()) {
-                                        long notificationDateInMillis = documentSnapshot.getLong("notificationAvailabilityInMillis");
+                                        long notificationDateInMillis =
+                                                documentSnapshot.getLong("notificationAvailabilityInMillis");
                                         if (System.currentTimeMillis() > notificationDateInMillis) {
+                                            // Fulfill all the requirement, set up the notification
                                             setUpNotificationData();
                                         } else {
                                             allActionStatus(true, "NOTIFICATION_FINISH");
-                                            Toast.makeText(requireActivity(), "Sorry, you can only sent notification once every two weeks", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(requireActivity(), "Sorry, you can only " +
+                                                    "send notification once every two weeks", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -251,6 +258,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
                 }
             }
         });
+
         return rootView;
     }
 
@@ -265,7 +273,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
                     if (task.getResult().isEmpty()) {
                         setUpDeleteEventDialog();
                     } else {
-                        Toast.makeText(getContext(), "Please ensure that the event have no donator", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Please ensure that the event has no donator", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -297,19 +305,19 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
     }
 
     private void setUpNotificationData() {
-        String TOPIC = "/topics/FoodDonation"; //topic must match with what the receiver subscribed to
+        String TOPIC = "/topics/FoodDonation"; // Topic must match with what the receiver subscribed to
         String NOTIFICATION_TITLE = event.getTitle();
         String NOTIFICATION_MESSAGE = event.getDescription();
         String NOTIFICATION_EVENT_ID = event.getEventId();
 
         JSONObject notification = new JSONObject();
-        JSONObject notifcationBody = new JSONObject();
+        JSONObject notificationBody = new JSONObject();
         try {
-            notifcationBody.put("title", NOTIFICATION_TITLE);
-            notifcationBody.put("message", NOTIFICATION_MESSAGE);
-            notifcationBody.put("eventId", NOTIFICATION_EVENT_ID);
+            notificationBody.put("title", NOTIFICATION_TITLE);
+            notificationBody.put("message", NOTIFICATION_MESSAGE);
+            notificationBody.put("eventId", NOTIFICATION_EVENT_ID);
             notification.put("to", TOPIC);
-            notification.put("data", notifcationBody);
+            notification.put("data", notificationBody);
         } catch (JSONException e) {
             Log.e(TAG, "onCreate: " + e.getMessage() );
         }
@@ -317,19 +325,21 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
     }
 
     private void sendNotification(JSONObject notification) {
-        // Send Notification
+        // Send Notification using Volley library
         String FCM_API = "https://fcm.googleapis.com/fcm/send";
-        final String serverKey = "key=" + "AAAA_kQBhCI:APA91bFc0c2ZXDUJdQRzTIESv_qs2SLJocXUPqPII0WSjaeTEZgshflKKBOk74lJAWkoFBCcz7THIBlXEmDoCaHzfaMOwv4ZEh-5ZiQP1GBAREorM8mypdYwvvbxx87aY3ZuVLzib_tJ";
+        final String serverKey = "key=" + "AAAA_kQBhCI:APA91bFc0c2ZXDUJdQRzTIESv_qs2SLJocXUPqPI" +
+                "I0WSjaeTEZgshflKKBOk74lJAWkoFBCcz7THIBlXEmDoCaHzfaMOwv4ZEh-5ZiQP1GBAREorM8myp" +
+                "dYwvvbxx87aY3ZuVLzib_tJ";
         final String contentType = "application/json";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
-                new com.android.volley.Response.Listener<JSONObject>() {
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i(TAG, "onResponse: " + response.toString());
                     }
                 },
-                new com.android.volley.Response.ErrorListener() {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i(TAG, "onErrorResponse: Didn't work");
@@ -350,7 +360,8 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
     private void updateUserDatabase() {
         String userUuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DocumentReference userReference = db.collection("users").document(userUuid);
-        userReference.update("notificationAvailabilityInMillis", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7 * 2)) // 2 Weeks
+        userReference.update("notificationAvailabilityInMillis",
+                System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7 * 2)) // 2 weeks in millis time
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -374,9 +385,6 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         eventTargetQuantity.setFocusable(status);
         eventTargetQuantity.setFocusableInTouchMode(status);
         eventTargetQuantity.setCursorVisible(status);
-        eventTotalDonation.setFocusable(status);
-        eventTotalDonation.setFocusableInTouchMode(status);
-        eventTotalDonation.setCursorVisible(status);
         if (action.equalsIgnoreCase("UPDATE_START")) {
             updateEventButton.setVisibility(View.INVISIBLE);
             updateEventProgressBar.setVisibility(View.VISIBLE);
@@ -609,7 +617,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
         allActionStatus(false, "DELETE_START");
         WriteBatch batch = db.batch();
         DocumentReference eventReference = db.collection("events").document(event.getEventId());
-        batch.delete(eventReference); // TODO don't use batch, use single deletion
+        batch.delete(eventReference);
 
         String uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DocumentReference socialCommunityReference = db.collection("users").document(uuid);
@@ -625,6 +633,7 @@ public class UpdateEventFragment extends Fragment implements View.OnFocusChangeL
                     public void onSuccess(Void aVoid) {
                         // File deleted successfully
                         Log.d(TAG, "onSuccess: deleted file");
+                        Toast.makeText(getContext(), "Event is successfully deleted", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getContext(), MainSocialCommunityActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

@@ -9,7 +9,11 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 public class User {
     private String name, phone, uuid, role;
 
-    boolean isSame(User user) {
+    public User(){
+        // Empty constructor
+    }
+
+    public boolean isSame(User user) {
         boolean isSame = true;
         if (!name.equalsIgnoreCase(user.getName())) {
             isSame = false;
@@ -50,9 +54,5 @@ public class User {
 
     public String getRole() {
         return role;
-    }
-
-    public User(){
-        // Empty constructor
     }
 }

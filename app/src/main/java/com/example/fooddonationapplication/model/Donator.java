@@ -10,18 +10,18 @@ public class Donator extends User implements Parcelable {
         // Empty constructor
     }
 
-    public boolean isSame(Donator user) {
-        boolean isSame = super.isSame(user);
-        // Check any same data
-        return isSame;
-    }
-
     public void setTotalDonation(int totalDonation) {
         this.totalDonation = totalDonation;
     }
 
     public double getTotalDonation() {
         return totalDonation;
+    }
+
+    public boolean isSame(Donator user) {
+        boolean isSame = super.isSame(user);
+        // Check any same data
+        return isSame;
     }
 
     public static final Creator<Donator> CREATOR = new Creator<Donator>() {

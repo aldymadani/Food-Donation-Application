@@ -178,8 +178,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // User authentication
         if (emailValidation && !password.isEmpty()) {
             isValid = true;
-        } else {
-            Toast.makeText(LoginActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
 
         // TODO To change focus to title so error text wouldn't be gone (NEED RECHECK IF IT'S NECESSARY)

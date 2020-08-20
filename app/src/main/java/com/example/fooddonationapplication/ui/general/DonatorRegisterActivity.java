@@ -99,27 +99,33 @@ public class DonatorRegisterActivity extends AppCompatActivity implements View.O
             textInputPassword.setError("Please enter your password");
             textInputConfirmPassword.setError("Please enter your password");
         } else {
+            boolean passwordValid = false;
+            boolean confirmPasswordValid = false;
             if (password.isEmpty()) {
                 textInputPassword.setError("Please enter your password");
             } else if (password.length() <= 5) {
-                textInputPassword.setError("Password minimum is 6 digit");
+                textInputPassword.setError("Password minimum is 6 digits");
             } else {
+                passwordValid = true;
                 textInputPassword.setErrorEnabled(false);
             }
 
             if (confirmPassword.isEmpty()) {
                 textInputConfirmPassword.setError("Please enter your password");
             } else if (confirmPassword.length() <= 5) {
-                textInputConfirmPassword.setError("Password minimum is 6 digit");
+                textInputConfirmPassword.setError("Password minimum is 6 digits");
             } else {
+                confirmPasswordValid = true;
                 textInputConfirmPassword.setErrorEnabled(false);
             }
 
-            if (!password.equals(confirmPassword)) {
-                textInputConfirmPassword.setError("The password is not matching");
-            } else {
-                textInputConfirmPassword.setErrorEnabled(false);
-                passwordValidation = true;
+            if (passwordValid && confirmPasswordValid) {
+                if (!password.equals(confirmPassword)) {
+                    textInputConfirmPassword.setError("The password is not matching");
+                } else {
+                    textInputConfirmPassword.setErrorEnabled(false);
+                    passwordValidation = true;
+                }
             }
         }
 
@@ -135,19 +141,15 @@ public class DonatorRegisterActivity extends AppCompatActivity implements View.O
         if (telephoneNumber.isEmpty()) {
             textInputTelephoneNumber.setError("Please enter your telephone number");
         } else if (telephoneNumber.length() < 7 || telephoneNumber.length() > 13) {
-            textInputTelephoneNumber.setError("Please Please input a valid telephone number");
+            textInputTelephoneNumber.setError("Please input a valid telephone number");
         } else {
             telephoneNumberValidation = true;
             textInputTelephoneNumber.setErrorEnabled(false);
         }
 
         // Register user
-        if (!emailValidation && !passwordValidation && fullName.isEmpty() && !telephoneNumberValidation) {
-            Toast.makeText(DonatorRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (emailValidation && passwordValidation && !fullName.isEmpty() && telephoneNumberValidation) {
+        if (emailValidation && passwordValidation && !fullName.isEmpty() && telephoneNumberValidation) {
             isValidated = true;
-        } else {
-            Toast.makeText(DonatorRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
 
         return isValidated;
@@ -215,7 +217,7 @@ public class DonatorRegisterActivity extends AppCompatActivity implements View.O
                             intent.putExtra(IntentNameExtra.DONATOR_MODEL, donator);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-                            Toast.makeText(DonatorRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DonatorRegisterActivity.this, "You are successfully registered!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

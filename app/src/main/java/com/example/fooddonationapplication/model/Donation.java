@@ -29,6 +29,10 @@ public class Donation implements Parcelable {
     private double totalDonation;
     private @ServerTimestamp Date timestamp;
 
+    public Donation(){
+        // Empty constructor
+    }
+
     public String getSocialCommunityPhoneNumber() {
         return socialCommunityPhoneNumber;
     }
@@ -43,10 +47,6 @@ public class Donation implements Parcelable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Donation(){
-        // Empty constructor
     }
 
     public void setDonatorName(String donatorName) {

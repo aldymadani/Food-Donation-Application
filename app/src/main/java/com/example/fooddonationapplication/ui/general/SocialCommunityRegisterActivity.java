@@ -224,33 +224,39 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
             textInputPassword.setError("Please enter your password");
             textInputConfirmPassword.setError("Please enter your password");
         } else {
+            boolean passwordValid = false;
+            boolean confirmPasswordValid = false;
             if (passwordData.isEmpty()) {
                 textInputPassword.setError("Please enter your password");
             } else if (passwordData.length() <= 5) {
-                textInputPassword.setError("Password minimum is 6 digit");
+                textInputPassword.setError("Password minimum is 6 digits");
             } else {
+                passwordValid = true;
                 textInputPassword.setErrorEnabled(false);
             }
 
             if (confirmPasswordData.isEmpty()) {
                 textInputConfirmPassword.setError("Please enter your password");
             } else if (confirmPasswordData.length() <= 5) {
-                textInputConfirmPassword.setError("Password minimum is 6 digit");
+                textInputConfirmPassword.setError("Password minimum is 6 digits");
             } else {
+                confirmPasswordValid = true;
                 textInputConfirmPassword.setErrorEnabled(false);
             }
 
-            if (!passwordData.equals(confirmPasswordData)) {
-                textInputConfirmPassword.setError("The password is not matching");
-            } else {
-                textInputConfirmPassword.setErrorEnabled(false);
-                passwordValidation = true;
+            if (passwordValid && confirmPasswordValid) {
+                if (!passwordData.equals(confirmPasswordData)) {
+                    textInputConfirmPassword.setError("The password is not matching");
+                } else {
+                    textInputConfirmPassword.setErrorEnabled(false);
+                    passwordValidation = true;
+                }
             }
         }
 
         // Full name checking
         if (socialCommunityNameData.isEmpty()) {
-            textInputSocialCommunityName.setError("Please enter your full name");
+            textInputSocialCommunityName.setError("Please enter the social community name");
         } else {
             textInputSocialCommunityName.setErrorEnabled(false);
         }
@@ -260,7 +266,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
         if (telephoneNumberData.isEmpty()) {
             textInputTelephoneNumber.setError("Please enter your telephone number");
         } else if (telephoneNumberData.length() < 7 || telephoneNumberData.length() > 13) {
-            textInputTelephoneNumber.setError("Please Please input a valid telephone number");
+            textInputTelephoneNumber.setError("Please input a valid telephone number");
         } else {
             telephoneNumberValidation = true;
             textInputTelephoneNumber.setErrorEnabled(false);
@@ -268,7 +274,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
 
         // Description checking
         if (socialCommunityDescriptionData.isEmpty()) {
-            textInputSocialCommunityDescription.setError("Please input your description");
+            textInputSocialCommunityDescription.setError("Please enter the social community description");
         } else {
             textInputSocialCommunityDescription.setErrorEnabled(false);
         }
@@ -279,12 +285,8 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
         }
 
         // Register user
-        if (!emailValidation && !passwordValidation && socialCommunityNameData.isEmpty() && !telephoneNumberValidation && socialCommunityDescriptionData.isEmpty() && !hasImage) {
-            Toast.makeText(SocialCommunityRegisterActivity.this, "Please fill in all the information", Toast.LENGTH_SHORT).show();
-        } else if (emailValidation && passwordValidation && !socialCommunityNameData.isEmpty() && telephoneNumberValidation && !socialCommunityDescriptionData.isEmpty() && hasImage) {
+        if (emailValidation && passwordValidation && !socialCommunityNameData.isEmpty() && telephoneNumberValidation && !socialCommunityDescriptionData.isEmpty() && hasImage) {
             isValidated = true;
-        } else {
-            Toast.makeText(SocialCommunityRegisterActivity.this, "Error occurred, please try again", Toast.LENGTH_SHORT).show();
         }
 
         return isValidated;
@@ -365,7 +367,7 @@ public class SocialCommunityRegisterActivity extends AppCompatActivity implement
                             allActionStatus(true);
                             Intent intent = new Intent(SocialCommunityRegisterActivity.this, MainSocialCommunityActivity.class);
                             intent.putExtra(IntentNameExtra.SOCIAL_COMMUNITY_MODEL, socialCommunity);
-                            Toast.makeText(SocialCommunityRegisterActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SocialCommunityRegisterActivity.this, "You are successfully registered!", Toast.LENGTH_SHORT).show();
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }

@@ -91,7 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             startActivity(mainIntent);
                             finish();
                         }
-                        Toast.makeText(SplashScreenActivity.this, "You are logged in!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SplashScreenActivity.this, "You are logged in!", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d(TAG, "No such document");
                     }

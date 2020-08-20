@@ -15,17 +15,16 @@ public class Event implements Parcelable {
     private long endDateInMillis;
     private @ServerTimestamp Date timestamp;
 
+    public Event() {
+        // Empty constructor required
+    }
+
     public String getTitleForSearch() {
         return titleForSearch;
     }
 
     public void setTitleForSearch(String titleForSearch) {
         this.titleForSearch = titleForSearch;
-    }
-
-
-    public Event() {
-        // Empty constructor required
     }
 
     public void setImageURL(String imageURL) {
@@ -73,19 +72,6 @@ public class Event implements Parcelable {
         this.timestamp = timestamp;
     }
 
-    public Event(String imageURL, String eventid, String title, String description, String socialCommunityID, String socialCommunityName, String socialCommunityTelephoneNumber, String endDate, long endDateInMillis, double targetQuantity, double totalDonation, Date timestamp) {
-        this.imageURL = imageURL;
-        this.eventId = eventid;
-        this.title = title;
-        this.description = description;
-        this.socialCommunityId = socialCommunityID;
-        this.endDate = endDate;
-        this.endDateInMillis = endDateInMillis;
-        this.targetQuantity = targetQuantity;
-        this.totalDonation = totalDonation;
-        this.timestamp = timestamp;
-    }
-
     public String getSocialCommunityId() {
         return socialCommunityId;
     }
@@ -121,6 +107,19 @@ public class Event implements Parcelable {
     public long getEndDateInMillis() {
         return endDateInMillis;
     }
+
+//    public Event(String imageURL, String eventid, String title, String description, String socialCommunityID, String socialCommunityName, String socialCommunityTelephoneNumber, String endDate, long endDateInMillis, double targetQuantity, double totalDonation, Date timestamp) {
+//        this.imageURL = imageURL;
+//        this.eventId = eventid;
+//        this.title = title;
+//        this.description = description;
+//        this.socialCommunityId = socialCommunityID;
+//        this.endDate = endDate;
+//        this.endDateInMillis = endDateInMillis;
+//        this.targetQuantity = targetQuantity;
+//        this.totalDonation = totalDonation;
+//        this.timestamp = timestamp;
+//    }
 
     public boolean isSame(Event event) {
         boolean isSame = true;

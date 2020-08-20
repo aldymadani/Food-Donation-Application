@@ -154,7 +154,8 @@ public class DonatorEventListFragment extends Fragment {
         if (!searchKeyword.getText().toString().isEmpty()) {
             Util.hideKeyboard(requireActivity());
             searchKeyword.clearFocus();
-            newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search).whereLessThanOrEqualTo("titleForSearch",search + "z");
+            newQuery = eventRef.whereGreaterThanOrEqualTo("titleForSearch", search)
+                    .whereLessThanOrEqualTo("titleForSearch",search + "z");
         } else {
             return;
         }

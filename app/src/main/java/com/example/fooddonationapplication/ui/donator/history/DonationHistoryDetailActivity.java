@@ -22,6 +22,8 @@ import com.example.fooddonationapplication.R;
 import com.example.fooddonationapplication.model.Donation;
 import com.example.fooddonationapplication.util.Util;
 
+import java.text.DecimalFormat;
+
 public class DonationHistoryDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "HistoryDetail";
@@ -71,10 +73,12 @@ public class DonationHistoryDetailActivity extends AppCompatActivity {
 
         pickUpAddress.setText(donation.getPickUpAddress());
         foodItems.setText(donation.getFoodItems());
-        pickUpDate.setText(donation.getPickUpDate());
+        pickUpDate.setText(Util.convertToFullDate(donation.getPickUpDate()));
         pickUpTime.setText(donation.getPickUpTime());
-        totalDonation.setText(String.valueOf(totalDonationData));
-        donationDate.setText(donation.getDonationDate());
+        DecimalFormat df = new DecimalFormat("#.###");
+        final String formattedTotalDonation = df.format(totalDonationData);
+        totalDonation.setText(formattedTotalDonation);
+        donationDate.setText(Util.convertToFullDate(donation.getDonationDate()));
 
         Glide.with(this).load(donation.getImageURL())
                 .listener(new RequestListener<Drawable>() {

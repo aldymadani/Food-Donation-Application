@@ -51,6 +51,7 @@ import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -119,7 +120,10 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         deliveryTime.setText(donation.getPickUpTime());
         pickUpAddress.setText(donation.getPickUpAddress());
         foodItems.setText(donation.getFoodItems());
-        donationQuantity.setText(String.valueOf(donation.getTotalDonation()));
+
+        DecimalFormat df = new DecimalFormat("#.###");
+        final String formattedTotalDonation = df.format(donation.getTotalDonation());
+        donationQuantity.setText(formattedTotalDonation);
         donationStatus.setText(donation.getStatus());
 
         disableTextField("On-Progress");
@@ -149,7 +153,7 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         updateDonationStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!hasEmptyField()) {
+                if (textFieldValidation()) {
                     deleteDonation.setEnabled(false);
                     updateDonationStatus.setVisibility(View.INVISIBLE);
                     updateDonationStatusProgressBar.setVisibility(View.VISIBLE);
@@ -159,8 +163,8 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         });
     }
 
-    private boolean hasEmptyField() {
-        boolean hasEmpty = true;
+    private boolean textFieldValidation() {
+        boolean isValid = false;
 
         // Checking food items field
         boolean foodItemsValidation = false;
@@ -183,10 +187,10 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         }
 
         if (foodItemsValidation && donationQuantityValidation) {
-            hasEmpty = false;
+            isValid = true;
         }
 
-        return hasEmpty;
+        return isValid;
     }
 
     private void completeDonationStatus() {
@@ -212,7 +216,7 @@ public class DonationDetailActivity extends AppCompatActivity implements View.On
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                setUpNotificationData("Received");
+                setUpNotificationData("Approved");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

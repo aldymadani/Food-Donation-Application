@@ -181,7 +181,7 @@ public class ChildEventListFragment extends Fragment {
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(2)
-                .setPageSize(1) // Remember that, the size you will pass to setPageSize() a method will load x3 items of that size at first load. Total initial is 3 https://medium.com/firebase-developers/firestore-pagination-in-android-using-firebaseui-library-1d7fe1a75704
+                .setPageSize(3) // Remember that, the size you will pass to setPageSize() a method will load x3 items of that size at first load. Total initial is 3 https://medium.com/firebase-developers/firestore-pagination-in-android-using-firebaseui-library-1d7fe1a75704
                 .build();
 
         // Init Adapter Configuration

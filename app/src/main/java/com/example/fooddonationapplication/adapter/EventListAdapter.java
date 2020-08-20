@@ -67,8 +67,10 @@ public class EventListAdapter extends FirestorePagingAdapter<Event, EventListAda
     protected void onLoadingStateChanged(@NonNull LoadingState state) {
         switch (state) {
             case LOADING_INITIAL:
+                Log.d(TAG, "Initially loaded" + getItemCount());
             case LOADING_MORE:
                 swipeLayout.setRefreshing(true);
+                Log.d(TAG, "Loading more" + getItemCount());
                 break;
 
             case LOADED:
@@ -87,6 +89,7 @@ public class EventListAdapter extends FirestorePagingAdapter<Event, EventListAda
                 break;
 
             case FINISHED:
+                Log.d(TAG, "Total item Loaded: " + getItemCount());
                 swipeLayout.setRefreshing(false);
                 break;
         }
